@@ -19,26 +19,21 @@ class MovieDetailsViewController: UIViewController {
     var yearAndCountryLabel: UILabel!
     var genreLabel: UILabel!
     var durationLabel: UILabel!
-    var circle: UIImageView!
-    var starIcon: UIImageView!
+//    var circle: UIImageView!
+//    var starIcon: UIImageView!
+    var favoritesButton: UIButton!
+    
     
     // DRUGA POLOVICA
     var overviewLabel: UILabel!
     var descriptionText: UILabel!
+    var overviewSectionView: OverviewView!
     var topFirst: UILabel!
     var topSecond: UILabel!
     var topThird: UILabel!
     var bottomFirst: UILabel!
     var bottomSecond: UILabel!
     var bottomThird: UILabel!
-    
-    init() {
-        super.init(nibName: nil, bundle: nil)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -112,14 +107,20 @@ class MovieDetailsViewController: UIViewController {
         durationLabel.textColor = .white
         view.addSubview(durationLabel)
         
-        let config = UIImage.SymbolConfiguration(pointSize: 32)
-        let circleImage = UIImage(systemName: "circle.fill", withConfiguration: config)?.withTintColor(.gray, renderingMode: .alwaysOriginal)
-        circle = UIImageView(image: circleImage)
-        view.addSubview(circle)
+//        let config = UIImage.SymbolConfiguration(pointSize: 32)
+//        let circleImage = UIImage(systemName: "circle.fill", withConfiguration: config)?.withTintColor(.gray, renderingMode: .alwaysOriginal)
+//        circle = UIImageView(image: circleImage)
+//        view.addSubview(circle)
         
         let starImage = UIImage(systemName: "star")?.withTintColor(.white, renderingMode: .alwaysOriginal)
-        starIcon = UIImageView(image: starImage)
-        view.addSubview(starIcon)
+//        starIcon = UIImageView(image: starImage)
+//        view.addSubview(starIcon)
+        
+        favoritesButton = UIButton()
+        favoritesButton.setImage(starImage, for: .normal)
+        favoritesButton.backgroundColor = .gray
+        favoritesButton.layer.cornerRadius = 16
+        view.addSubview(favoritesButton)
         
         // DRUGA POLOVICA
         overviewLabel = UILabel()
@@ -134,6 +135,9 @@ class MovieDetailsViewController: UIViewController {
         descriptionText.numberOfLines = 0
         view.addSubview(descriptionText)
         
+//        overviewSectionView = OverviewView()
+//        view.addSubview(overviewSectionView)
+        
         boldAttribute = [
             NSAttributedString.Key.font: UIFont(name: "HelveticaNeue-Bold", size: 14)!
         ]
@@ -141,7 +145,7 @@ class MovieDetailsViewController: UIViewController {
             NSAttributedString.Key.font: UIFont(name: "HelveticaNeue-Light", size: 14)!
         ]
         
-        boldText = NSAttributedString(string: "Don Heck\n", attributes: boldAttribute)
+        boldText = NSAttributedString(string: "Don HeckHeckHeckHeckHeckHeck\n", attributes: boldAttribute)
         regularText = NSAttributedString(string: "Characters", attributes: regularAttribute)
         var text = NSMutableAttributedString()
         text.append(boldText)
@@ -187,7 +191,7 @@ class MovieDetailsViewController: UIViewController {
         text.append(boldText)
         text.append(regularText)
         bottomSecond = UILabel()
-        bottomSecond.attributedText = text
+//        bottomSecond.attributedText = text
         bottomSecond.numberOfLines = 0
         view.addSubview(bottomSecond)
         
@@ -221,11 +225,14 @@ class MovieDetailsViewController: UIViewController {
         shortDescription.autoPinEdge(toSuperviewSafeArea: .leading, withInset: 18)
         shortDescription.autoPinEdge(.top, to: .bottom, of: movieNameLabel, withOffset: 3)
         
-        circle.autoPinEdge(.top, to: .bottom, of: shortDescription, withOffset: 15)
-        circle.autoPinEdge(toSuperviewSafeArea: .leading, withInset: 18)
+        favoritesButton.autoSetDimensions(to: CGSize(width: 32, height: 32))
+        favoritesButton.autoPinEdge(.top, to: .bottom, of: shortDescription, withOffset: 15)
+        favoritesButton.autoPinEdge(toSuperviewSafeArea: .leading, withInset: 18)
         
-        starIcon.autoPinEdge(.top, to: .top, of: circle, withOffset: 9)
-        starIcon.autoPinEdge(.leading, to: .leading, of: circle, withOffset: 9)
+//        starIcon.auto.autoAlignAxis(.vertical, toSameAxisOf: circle)
+//        starIcon.autoAlignAxis(.horizontal, toSameAxisOf: circle)
+//        starIcon.autoPinEdge(.top, to: .top, of: circle, withOffset: 9)
+//        starIcon.autoPinEdge(.leading, to: .leading, of: circle, withOffset: 9)
         
         // DRUGA POLOVICA
         overviewLabel.autoPinEdge(toSuperviewSafeArea: .leading, withInset: 18)
