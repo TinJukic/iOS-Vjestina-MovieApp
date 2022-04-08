@@ -28,6 +28,8 @@ class WhatsPopularView: UIView {
     var onTVButton: UIButton!
     var forRentButton: UIButton!
     var inTheatersButton: UIButton!
+    var whatsPopularStackView: UIStackView!
+    var moviesCollectionView: UICollectionView!
     
     @objc func streamingButtonPressed() {
         print("Streaming button")
@@ -44,11 +46,23 @@ class WhatsPopularView: UIView {
         forRentButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
     }
     
+    @objc func inTheatersButtonPressed() {
+        print("In theaters button")
+        inTheatersButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+    }
+    
     func buildViews() {
         whatsPopularLabel = UILabel()
         whatsPopularLabel.text = "What's popular"
         whatsPopularLabel.font = UIFont.boldSystemFont(ofSize: 20)
         self.addSubview(whatsPopularLabel)
+        
+        whatsPopularStackView = UIStackView()
+        whatsPopularStackView.axis = .horizontal
+        whatsPopularStackView.alignment = .fill
+        whatsPopularStackView.distribution = .fillEqually
+        whatsPopularStackView.spacing = 5
+        self.addSubview(whatsPopularStackView)
         
         streamingButton = UIButton()
         streamingButton.setTitle("Streaming", for: .normal)
@@ -56,21 +70,30 @@ class WhatsPopularView: UIView {
         streamingButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         streamingButton.addTarget(self, action: #selector(streamingButtonPressed), for: .touchUpInside)
         streamingButton.isHidden = false
-        self.addSubview(streamingButton)
+        whatsPopularStackView.addArrangedSubview(streamingButton)
         
         onTVButton = UIButton()
         onTVButton.setTitle("On TV", for: .normal)
         onTVButton.setTitleColor(.black, for: .normal)
         onTVButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         onTVButton.addTarget(self, action: #selector(onTVButtonPressed), for: .touchUpInside)
-        self.addSubview(onTVButton)
+        whatsPopularStackView.addArrangedSubview(onTVButton)
         
         forRentButton = UIButton()
         forRentButton.setTitle("For rent", for: .normal)
         forRentButton.setTitleColor(.black, for: .normal)
         forRentButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         forRentButton.addTarget(self, action: #selector(forRentButtonPressed), for: .touchUpInside)
-        self.addSubview(forRentButton)
+        whatsPopularStackView.addArrangedSubview(forRentButton)
+        
+        inTheatersButton = UIButton()
+        inTheatersButton.setTitle("In theaters", for: .normal)
+        inTheatersButton.setTitleColor(.black, for: .normal)
+        inTheatersButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
+        inTheatersButton.addTarget(self, action: #selector(inTheatersButtonPressed), for: .touchUpInside)
+        whatsPopularStackView.addArrangedSubview(inTheatersButton)
+        
+        moviesCollectionView = UICollectionView()
     }
     
     func addConstraints() {
@@ -78,16 +101,8 @@ class WhatsPopularView: UIView {
         whatsPopularLabel.autoPinEdge(toSuperviewSafeArea: .trailing, withInset: 0)
         whatsPopularLabel.autoPinEdge(toSuperviewSafeArea: .top, withInset: 0)
         
-        streamingButton.autoPinEdge(toSuperviewSafeArea: .leading, withInset: 0)
-        streamingButton.autoPinEdge(.top, to: .bottom, of: whatsPopularLabel, withOffset: 8)
-        streamingButton.autoSetDimensions(to: CGSize(width: 75, height: 20))
-        
-        onTVButton.autoPinEdge(.top, to: .bottom, of: whatsPopularLabel, withOffset: 8)
-        onTVButton.autoPinEdge(.leading, to: .trailing, of: streamingButton, withOffset: 22)
-        onTVButton.autoSetDimensions(to: CGSize(width: 50, height: 20))
-        
-        forRentButton.autoPinEdge(.top, to: .bottom, of: whatsPopularLabel, withOffset: 8)
-        forRentButton.autoPinEdge(.leading, to: .trailing, of: onTVButton, withOffset: 23)
-        forRentButton.autoSetDimensions(to: CGSize(width: 60, height: 20))
+        whatsPopularStackView.autoPinEdge(toSuperviewSafeArea: .leading, withInset: 0)
+        whatsPopularStackView.autoPinEdge(toSuperviewSafeArea: .trailing, withInset: 0)
+        whatsPopularStackView.autoPinEdge(.top, to: .bottom, of: whatsPopularLabel, withOffset: 8)
     }
 }

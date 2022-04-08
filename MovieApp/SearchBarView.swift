@@ -74,6 +74,7 @@ class SearchBarView: UIView, UITextFieldDelegate {
         self.xButton.isHidden = true
         self.cancelButton.isHidden = true
         textField.text = "Search"
+        textField.resignFirstResponder()
     }
     
     func buildViews() {

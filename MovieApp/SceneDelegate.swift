@@ -23,6 +23,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 //        window!.rootViewController = vc
         let vc = MovieListViewController()
         let navigationController = UINavigationController(rootViewController: vc)
+        navigationController.navigationBar.barTintColor = .systemBlue
+        navigationController.navigationBar.tintColor = .systemBlue
         window!.rootViewController = navigationController
         window?.makeKeyAndVisible()
     }

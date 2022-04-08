@@ -18,14 +18,6 @@ class MovieListViewController: UIViewController {
         
         view.backgroundColor = .white
         navigationItem.title = "TMDB"
-//        navigationController?.navigationBar.tintColor = .systemBlue
-//        navigationController?.navigationBar.barTintColor = .systemBlue
-        navigationController?.navigationBar.backgroundColor = .systemBlue
-//        navigationController?.toolbar.tintColor = .systemBlue
-//        navigationController?.toolbar.backgroundColor = .systemBlue
-//        tabBarController?.tabBar.tintColor = UIColor.yellow
-//        self.navigationController?.navigationBar.barTintColor = .red
-//        self.navigationController?.navigationBar.tintColor = .green
         
         buildViews()
         addConstraints()
