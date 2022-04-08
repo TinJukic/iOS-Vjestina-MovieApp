@@ -9,11 +9,14 @@ import Foundation
 import UIKit
 import PureLayout
 
+// Kako dodati UICollectionView na moj view?
+// Primjer prepisan iz skripte
+
 class WhatsPopularView: UIView {
     init() {
         super.init(frame: .zero)
         
-        backgroundColor = .lightGray
+        backgroundColor = .white
         
         buildViews()
         addConstraints()
@@ -24,13 +27,14 @@ class WhatsPopularView: UIView {
     }
     
     var whatsPopularLabel: UILabel!
-    var streamingButton: UIButton!
+    @objc var streamingButton: UIButton!
     var onTVButton: UIButton!
     var forRentButton: UIButton!
     var inTheatersButton: UIButton!
     var whatsPopularStackView: UIStackView!
     var moviesCollectionView: UICollectionView!
     var buttonList:[UIButton] = []
+    let cellIdentifier = "cellId"
     
     func unboldButtons(boldedButton: UIButton) {
         buttonList.forEach({
@@ -77,12 +81,15 @@ class WhatsPopularView: UIView {
         whatsPopularStackView.spacing = 5
         self.addSubview(whatsPopularStackView)
         
+//        UISegmentedControll umjesto UIButtona
+        
         streamingButton = UIButton()
         streamingButton.setTitle("Streaming", for: .normal)
         streamingButton.setTitleColor(.black, for: .normal)
         streamingButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         streamingButton.addTarget(self, action: #selector(streamingButtonPressed), for: .touchUpInside)
         streamingButton.isHidden = false
+        streamingButton.isUserInteractionEnabled = true
         buttonList.append(streamingButton)
         whatsPopularStackView.addArrangedSubview(streamingButton)
         
@@ -110,7 +117,17 @@ class WhatsPopularView: UIView {
         buttonList.append(inTheatersButton)
         whatsPopularStackView.addArrangedSubview(inTheatersButton)
         
-        moviesCollectionView = UICollectionView()
+        let flowLayout = UICollectionViewFlowLayout()
+        flowLayout.scrollDirection = .vertical
+        moviesCollectionView = UICollectionView(
+            frame: CGRect(x: 0, y: 0, width: self.bounds.width, height: self.bounds.height),
+            collectionViewLayout: flowLayout
+        )
+        moviesCollectionView.backgroundColor = .white
+        self.addSubview(moviesCollectionView)
+        moviesCollectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: cellIdentifier)
+        moviesCollectionView.dataSource = self
+        moviesCollectionView.delegate = self
     }
     
     func addConstraints() {
@@ -121,5 +138,36 @@ class WhatsPopularView: UIView {
         whatsPopularStackView.autoPinEdge(toSuperviewSafeArea: .leading, withInset: 0)
         whatsPopularStackView.autoPinEdge(toSuperviewSafeArea: .trailing, withInset: 0)
         whatsPopularStackView.autoPinEdge(.top, to: .bottom, of: whatsPopularLabel, withOffset: 8)
+        
+        moviesCollectionView.autoPinEdgesToSuperviewEdges()
+    }
+}
+
+extension WhatsPopularView: UICollectionViewDataSource {
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 1
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 10
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath)
+        cell.backgroundColor = .blue
+        return cell
+    }
+}
+
+extension WhatsPopularView: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+//        logic when cell is selected
+    }
+}
+
+extension WhatsPopularView: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let row = indexPath.row + 1
+        return CGSize(width: row * 10, height: row * 10)
     }
 }

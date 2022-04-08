@@ -9,9 +9,18 @@ import Foundation
 import UIKit
 import PureLayout
 
+protocol SearchBarViewDelegate {
+    func didSelectSearchBar()
+    func didDeselectSearchBar()
+}
+
 class SearchBarView: UIView, UITextFieldDelegate {
-    init() {
+    var delegate: SearchBarViewDelegate?
+    
+    init(delegate: SearchBarViewDelegate?) {
         super.init(frame: .zero)
+        
+        self.delegate = delegate
         
         backgroundColor = .lightGray
         
@@ -37,22 +46,16 @@ class SearchBarView: UIView, UITextFieldDelegate {
         return true
     }
     
-    override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
-
-    }
-    
     func textFieldDidBeginEditing(_ textField: UITextField) {
         // change properties
         print("Usao sam tu")
         self.xButton.isHidden = false
         self.cancelButton.isHidden = false
+        delegate?.didSelectSearchBar()
     }
     
-    private func textFieldShouldEndEditing(_ textField: UITextField) {
-        print("A sad sam tu")
-//        self.xButton.isHidden = true
-//        self.cancelButton.isHidden = true
-//        textField.text = "Search"
+    func textFieldDidEndEditing(_ textField: UITextField) {
+//        some code here
     }
     
     func textFieldShouldClear(_ textField: UITextField) -> Bool {
@@ -73,8 +76,9 @@ class SearchBarView: UIView, UITextFieldDelegate {
         print("Cancel pritisnut!")
         self.xButton.isHidden = true
         self.cancelButton.isHidden = true
-        textField.text = "Search"
         textField.resignFirstResponder()
+        delegate?.didDeselectSearchBar()
+        textField.text = "Search"
     }
     
     func buildViews() {
@@ -120,7 +124,6 @@ class SearchBarView: UIView, UITextFieldDelegate {
 
         cancelButton.autoPinEdge(toSuperviewSafeArea: .trailing, withInset: 18)
         cancelButton.autoPinEdge(toSuperviewSafeArea: .top, withInset: 16.75)
-//        cancelButton.autoPinEdge(.leading, to: .trailing, of: xButton, withOffset: 28.75)
         cancelButton.autoSetDimensions(to: CGSize(width: 55, height: 10))
     }
 }
