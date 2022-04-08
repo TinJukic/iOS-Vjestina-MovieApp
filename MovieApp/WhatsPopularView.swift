@@ -30,25 +30,38 @@ class WhatsPopularView: UIView {
     var inTheatersButton: UIButton!
     var whatsPopularStackView: UIStackView!
     var moviesCollectionView: UICollectionView!
+    var buttonList:[UIButton] = []
+    
+    func unboldButtons(boldedButton: UIButton) {
+        buttonList.forEach({
+            if($0 != boldedButton) {
+                $0.titleLabel?.font = UIFont.systemFont(ofSize: 16)
+            }
+        })
+    }
     
     @objc func streamingButtonPressed() {
         print("Streaming button")
         streamingButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+        unboldButtons(boldedButton: streamingButton)
     }
     
     @objc func onTVButtonPressed() {
         print("On TV button")
         onTVButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+        unboldButtons(boldedButton: onTVButton)
     }
     
     @objc func forRentButtonPressed() {
         print("For rent button")
         forRentButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+        unboldButtons(boldedButton: forRentButton)
     }
     
     @objc func inTheatersButtonPressed() {
         print("In theaters button")
         inTheatersButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+        unboldButtons(boldedButton: inTheatersButton)
     }
     
     func buildViews() {
@@ -70,6 +83,7 @@ class WhatsPopularView: UIView {
         streamingButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         streamingButton.addTarget(self, action: #selector(streamingButtonPressed), for: .touchUpInside)
         streamingButton.isHidden = false
+        buttonList.append(streamingButton)
         whatsPopularStackView.addArrangedSubview(streamingButton)
         
         onTVButton = UIButton()
@@ -77,6 +91,7 @@ class WhatsPopularView: UIView {
         onTVButton.setTitleColor(.black, for: .normal)
         onTVButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         onTVButton.addTarget(self, action: #selector(onTVButtonPressed), for: .touchUpInside)
+        buttonList.append(onTVButton)
         whatsPopularStackView.addArrangedSubview(onTVButton)
         
         forRentButton = UIButton()
@@ -84,6 +99,7 @@ class WhatsPopularView: UIView {
         forRentButton.setTitleColor(.black, for: .normal)
         forRentButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         forRentButton.addTarget(self, action: #selector(forRentButtonPressed), for: .touchUpInside)
+        buttonList.append(forRentButton)
         whatsPopularStackView.addArrangedSubview(forRentButton)
         
         inTheatersButton = UIButton()
@@ -91,6 +107,7 @@ class WhatsPopularView: UIView {
         inTheatersButton.setTitleColor(.black, for: .normal)
         inTheatersButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         inTheatersButton.addTarget(self, action: #selector(inTheatersButtonPressed), for: .touchUpInside)
+        buttonList.append(inTheatersButton)
         whatsPopularStackView.addArrangedSubview(inTheatersButton)
         
         moviesCollectionView = UICollectionView()
