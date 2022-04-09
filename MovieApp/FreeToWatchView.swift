@@ -13,7 +13,7 @@ class FreeToWatchView: UIView {
     init() {
         super.init(frame: .zero)
         
-        backgroundColor = .white
+        backgroundColor = .systemGreen
         
         buildViews()
         addConstraints()
@@ -46,6 +46,7 @@ class FreeToWatchView: UIView {
     @objc func tvButtonPressed() {
         print("TV button")
         tvButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+        unboldButtons(boldedButton: tvButton)
     }
     
     func buildViews() {
@@ -64,7 +65,7 @@ class FreeToWatchView: UIView {
         moviesButton = UIButton()
         moviesButton.setTitle("Movies", for: .normal)
         moviesButton.setTitleColor(.black, for: .normal)
-        moviesButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
+        moviesButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
         moviesButton.addTarget(self, action: #selector(moviesButtonPressed), for: .touchUpInside)
         buttonList.append(moviesButton)
         freeToWatchStackView.addArrangedSubview(moviesButton)
@@ -84,7 +85,8 @@ class FreeToWatchView: UIView {
         freeToWatchLabel.autoPinEdge(toSuperviewSafeArea: .top, withInset: 0)
         
         freeToWatchStackView.autoPinEdge(toSuperviewSafeArea: .leading, withInset: 0)
-        freeToWatchStackView.autoPinEdge(toSuperviewEdge: .trailing, withInset: 0)
+        freeToWatchStackView.autoPinEdge(toSuperviewSafeArea: .trailing, withInset: 0)
+        freeToWatchStackView.autoPinEdge(toSuperviewSafeArea: .bottom, withInset: 0)
         freeToWatchStackView.autoPinEdge(.top, to: .bottom, of: freeToWatchLabel, withOffset: 8)
     }
 }

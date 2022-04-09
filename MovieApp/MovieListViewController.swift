@@ -42,7 +42,7 @@ class MovieListViewController: UIViewController {
         
         stackView = UIStackView()
         stackView.axis = .vertical
-        stackView.alignment = .leading
+        stackView.alignment = .fill
         stackView.distribution = .fillEqually
         stackView.spacing = 5
         view.addSubview(stackView)
@@ -69,14 +69,6 @@ class MovieListViewController: UIViewController {
         stackView.autoPinEdge(toSuperviewSafeArea: .leading, withInset: 18)
         stackView.autoPinEdge(toSuperviewSafeArea: .trailing, withInset: 18)
         stackView.autoPinEdge(.top, to: .bottom, of: searchBarView, withOffset: 20)
-        
-//        whatsPopularView.autoPinEdge(toSuperviewEdge: .leading, withInset: 18)
-//        whatsPopularView.autoPinEdge(toSuperviewEdge: .trailing, withInset: 18)
-//        whatsPopularView.autoPinEdge(.top, to: .bottom, of: searchBarView, withOffset: 20)
-//
-//        freeToWatchView.autoPinEdge(toSuperviewSafeArea: .leading, withInset: 18)
-//        freeToWatchView.autoPinEdge(toSuperviewSafeArea: .trailing, withInset: 18)
-//        freeToWatchView.autoPinEdge(.top, to: .bottom, of: whatsPopularView, withOffset: 200)
         
         searchMoviesView.autoPinEdge(toSuperviewSafeArea: .leading, withInset: 18)
         searchMoviesView.autoPinEdge(toSuperviewSafeArea: .trailing, withInset: 18)

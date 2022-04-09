@@ -16,7 +16,7 @@ class WhatsPopularView: UIView {
     init() {
         super.init(frame: .zero)
         
-        backgroundColor = .white
+        backgroundColor = .systemYellow
         
         buildViews()
         addConstraints()
@@ -69,6 +69,8 @@ class WhatsPopularView: UIView {
     }
     
     func buildViews() {
+        isUserInteractionEnabled = true
+        
         whatsPopularLabel = UILabel()
         whatsPopularLabel.text = "What's popular"
         whatsPopularLabel.font = UIFont.boldSystemFont(ofSize: 20)
@@ -86,10 +88,8 @@ class WhatsPopularView: UIView {
         streamingButton = UIButton()
         streamingButton.setTitle("Streaming", for: .normal)
         streamingButton.setTitleColor(.black, for: .normal)
-        streamingButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
+        streamingButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
         streamingButton.addTarget(self, action: #selector(streamingButtonPressed), for: .touchUpInside)
-        streamingButton.isHidden = false
-        streamingButton.isUserInteractionEnabled = true
         buttonList.append(streamingButton)
         whatsPopularStackView.addArrangedSubview(streamingButton)
         
@@ -128,9 +128,12 @@ class WhatsPopularView: UIView {
         moviesCollectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: cellIdentifier)
         moviesCollectionView.dataSource = self
         moviesCollectionView.delegate = self
+        moviesCollectionView.backgroundColor = .systemRed
     }
     
     func addConstraints() {
+        self.bounds.size.height = 100
+        
         whatsPopularLabel.autoPinEdge(toSuperviewSafeArea: .leading, withInset: 0)
         whatsPopularLabel.autoPinEdge(toSuperviewSafeArea: .trailing, withInset: 0)
         whatsPopularLabel.autoPinEdge(toSuperviewSafeArea: .top, withInset: 0)
@@ -139,7 +142,11 @@ class WhatsPopularView: UIView {
         whatsPopularStackView.autoPinEdge(toSuperviewSafeArea: .trailing, withInset: 0)
         whatsPopularStackView.autoPinEdge(.top, to: .bottom, of: whatsPopularLabel, withOffset: 8)
         
-        moviesCollectionView.autoPinEdgesToSuperviewEdges()
+//        moviesCollectionView.autoPinEdgesToSuperviewEdges()
+        moviesCollectionView.autoPinEdge(toSuperviewSafeArea: .leading, withInset: 0)
+        moviesCollectionView.autoPinEdge(toSuperviewSafeArea: .trailing, withInset: 0)
+        moviesCollectionView.autoPinEdge(toSuperviewSafeArea: .bottom, withInset: 0)
+        moviesCollectionView.autoPinEdge(.top, to: .bottom, of: whatsPopularStackView, withOffset: 20)
     }
 }
 
