@@ -24,7 +24,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let vc = MovieListViewController()
         let navigationController = UINavigationController(rootViewController: vc)
         window!.rootViewController = navigationController
-//        let vc = ProbaTableView(coder: NSCoder.init())
+//        let vc = InitialViewController()
 //        window!.rootViewController = vc
         window?.makeKeyAndVisible()
     }

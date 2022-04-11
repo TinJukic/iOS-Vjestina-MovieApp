@@ -35,6 +35,8 @@ class WhatsPopularView: UIView {
     var moviesCollectionView: UICollectionView!
     var buttonList:[UIButton] = []
     let cellIdentifier = "cellId"
+    var cellHeight = 0.0
+    var selectedCategory = "Streaming"
     
     func unboldButtons(boldedButton: UIButton) {
         buttonList.forEach({
@@ -46,24 +48,28 @@ class WhatsPopularView: UIView {
     
     @objc func streamingButtonPressed() {
         print("Streaming button")
+        selectedCategory = "Streaming"
         streamingButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
         unboldButtons(boldedButton: streamingButton)
     }
     
     @objc func onTVButtonPressed() {
         print("On TV button")
+        selectedCategory = "On TV"
         onTVButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
         unboldButtons(boldedButton: onTVButton)
     }
     
     @objc func forRentButtonPressed() {
         print("For rent button")
+        selectedCategory = "For rent"
         forRentButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
         unboldButtons(boldedButton: forRentButton)
     }
     
     @objc func inTheatersButtonPressed() {
         print("In theaters button")
+        selectedCategory = "In theaters"
         inTheatersButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
         unboldButtons(boldedButton: inTheatersButton)
     }
@@ -118,22 +124,18 @@ class WhatsPopularView: UIView {
         whatsPopularStackView.addArrangedSubview(inTheatersButton)
         
         let flowLayout = UICollectionViewFlowLayout()
-        flowLayout.scrollDirection = .vertical
+        flowLayout.scrollDirection = .horizontal
         moviesCollectionView = UICollectionView(
             frame: CGRect(x: 0, y: 0, width: self.bounds.width, height: self.bounds.height),
             collectionViewLayout: flowLayout
         )
-        moviesCollectionView.backgroundColor = .white
         self.addSubview(moviesCollectionView)
         moviesCollectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: cellIdentifier)
         moviesCollectionView.dataSource = self
         moviesCollectionView.delegate = self
-        moviesCollectionView.backgroundColor = .systemRed
     }
     
     func addConstraints() {
-        self.bounds.size.height = 100
-        
         whatsPopularLabel.autoPinEdge(toSuperviewSafeArea: .leading, withInset: 0)
         whatsPopularLabel.autoPinEdge(toSuperviewSafeArea: .trailing, withInset: 0)
         whatsPopularLabel.autoPinEdge(toSuperviewSafeArea: .top, withInset: 0)
@@ -142,11 +144,11 @@ class WhatsPopularView: UIView {
         whatsPopularStackView.autoPinEdge(toSuperviewSafeArea: .trailing, withInset: 0)
         whatsPopularStackView.autoPinEdge(.top, to: .bottom, of: whatsPopularLabel, withOffset: 8)
         
-//        moviesCollectionView.autoPinEdgesToSuperviewEdges()
         moviesCollectionView.autoPinEdge(toSuperviewSafeArea: .leading, withInset: 0)
         moviesCollectionView.autoPinEdge(toSuperviewSafeArea: .trailing, withInset: 0)
         moviesCollectionView.autoPinEdge(toSuperviewSafeArea: .bottom, withInset: 0)
-        moviesCollectionView.autoPinEdge(.top, to: .bottom, of: whatsPopularStackView, withOffset: 20)
+        moviesCollectionView.autoPinEdge(.top, to: .bottom, of: whatsPopularStackView, withOffset: 8)
+        moviesCollectionView.autoSetDimension(.height, toSize: 180, relation: .greaterThanOrEqual)
     }
 }
 
@@ -161,7 +163,10 @@ extension WhatsPopularView: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath)
-        cell.backgroundColor = .blue
+        cell.backgroundColor = .white
+        let contentForCell = MovieCollectionViewCell(index: indexPath.row, category: selectedCategory)
+        cell.contentView.addSubview(contentForCell)
+        cellHeight = cell.bounds.height
         return cell
     }
 }
@@ -174,7 +179,6 @@ extension WhatsPopularView: UICollectionViewDelegate {
 
 extension WhatsPopularView: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let row = indexPath.row + 1
-        return CGSize(width: row * 10, height: row * 10)
+        return CGSize(width: 120, height: 180)
     }
 }

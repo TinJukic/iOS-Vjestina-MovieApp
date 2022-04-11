@@ -11,6 +11,9 @@
 		5233C0D22800595E007F26EE /* FreeToWatchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5233C0D12800595E007F26EE /* FreeToWatchView.swift */; };
 		5233C0D428008369007F26EE /* SearchMoviesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5233C0D328008369007F26EE /* SearchMoviesView.swift */; };
 		524B327427FDECF100E8EDC2 /* MovieAppData in Frameworks */ = {isa = PBXBuildFile; productRef = 524B327327FDECF100E8EDC2 /* MovieAppData */; };
+		5260B00728043A890066DBE9 /* SearchMoviesViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5260B00628043A890066DBE9 /* SearchMoviesViewCell.swift */; };
+		527E31502803027F0006B0E5 /* InitialViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 527E314F2803027F0006B0E5 /* InitialViewController.swift */; };
+		527E315228031AEC0006B0E5 /* MovieCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 527E315128031AEC0006B0E5 /* MovieCollectionViewCell.swift */; };
 		52873E152800C21C00F6A6B3 /* ProbaTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52873E142800C21C00F6A6B3 /* ProbaTableView.swift */; };
 		52C4765127E7964C00DBAD72 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52C4765027E7964C00DBAD72 /* AppDelegate.swift */; };
 		52C4765327E7964C00DBAD72 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52C4765227E7964C00DBAD72 /* SceneDelegate.swift */; };
@@ -27,6 +30,9 @@
 		521B02BD27FC962B005C709A /* OverviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverviewView.swift; sourceTree = "<group>"; };
 		5233C0D12800595E007F26EE /* FreeToWatchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreeToWatchView.swift; sourceTree = "<group>"; };
 		5233C0D328008369007F26EE /* SearchMoviesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchMoviesView.swift; sourceTree = "<group>"; };
+		5260B00628043A890066DBE9 /* SearchMoviesViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchMoviesViewCell.swift; sourceTree = "<group>"; };
+		527E314F2803027F0006B0E5 /* InitialViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitialViewController.swift; sourceTree = "<group>"; };
+		527E315128031AEC0006B0E5 /* MovieCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieCollectionViewCell.swift; sourceTree = "<group>"; };
 		52873E142800C21C00F6A6B3 /* ProbaTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProbaTableView.swift; sourceTree = "<group>"; };
 		52C4764D27E7964C00DBAD72 /* MovieApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MovieApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		52C4765027E7964C00DBAD72 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -85,6 +91,9 @@
 				5233C0D12800595E007F26EE /* FreeToWatchView.swift */,
 				5233C0D328008369007F26EE /* SearchMoviesView.swift */,
 				52873E142800C21C00F6A6B3 /* ProbaTableView.swift */,
+				527E314F2803027F0006B0E5 /* InitialViewController.swift */,
+				527E315128031AEC0006B0E5 /* MovieCollectionViewCell.swift */,
+				5260B00628043A890066DBE9 /* SearchMoviesViewCell.swift */,
 			);
 			path = MovieApp;
 			sourceTree = "<group>";
@@ -169,6 +178,9 @@
 			files = (
 				52E9848427F9E05600D7990A /* SearchBarView.swift in Sources */,
 				52C4766527E7983F00DBAD72 /* MovieDetailsViewController.swift in Sources */,
+				527E31502803027F0006B0E5 /* InitialViewController.swift in Sources */,
+				527E315228031AEC0006B0E5 /* MovieCollectionViewCell.swift in Sources */,
+				5260B00728043A890066DBE9 /* SearchMoviesViewCell.swift in Sources */,
 				52C4765127E7964C00DBAD72 /* AppDelegate.swift in Sources */,
 				52C4765327E7964C00DBAD72 /* SceneDelegate.swift in Sources */,
 				5233C0D22800595E007F26EE /* FreeToWatchView.swift in Sources */,
