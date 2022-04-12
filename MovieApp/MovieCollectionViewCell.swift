@@ -13,17 +13,17 @@ import MovieAppData
 class MovieCollectionViewCell: UIView {
     var moviePicture: UIImageView!
     var likeButton: UIButton!
-    var index = 0
-    var category = ""
+    var pictureURL = ""
     var moviesList: [MovieModel] = []
+    var cell: UICollectionViewCell!
     
-    init(index: Int, category: String) {
+    init(pictureURL: String, cell: UICollectionViewCell) {
         super.init(frame: .zero)
         
         self.backgroundColor = .systemGreen
-        self.index = index
-        self.category = category
+        self.pictureURL = pictureURL
         self.moviesList = Movies.all()
+        self.cell = cell
         
         buildViews()
         addConstraints()
@@ -35,7 +35,7 @@ class MovieCollectionViewCell: UIView {
     
     func buildViews() {
         // potrebno je dohvatiti sliku filma i staviti ju na view od kraja do kraja
-        self.autoSetDimensions(to: CGSize(width: 120, height: 180))
+        self.autoSetDimensions(to: CGSize(width: cell.bounds.width, height: cell.bounds.height))
         
 //        slika
 //        print(moviesList)

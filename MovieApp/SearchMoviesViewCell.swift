@@ -15,14 +15,18 @@ class SearchMoviesViewCell: UIView {
     var movieTitle: UILabel!
     var movieDescription: UILabel!
     var index = 0
-    var moviesList: [MovieModel] = []
+    var cell: UICollectionViewCell!
     
-    init(index: Int) {
+    init(index: Int, cell: UICollectionViewCell) {
         super.init(frame: .zero)
         
-        self.backgroundColor = .systemGreen
+        self.backgroundColor = .white
         
         self.index = index
+        self.cell = cell
+        
+        buildViews()
+        addConstraints()
     }
     
     required init?(coder: NSCoder) {
@@ -30,16 +34,52 @@ class SearchMoviesViewCell: UIView {
     }
     
     func buildViews() {
+        movieImage = UIImageView()
+        do {
+            let url = URL(string: Movies.all()[index].imageUrl)!
+            let data = try Data(contentsOf: url)
+            movieImage.image = UIImage(data: data)
+        }
+        catch{
+            print(error)
+        }
+        self.addSubview(movieImage)
+        
         movieTitle = UILabel()
-        movieTitle.text = "Tu sam"
+        movieTitle.text = Movies.all()[index].title + " (" + String(Movies.all()[index].year) + ")"
+        movieTitle.font = UIFont.boldSystemFont(ofSize: 16)
+        movieTitle.numberOfLines = 0
         self.addSubview(movieTitle)
+        
+        print(Movies.all()[index].title)
+        print(Movies.all()[index].year)
+        print(Movies.all()[index].description)
+        print()
+        
+        movieDescription = UILabel()
+        movieDescription.text = Movies.all()[index].description
+        movieDescription.font = UIFont.systemFont(ofSize: 16)
+        movieDescription.numberOfLines = 0
+        self.addSubview(movieDescription)
     }
     
     func addConstraints() {
-        self.autoSetDimensions(to: CGSize(width: 325, height: 140))
-        self.layer.cornerRadius = 10
+        self.autoSetDimensions(to: CGSize(width: cell.bounds.width, height: cell.bounds.height))
         
-        movieTitle.autoPinEdge(toSuperviewSafeArea: .leading, withInset: 10)
-        movieTitle.autoPinEdge(toSuperviewSafeArea: .top, withInset: 10)
+        movieImage.autoPinEdge(toSuperviewSafeArea: .top, withInset: 0)
+        movieImage.autoPinEdge(toSuperviewSafeArea: .leading, withInset: 0)
+        movieImage.autoSetDimensions(to: CGSize(width: 100, height: 140))
+        movieImage.layer.cornerRadius = 10
+        
+        movieTitle.autoPinEdge(.leading, to: .trailing, of: movieImage, withOffset: 15)
+        movieTitle.autoPinEdge(toSuperviewSafeArea: .top, withInset: 13)
+        movieTitle.autoPinEdge(toSuperviewSafeArea: .trailing, withInset: 10)
+        
+        movieDescription.autoPinEdge(toSuperviewSafeArea: .trailing, withInset: 10)
+        movieDescription.autoPinEdge(toSuperviewSafeArea: .bottom, withInset: 15)
+        movieDescription.autoPinEdge(.top, to: .bottom, of: movieTitle, withOffset: 5)
+        movieDescription.autoPinEdge(.leading, to: .trailing, of: movieImage, withOffset: 15)
+        
+        self.layer.cornerRadius = 10
     }
 }

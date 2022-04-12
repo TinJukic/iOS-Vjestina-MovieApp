@@ -109,7 +109,7 @@ class FreeToWatchView: UIView {
         moviesCollectionView.autoPinEdge(toSuperviewSafeArea: .trailing, withInset: 0)
         moviesCollectionView.autoPinEdge(toSuperviewSafeArea: .bottom, withInset: 0)
         moviesCollectionView.autoPinEdge(.top, to: .bottom, of: freeToWatchStackView, withOffset: 8)
-        moviesCollectionView.autoSetDimension(.height, toSize: 180, relation: .greaterThanOrEqual)
+        moviesCollectionView.autoSetDimension(.height, toSize: 180)
     }
 }
 
@@ -125,7 +125,10 @@ extension FreeToWatchView: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath)
         cell.backgroundColor = .white
-        let contentForCell = MovieCollectionViewCell(index: indexPath.row, category: selectedCategory)
+        
+        var pictureURL = ""
+        
+        let contentForCell = MovieCollectionViewCell(pictureURL: pictureURL, cell: cell)
         cell.contentView.addSubview(contentForCell)
         cellHeight = cell.bounds.height
         return cell

@@ -8,6 +8,7 @@
 import Foundation
 import UIKit
 import PureLayout
+import MovieAppData
 
 // Kako dodati UICollectionView na moj view?
 // Primjer prepisan iz skripte
@@ -164,7 +165,11 @@ extension WhatsPopularView: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath)
         cell.backgroundColor = .white
-        let contentForCell = MovieCollectionViewCell(index: indexPath.row, category: selectedCategory)
+        
+        var pictureURL = ""
+//        var moviesCategoryList = Movies.all().<MovieGroup.popular>.filters
+        
+        let contentForCell = MovieCollectionViewCell(pictureURL: pictureURL, cell: cell)
         cell.contentView.addSubview(contentForCell)
         cellHeight = cell.bounds.height
         return cell
