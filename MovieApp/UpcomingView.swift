@@ -1,19 +1,19 @@
 //
-//  FreeToWatchView.swift
+//  TrendingView.swift
 //  MovieApp
 //
-//  Created by FIVE on 08.04.2022..
+//  Created by FIVE on 14.04.2022..
 //
 
 import Foundation
 import UIKit
 import PureLayout
 
-class FreeToWatchView: UIView {
+class UpcomingView: UIView {
     init() {
         super.init(frame: .zero)
         
-        backgroundColor = .systemCyan
+        backgroundColor = .systemMint
         
         buildViews()
         addConstraints()
@@ -23,9 +23,7 @@ class FreeToWatchView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    var freeToWatchLabel: UILabel!
-    var moviesButton: UIButton!
-    var tvButton: UIButton!
+    var upcomingLabel: UILabel!
     var dramaButton: UIButton!
     var thrillerButton: UIButton!
     var horrorButton: UIButton!
@@ -35,8 +33,8 @@ class FreeToWatchView: UIView {
     var actionButton: UIButton!
     var sciFiButton: UIButton!
     var warButton: UIButton!
-    var freeToWatchStackView: UIStackView!
     var buttonList:[UIButton] = []
+    var upcomingStackView: UIStackView!
     var moviesCollectionView: UICollectionView!
     let cellIdentifier = "cellId"
     var cellHeight = 0.0
@@ -114,17 +112,17 @@ class FreeToWatchView: UIView {
     }
     
     func buildViews() {
-        freeToWatchLabel = UILabel()
-        freeToWatchLabel.text = "Free To Watch"
-        freeToWatchLabel.font = UIFont.boldSystemFont(ofSize: 20)
-        self.addSubview(freeToWatchLabel)
+        upcomingLabel = UILabel()
+        upcomingLabel.text = "Trending"
+        upcomingLabel.font = UIFont.boldSystemFont(ofSize: 20)
+        self.addSubview(upcomingLabel)
         
-        freeToWatchStackView = UIStackView()
-        freeToWatchStackView.axis = .horizontal
-        freeToWatchStackView.alignment = .fill
-        freeToWatchStackView.distribution = .fillEqually
-        freeToWatchStackView.spacing = 1
-        self.addSubview(freeToWatchStackView)
+        upcomingStackView = UIStackView()
+        upcomingStackView.axis = .horizontal
+        upcomingStackView.alignment = .fill
+        upcomingStackView.distribution = .fillEqually
+        upcomingStackView.spacing = 1
+        self.addSubview(upcomingStackView)
         
         dramaButton = UIButton()
         dramaButton.setTitle("Drama", for: .normal)
@@ -132,7 +130,7 @@ class FreeToWatchView: UIView {
         dramaButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
         dramaButton.addTarget(self, action: #selector(dramaButtonPressed), for: .touchUpInside)
         buttonList.append(dramaButton)
-        freeToWatchStackView.addArrangedSubview(dramaButton)
+        upcomingStackView.addArrangedSubview(dramaButton)
         
         thrillerButton = UIButton()
         thrillerButton.setTitle("Thriller", for: .normal)
@@ -140,7 +138,7 @@ class FreeToWatchView: UIView {
         thrillerButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         thrillerButton.addTarget(self, action: #selector(thrillerButtonPressed), for: .touchUpInside)
         buttonList.append(thrillerButton)
-        freeToWatchStackView.addArrangedSubview(thrillerButton)
+        upcomingStackView.addArrangedSubview(thrillerButton)
         
         horrorButton = UIButton()
         horrorButton.setTitle("Horror", for: .normal)
@@ -148,7 +146,7 @@ class FreeToWatchView: UIView {
         horrorButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         horrorButton.addTarget(self, action: #selector(horrorButtonPressed), for: .touchUpInside)
         buttonList.append(horrorButton)
-        freeToWatchStackView.addArrangedSubview(horrorButton)
+        upcomingStackView.addArrangedSubview(horrorButton)
         
         comedyButton = UIButton()
         comedyButton.setTitle("Comedy", for: .normal)
@@ -156,7 +154,7 @@ class FreeToWatchView: UIView {
         comedyButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         comedyButton.addTarget(self, action: #selector(comedyButtonPressed), for: .touchUpInside)
         buttonList.append(comedyButton)
-        freeToWatchStackView.addArrangedSubview(comedyButton)
+        upcomingStackView.addArrangedSubview(comedyButton)
         
         romanticComedyButton = UIButton()
         romanticComedyButton.setTitle("Romantic comedy", for: .normal)
@@ -164,7 +162,7 @@ class FreeToWatchView: UIView {
         romanticComedyButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         romanticComedyButton.addTarget(self, action: #selector(romanticComedyButtonPressed), for: .touchUpInside)
         buttonList.append(romanticComedyButton)
-        freeToWatchStackView.addArrangedSubview(romanticComedyButton)
+        upcomingStackView.addArrangedSubview(romanticComedyButton)
         
         sportButton = UIButton()
         sportButton.setTitle("Sport", for: .normal)
@@ -172,7 +170,7 @@ class FreeToWatchView: UIView {
         sportButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         sportButton.addTarget(self, action: #selector(sportButtonPressed), for: .touchUpInside)
         buttonList.append(sportButton)
-        freeToWatchStackView.addArrangedSubview(sportButton)
+        upcomingStackView.addArrangedSubview(sportButton)
         
         actionButton = UIButton()
         actionButton.setTitle("Action", for: .normal)
@@ -180,7 +178,7 @@ class FreeToWatchView: UIView {
         actionButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         actionButton.addTarget(self, action: #selector(actionButtonPressed), for: .touchUpInside)
         buttonList.append(actionButton)
-        freeToWatchStackView.addArrangedSubview(actionButton)
+        upcomingStackView.addArrangedSubview(actionButton)
         
         sciFiButton = UIButton()
         sciFiButton.setTitle("Sci-fi", for: .normal)
@@ -188,7 +186,7 @@ class FreeToWatchView: UIView {
         sciFiButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         sciFiButton.addTarget(self, action: #selector(sciFiButtonPressed), for: .touchUpInside)
         buttonList.append(sciFiButton)
-        freeToWatchStackView.addArrangedSubview(sciFiButton)
+        upcomingStackView.addArrangedSubview(sciFiButton)
         
         warButton = UIButton()
         warButton.setTitle("War", for: .normal)
@@ -196,7 +194,7 @@ class FreeToWatchView: UIView {
         warButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         warButton.addTarget(self, action: #selector(warButtonPressed), for: .touchUpInside)
         buttonList.append(warButton)
-        freeToWatchStackView.addArrangedSubview(warButton)
+        upcomingStackView.addArrangedSubview(warButton)
         
         let flowLayout = UICollectionViewFlowLayout()
         flowLayout.scrollDirection = .horizontal
@@ -211,23 +209,23 @@ class FreeToWatchView: UIView {
     }
     
     func addConstraints() {
-        freeToWatchLabel.autoPinEdge(toSuperviewSafeArea: .leading, withInset: 0)
-        freeToWatchLabel.autoPinEdge(toSuperviewSafeArea: .trailing, withInset: 0)
-        freeToWatchLabel.autoPinEdge(toSuperviewSafeArea: .top, withInset: 0)
+        upcomingLabel.autoPinEdge(toSuperviewSafeArea: .leading, withInset: 0)
+        upcomingLabel.autoPinEdge(toSuperviewSafeArea: .trailing, withInset: 0)
+        upcomingLabel.autoPinEdge(toSuperviewSafeArea: .top, withInset: 0)
         
-        freeToWatchStackView.autoPinEdge(toSuperviewSafeArea: .leading, withInset: 0)
-        freeToWatchStackView.autoPinEdge(toSuperviewSafeArea: .trailing, withInset: 0)
-        freeToWatchStackView.autoPinEdge(.top, to: .bottom, of: freeToWatchLabel, withOffset: 8)
+        upcomingStackView.autoPinEdge(toSuperviewSafeArea: .leading, withInset: 0)
+        upcomingStackView.autoPinEdge(toSuperviewSafeArea: .trailing, withInset: 0)
+        upcomingStackView.autoPinEdge(.top, to: .bottom, of: upcomingLabel, withOffset: 8)
         
         moviesCollectionView.autoPinEdge(toSuperviewSafeArea: .leading, withInset: 0)
         moviesCollectionView.autoPinEdge(toSuperviewSafeArea: .trailing, withInset: 0)
         moviesCollectionView.autoPinEdge(toSuperviewSafeArea: .bottom, withInset: 0)
-        moviesCollectionView.autoPinEdge(.top, to: .bottom, of: freeToWatchStackView, withOffset: 8)
+        moviesCollectionView.autoPinEdge(.top, to: .bottom, of: upcomingStackView, withOffset: 8)
         moviesCollectionView.autoSetDimension(.height, toSize: 180)
     }
 }
 
-extension FreeToWatchView: UICollectionViewDataSource {
+extension UpcomingView: UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
     }
@@ -249,13 +247,13 @@ extension FreeToWatchView: UICollectionViewDataSource {
     }
 }
 
-extension FreeToWatchView: UICollectionViewDelegate {
+extension UpcomingView: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 //        logic when cell is selected
     }
 }
 
-extension FreeToWatchView: UICollectionViewDelegateFlowLayout {
+extension UpcomingView: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: 120, height: 180)
     }

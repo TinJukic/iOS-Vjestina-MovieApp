@@ -37,7 +37,7 @@ class WhatsPopularView: UIView {
     var buttonList:[UIButton] = []
     let cellIdentifier = "cellId"
     var cellHeight = 0.0
-    var selectedCategory = "Streaming"
+    var selectedCategory = MovieFilter.streaming
     
     func unboldButtons(boldedButton: UIButton) {
         buttonList.forEach({
@@ -49,28 +49,28 @@ class WhatsPopularView: UIView {
     
     @objc func streamingButtonPressed() {
         print("Streaming button")
-        selectedCategory = "Streaming"
+        selectedCategory = MovieFilter.streaming
         streamingButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
         unboldButtons(boldedButton: streamingButton)
     }
     
     @objc func onTVButtonPressed() {
         print("On TV button")
-        selectedCategory = "On TV"
+        selectedCategory = MovieFilter.onTv
         onTVButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
         unboldButtons(boldedButton: onTVButton)
     }
     
     @objc func forRentButtonPressed() {
         print("For rent button")
-        selectedCategory = "For rent"
+        selectedCategory = MovieFilter.forRent
         forRentButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
         unboldButtons(boldedButton: forRentButton)
     }
     
     @objc func inTheatersButtonPressed() {
         print("In theaters button")
-        selectedCategory = "In theaters"
+        selectedCategory = MovieFilter.inTheaters
         inTheatersButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
         unboldButtons(boldedButton: inTheatersButton)
     }
@@ -87,10 +87,8 @@ class WhatsPopularView: UIView {
         whatsPopularStackView.axis = .horizontal
         whatsPopularStackView.alignment = .fill
         whatsPopularStackView.distribution = .fillEqually
-        whatsPopularStackView.spacing = 5
+        whatsPopularStackView.spacing = 1
         self.addSubview(whatsPopularStackView)
-        
-//        UISegmentedControll umjesto UIButtona
         
         streamingButton = UIButton()
         streamingButton.setTitle("Streaming", for: .normal)
@@ -159,15 +157,21 @@ extension WhatsPopularView: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 10
+        let movies = Movies.all()
+        return movies.filter({$0.group.contains(MovieGroup.popular)}).count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath)
         cell.backgroundColor = .white
         
-        var pictureURL = ""
-//        var moviesCategoryList = Movies.all().<MovieGroup.popular>.filters
+        var movies = Movies.all()
+        movies = movies.filter({$0.group.contains(MovieGroup.popular)})
+        
+        var pictureURL = movies[indexPath.row].imageUrl
+        print("View...")
+        print(pictureURL)
+        print()
         
         let contentForCell = MovieCollectionViewCell(pictureURL: pictureURL, cell: cell)
         cell.contentView.addSubview(contentForCell)

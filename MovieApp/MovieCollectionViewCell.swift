@@ -25,6 +25,10 @@ class MovieCollectionViewCell: UIView {
         self.moviesList = Movies.all()
         self.cell = cell
         
+        print("Cell...")
+        print(pictureURL)
+        print()
+        
         buildViews()
         addConstraints()
     }
@@ -37,15 +41,30 @@ class MovieCollectionViewCell: UIView {
         // potrebno je dohvatiti sliku filma i staviti ju na view od kraja do kraja
         self.autoSetDimensions(to: CGSize(width: cell.bounds.width, height: cell.bounds.height))
         
-//        slika
-//        print(moviesList)
-        
         likeButton = UIButton()
-        likeButton.setImage(UIImage(systemName: "heart")?.withTintColor(.black), for: .normal)
+        likeButton.setImage(UIImage(systemName: "heart")?.withTintColor(.white, renderingMode: .alwaysOriginal), for: .normal)
+//        likeButton.backgroundColor = .gray
+//        likeButton.layer.cornerRadius = 16
         self.addSubview(likeButton)
+        
+//        moviePicture = UIImageView()
+//        do {
+//            let url = URL(string: pictureURL)!
+//            let data = try Data(contentsOf: url)
+//            moviePicture.image = UIImage(data: data)
+//        }
+//        catch{
+//            print(error)
+//        }
+//        self.addSubview(moviePicture)
     }
     
     func addConstraints() {
+        
+//        moviePicture.autoPinEdge(toSuperviewEdge: .leading, withInset: 0)
+//        moviePicture.autoPinEdge(toSuperviewEdge: .trailing, withInset: 0)
+//        moviePicture.autoSetDimensions(to: CGSize(width: cell.bounds.width, height: cell.bounds.height))
+        
         likeButton.autoPinEdge(toSuperviewEdge: .leading, withInset: 16)
         likeButton.autoPinEdge(toSuperviewEdge: .top, withInset: 16)
         

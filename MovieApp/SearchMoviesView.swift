@@ -62,7 +62,6 @@ extension SearchMoviesView: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath)
-        cell.backgroundColor = .brown
         let contentForCell = SearchMoviesViewCell(index: indexPath.row, cell: cell)
         cell.contentView.addSubview(contentForCell)
         cell.layer.cornerRadius = 10
