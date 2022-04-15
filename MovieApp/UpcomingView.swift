@@ -8,12 +8,13 @@
 import Foundation
 import UIKit
 import PureLayout
+import MovieAppData
 
 class UpcomingView: UIView {
     init() {
         super.init(frame: .zero)
         
-        backgroundColor = .systemMint
+        backgroundColor = .white
         
         buildViews()
         addConstraints()
@@ -28,11 +29,8 @@ class UpcomingView: UIView {
     var thrillerButton: UIButton!
     var horrorButton: UIButton!
     var comedyButton: UIButton!
-    var romanticComedyButton: UIButton!
-    var sportButton: UIButton!
     var actionButton: UIButton!
     var sciFiButton: UIButton!
-    var warButton: UIButton!
     var buttonList:[UIButton] = []
     var upcomingStackView: UIStackView!
     var moviesCollectionView: UICollectionView!
@@ -76,20 +74,6 @@ class UpcomingView: UIView {
         unboldButtons(boldedButton: comedyButton)
     }
     
-    @objc func romanticComedyButtonPressed() {
-        print("Romantic Comedy button")
-        selectedCategory = "Romantic comedy"
-        romanticComedyButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
-        unboldButtons(boldedButton: romanticComedyButton)
-    }
-    
-    @objc func sportButtonPressed() {
-        print("Sport button")
-        selectedCategory = "Sport"
-        sportButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
-        unboldButtons(boldedButton: sportButton)
-    }
-    
     @objc func actionButtonPressed() {
         print("Action button")
         selectedCategory = "Action"
@@ -102,13 +86,6 @@ class UpcomingView: UIView {
         selectedCategory = "SciFi"
         sciFiButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
         unboldButtons(boldedButton: sciFiButton)
-    }
-    
-    @objc func warButtonPressed() {
-        print("War button")
-        selectedCategory = "War"
-        warButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
-        unboldButtons(boldedButton: warButton)
     }
     
     func buildViews() {
@@ -156,22 +133,6 @@ class UpcomingView: UIView {
         buttonList.append(comedyButton)
         upcomingStackView.addArrangedSubview(comedyButton)
         
-        romanticComedyButton = UIButton()
-        romanticComedyButton.setTitle("Romantic comedy", for: .normal)
-        romanticComedyButton.setTitleColor(.black, for: .normal)
-        romanticComedyButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
-        romanticComedyButton.addTarget(self, action: #selector(romanticComedyButtonPressed), for: .touchUpInside)
-        buttonList.append(romanticComedyButton)
-        upcomingStackView.addArrangedSubview(romanticComedyButton)
-        
-        sportButton = UIButton()
-        sportButton.setTitle("Sport", for: .normal)
-        sportButton.setTitleColor(.black, for: .normal)
-        sportButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
-        sportButton.addTarget(self, action: #selector(sportButtonPressed), for: .touchUpInside)
-        buttonList.append(sportButton)
-        upcomingStackView.addArrangedSubview(sportButton)
-        
         actionButton = UIButton()
         actionButton.setTitle("Action", for: .normal)
         actionButton.setTitleColor(.black, for: .normal)
@@ -188,14 +149,6 @@ class UpcomingView: UIView {
         buttonList.append(sciFiButton)
         upcomingStackView.addArrangedSubview(sciFiButton)
         
-        warButton = UIButton()
-        warButton.setTitle("War", for: .normal)
-        warButton.setTitleColor(.black, for: .normal)
-        warButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
-        warButton.addTarget(self, action: #selector(warButtonPressed), for: .touchUpInside)
-        buttonList.append(warButton)
-        upcomingStackView.addArrangedSubview(warButton)
-        
         let flowLayout = UICollectionViewFlowLayout()
         flowLayout.scrollDirection = .horizontal
         moviesCollectionView = UICollectionView(
@@ -203,7 +156,7 @@ class UpcomingView: UIView {
             collectionViewLayout: flowLayout
         )
         self.addSubview(moviesCollectionView)
-        moviesCollectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: cellIdentifier)
+        moviesCollectionView.register(MovieCollectionViewCell.self, forCellWithReuseIdentifier: MovieCollectionViewCell.cellIdentifier)
         moviesCollectionView.dataSource = self
         moviesCollectionView.delegate = self
     }
@@ -231,18 +184,19 @@ extension UpcomingView: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 10
+        let movies = Movies.all()
+        return movies.filter({$0.group.contains(MovieGroup.upcoming)}).count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath)
-        cell.backgroundColor = .white
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MovieCollectionViewCell.cellIdentifier, for: indexPath) as! MovieCollectionViewCell
         
-        var pictureURL = ""
+        var movies = Movies.all()
+        movies = movies.filter({$0.group.contains(MovieGroup.upcoming)})
         
-        let contentForCell = MovieCollectionViewCell(pictureURL: pictureURL, cell: cell)
-        cell.contentView.addSubview(contentForCell)
-        cellHeight = cell.bounds.height
+        let pictureURL = movies[indexPath.row].imageUrl
+        cell.setImageURL(imageURL: pictureURL)
+        
         return cell
     }
 }

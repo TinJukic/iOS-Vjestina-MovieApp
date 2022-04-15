@@ -17,7 +17,7 @@ class WhatsPopularView: UIView {
     init() {
         super.init(frame: .zero)
         
-        backgroundColor = .systemYellow
+        backgroundColor = .white
         
         buildViews()
         addConstraints()
@@ -86,8 +86,8 @@ class WhatsPopularView: UIView {
         whatsPopularStackView = UIStackView()
         whatsPopularStackView.axis = .horizontal
         whatsPopularStackView.alignment = .fill
-        whatsPopularStackView.distribution = .fillEqually
-        whatsPopularStackView.spacing = 1
+        whatsPopularStackView.distribution = .fillProportionally
+        whatsPopularStackView.spacing = 12
         self.addSubview(whatsPopularStackView)
         
         streamingButton = UIButton()
@@ -129,7 +129,7 @@ class WhatsPopularView: UIView {
             collectionViewLayout: flowLayout
         )
         self.addSubview(moviesCollectionView)
-        moviesCollectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: cellIdentifier)
+        moviesCollectionView.register(MovieCollectionViewCell.self, forCellWithReuseIdentifier: MovieCollectionViewCell.cellIdentifier)
         moviesCollectionView.dataSource = self
         moviesCollectionView.delegate = self
     }
@@ -162,20 +162,14 @@ extension WhatsPopularView: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath)
-        cell.backgroundColor = .white
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MovieCollectionViewCell.cellIdentifier, for: indexPath) as! MovieCollectionViewCell
         
         var movies = Movies.all()
         movies = movies.filter({$0.group.contains(MovieGroup.popular)})
         
-        var pictureURL = movies[indexPath.row].imageUrl
-        print("View...")
-        print(pictureURL)
-        print()
+        let pictureURL = movies[indexPath.row].imageUrl
+        cell.setImageURL(imageURL: pictureURL)
         
-        let contentForCell = MovieCollectionViewCell(pictureURL: pictureURL, cell: cell)
-        cell.contentView.addSubview(contentForCell)
-        cellHeight = cell.bounds.height
         return cell
     }
 }

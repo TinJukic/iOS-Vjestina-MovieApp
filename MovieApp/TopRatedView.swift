@@ -8,12 +8,13 @@
 import Foundation
 import UIKit
 import PureLayout
+import MovieAppData
 
 class TopRatedView: UIView {
     init() {
         super.init(frame: .zero)
         
-        backgroundColor = .darkGray
+        backgroundColor = .white
         
         buildViews()
         addConstraints()
@@ -123,7 +124,7 @@ class TopRatedView: UIView {
             collectionViewLayout: flowLayout
         )
         self.addSubview(moviesCollectionView)
-        moviesCollectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: cellIdentifier)
+        moviesCollectionView.register(MovieCollectionViewCell.self, forCellWithReuseIdentifier: MovieCollectionViewCell.cellIdentifier)
         moviesCollectionView.dataSource = self
         moviesCollectionView.delegate = self
     }
@@ -151,18 +152,19 @@ extension TopRatedView: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 10
+        let movies = Movies.all()
+        return movies.filter({$0.group.contains(MovieGroup.topRated)}).count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath)
-        cell.backgroundColor = .white
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MovieCollectionViewCell.cellIdentifier, for: indexPath) as! MovieCollectionViewCell
         
-        var pictureURL = ""
+        var movies = Movies.all()
+        movies = movies.filter({$0.group.contains(MovieGroup.topRated)})
         
-        let contentForCell = MovieCollectionViewCell(pictureURL: pictureURL, cell: cell)
-        cell.contentView.addSubview(contentForCell)
-        cellHeight = cell.bounds.height
+        let pictureURL = movies[indexPath.row].imageUrl
+        cell.setImageURL(imageURL: pictureURL)
+        
         return cell
     }
 }

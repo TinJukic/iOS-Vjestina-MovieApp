@@ -70,6 +70,7 @@ class SearchMoviesViewCell: UIView {
         movieImage.autoPinEdge(toSuperviewSafeArea: .leading, withInset: 0)
         movieImage.autoSetDimensions(to: CGSize(width: 100, height: 140))
         movieImage.layer.cornerRadius = 10
+        movieImage.clipsToBounds = true
         
         movieTitle.autoPinEdge(.leading, to: .trailing, of: movieImage, withOffset: 15)
         movieTitle.autoPinEdge(toSuperviewSafeArea: .top, withInset: 13)
@@ -81,5 +82,8 @@ class SearchMoviesViewCell: UIView {
         movieDescription.autoPinEdge(.leading, to: .trailing, of: movieImage, withOffset: 15)
         
         self.layer.cornerRadius = 10
+        self.layer.shadowOffset = CGSize(width: 1, height: 1)
+        self.layer.shadowRadius = 5
+        self.layer.shadowOpacity = 0.1
     }
 }

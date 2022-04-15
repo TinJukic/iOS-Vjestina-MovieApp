@@ -13,7 +13,7 @@ class MovieCategoriesView: UIScrollView {
     init() {
         super.init(frame: .zero)
         
-        backgroundColor = .magenta
+        backgroundColor = .white
         
         buildViews()
         addConstraints()
