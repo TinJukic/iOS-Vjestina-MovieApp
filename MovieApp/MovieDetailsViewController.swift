@@ -44,6 +44,12 @@ class MovieDetailsViewController: UIViewController {
     func buildViews() {
         view.backgroundColor = .white
         
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = .systemBlue
+        navigationController?.navigationBar.standardAppearance = appearance
+        navigationController?.navigationBar.scrollEdgeAppearance = appearance
+        
         // PRVA POLOVICA
         imageView = UIImageView(image: UIImage(named: "IronMan"))
         imageView.contentMode = .scaleAspectFill

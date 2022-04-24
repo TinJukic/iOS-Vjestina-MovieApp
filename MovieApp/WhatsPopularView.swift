@@ -10,9 +10,6 @@ import UIKit
 import PureLayout
 import MovieAppData
 
-// Kako dodati UICollectionView na moj view?
-// Primjer prepisan iz skripte
-
 class WhatsPopularView: UIView {
     init() {
         super.init(frame: .zero)
@@ -177,6 +174,20 @@ extension WhatsPopularView: UICollectionViewDataSource {
 extension WhatsPopularView: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 //        logic when cell is selected
+        print("Clicked on cell number \(indexPath.row)")
+        
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = .systemBlue
+        self.inputViewController?.navigationController?.navigationBar.standardAppearance = appearance
+        self.inputViewController?.navigationController?.navigationBar.scrollEdgeAppearance = appearance
+        
+        print("Sad idem staviti novi view controller na vrh svega")
+        let movieDetailsViewsController = MovieDetailsViewController()
+        movieDetailsViewsController.tabBarController?.selectedIndex = indexPath.row
+        self.inputViewController?.navigationController?.pushViewController(movieDetailsViewsController, animated: true)
+        
+        print("Obavio sam sto sam trebao...")
     }
 }
 

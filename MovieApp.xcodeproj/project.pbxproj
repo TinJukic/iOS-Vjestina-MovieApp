@@ -10,6 +10,8 @@
 		521B02BE27FC962B005C709A /* OverviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 521B02BD27FC962B005C709A /* OverviewView.swift */; };
 		5233C0D22800595E007F26EE /* FreeToWatchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5233C0D12800595E007F26EE /* FreeToWatchView.swift */; };
 		5233C0D428008369007F26EE /* SearchMoviesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5233C0D328008369007F26EE /* SearchMoviesView.swift */; };
+		5234E4982815B8E20040D65B /* FavoritesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5234E4972815B8E20040D65B /* FavoritesViewController.swift */; };
+		5234E49C2815C08D0040D65B /* CustomTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5234E49B2815C08D0040D65B /* CustomTabBarController.swift */; };
 		5244E9C5280800E800A8AB43 /* TrendingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5244E9C4280800E800A8AB43 /* TrendingView.swift */; };
 		5244E9C72808044500A8AB43 /* MovieCategoriesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5244E9C62808044500A8AB43 /* MovieCategoriesView.swift */; };
 		5244E9C928080BC000A8AB43 /* TopRatedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5244E9C828080BC000A8AB43 /* TopRatedView.swift */; };
@@ -34,6 +36,8 @@
 		521B02BD27FC962B005C709A /* OverviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverviewView.swift; sourceTree = "<group>"; };
 		5233C0D12800595E007F26EE /* FreeToWatchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreeToWatchView.swift; sourceTree = "<group>"; };
 		5233C0D328008369007F26EE /* SearchMoviesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchMoviesView.swift; sourceTree = "<group>"; };
+		5234E4972815B8E20040D65B /* FavoritesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesViewController.swift; sourceTree = "<group>"; };
+		5234E49B2815C08D0040D65B /* CustomTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabBarController.swift; sourceTree = "<group>"; };
 		5244E9C4280800E800A8AB43 /* TrendingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrendingView.swift; sourceTree = "<group>"; };
 		5244E9C62808044500A8AB43 /* MovieCategoriesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieCategoriesView.swift; sourceTree = "<group>"; };
 		5244E9C828080BC000A8AB43 /* TopRatedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopRatedView.swift; sourceTree = "<group>"; };
@@ -106,6 +110,8 @@
 				5244E9C62808044500A8AB43 /* MovieCategoriesView.swift */,
 				5244E9C828080BC000A8AB43 /* TopRatedView.swift */,
 				5244E9CC28080CEC00A8AB43 /* UpcomingView.swift */,
+				5234E4972815B8E20040D65B /* FavoritesViewController.swift */,
+				5234E49B2815C08D0040D65B /* CustomTabBarController.swift */,
 			);
 			path = MovieApp;
 			sourceTree = "<group>";
@@ -190,6 +196,7 @@
 			files = (
 				52E9848427F9E05600D7990A /* SearchBarView.swift in Sources */,
 				52C4766527E7983F00DBAD72 /* MovieDetailsViewController.swift in Sources */,
+				5234E49C2815C08D0040D65B /* CustomTabBarController.swift in Sources */,
 				527E31502803027F0006B0E5 /* InitialViewController.swift in Sources */,
 				527E315228031AEC0006B0E5 /* MovieCollectionViewCell.swift in Sources */,
 				5260B00728043A890066DBE9 /* SearchMoviesViewCell.swift in Sources */,
@@ -198,6 +205,7 @@
 				52C4765327E7964C00DBAD72 /* SceneDelegate.swift in Sources */,
 				5244E9C5280800E800A8AB43 /* TrendingView.swift in Sources */,
 				5233C0D22800595E007F26EE /* FreeToWatchView.swift in Sources */,
+				5234E4982815B8E20040D65B /* FavoritesViewController.swift in Sources */,
 				5233C0D428008369007F26EE /* SearchMoviesView.swift in Sources */,
 				5244E9C72808044500A8AB43 /* MovieCategoriesView.swift in Sources */,
 				5244E9C928080BC000A8AB43 /* TopRatedView.swift in Sources */,

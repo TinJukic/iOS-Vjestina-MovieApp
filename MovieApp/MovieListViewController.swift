@@ -9,15 +9,10 @@ import Foundation
 import UIKit
 import PureLayout
 
-// Zasto UIStackView moja dva viewa pozicionira jednog na drugog?
-// Ne prepoznaje viewe unutar njega?
 
 class MovieListViewController: UIViewController {
     var searchBarView: SearchBarView!
-//    var whatsPopularView: WhatsPopularView!
-//    var freeToWatchView: FreeToWatchView!
     var searchMoviesView: SearchMoviesView!
-//    var stackView: UIStackView!
     var movieCategories: MovieCategoriesView!
     
     override func viewDidLoad() {
@@ -40,19 +35,6 @@ class MovieListViewController: UIViewController {
         // adding searchBar to the main view
         searchBarView = SearchBarView(delegate: self)
         view.addSubview(searchBarView)
-        
-//        stackView = UIStackView()
-//        stackView.axis = .vertical
-//        stackView.alignment = .fill
-//        stackView.distribution = .fillEqually
-//        stackView.spacing = 5
-//        view.addSubview(stackView)
-//
-//        whatsPopularView = WhatsPopularView()
-//        stackView.addArrangedSubview(whatsPopularView)
-//
-//        freeToWatchView = FreeToWatchView()
-//        stackView.addArrangedSubview(freeToWatchView)
 
         searchMoviesView = SearchMoviesView()
         searchMoviesView.isHidden = true
@@ -67,10 +49,6 @@ class MovieListViewController: UIViewController {
         searchBarView.autoPinEdge(toSuperviewSafeArea: .trailing, withInset: 18)
         searchBarView.autoPinEdge(toSuperviewSafeArea: .top, withInset: 22)
         searchBarView.layer.cornerRadius = 10
-
-//        stackView.autoPinEdge(toSuperviewSafeArea: .leading, withInset: 18)
-//        stackView.autoPinEdge(toSuperviewSafeArea: .trailing, withInset: 18)
-//        stackView.autoPinEdge(.top, to: .bottom, of: searchBarView, withOffset: 20)
         
         movieCategories.autoPinEdge(toSuperviewSafeArea: .leading, withInset: 18)
         movieCategories.autoPinEdge(toSuperviewSafeArea: .trailing, withInset: 18)
@@ -85,13 +63,11 @@ class MovieListViewController: UIViewController {
 
 extension MovieListViewController: SearchBarViewDelegate {
     func didSelectSearchBar() {
-//        stackView.isHidden = true
         movieCategories.isHidden = true
         searchMoviesView.isHidden = false
     }
     
     func didDeselectSearchBar() {
-//        stackView.isHidden = false
         movieCategories.isHidden = false
         searchMoviesView.isHidden = true
         
