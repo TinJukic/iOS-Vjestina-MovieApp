@@ -10,8 +10,11 @@ import UIKit
 import PureLayout
 
 class MovieCategoriesView: UIScrollView {
-    init() {
+    var navigationController: UINavigationController!
+    
+    init(navigationController: UINavigationController) {
         super.init(frame: .zero)
+        self.navigationController = navigationController
         
         backgroundColor = .white
         
@@ -38,19 +41,19 @@ class MovieCategoriesView: UIScrollView {
         stackView.spacing = 5
         self.addSubview(stackView)
         
-        whatsPopularView = WhatsPopularView()
+        whatsPopularView = WhatsPopularView(navigationController: navigationController)
         stackView.addArrangedSubview(whatsPopularView)
         
-        freeToWatchView = FreeToWatchView()
+        freeToWatchView = FreeToWatchView(navigationController: navigationController)
         stackView.addArrangedSubview(freeToWatchView)
         
-        trendingView = TrendingView()
+        trendingView = TrendingView(navigationController: navigationController)
         stackView.addArrangedSubview(trendingView)
         
-        topRatedView = TopRatedView()
+        topRatedView = TopRatedView(navigationController: navigationController)
         stackView.addArrangedSubview(topRatedView)
         
-        upcomingView = UpcomingView()
+        upcomingView = UpcomingView(navigationController: navigationController)
         stackView.addArrangedSubview(upcomingView)
     }
     

@@ -11,9 +11,12 @@ import PureLayout
 import MovieAppData
 
 class UpcomingView: UIView {
-    init() {
+    var navigationController: UINavigationController!
+    
+    init(navigationController: UINavigationController) {
         super.init(frame: .zero)
         
+        self.navigationController = navigationController
         backgroundColor = .white
         
         buildViews()
@@ -204,6 +207,14 @@ extension UpcomingView: UICollectionViewDataSource {
 extension UpcomingView: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 //        logic when cell is selected
+        print("Clicked on cell number \(indexPath.row)")
+        
+        let movieDetailsViewsController = MovieDetailsViewController()
+        movieDetailsViewsController.tabBarController?.selectedIndex = indexPath.row
+        
+        self.navigationController.pushViewController(movieDetailsViewsController, animated: true)
+        
+        print("Obavio sam sto sam trebao...")
     }
 }
 

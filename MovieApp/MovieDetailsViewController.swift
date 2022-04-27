@@ -37,6 +37,16 @@ class MovieDetailsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = .systemBlue
+        navigationController?.navigationBar.standardAppearance = appearance
+        navigationController?.navigationBar.scrollEdgeAppearance = appearance
+        navigationItem.title = "TMDB"
+        navigationItem.backButtonTitle = "back"
+        navigationItem.backButtonDisplayMode = .default
+        
         buildViews()
         addConstraints()
     }

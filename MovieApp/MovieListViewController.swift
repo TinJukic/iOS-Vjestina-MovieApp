@@ -40,7 +40,7 @@ class MovieListViewController: UIViewController {
         searchMoviesView.isHidden = true
         view.addSubview(searchMoviesView)
         
-        movieCategories = MovieCategoriesView()
+        movieCategories = MovieCategoriesView(navigationController: self.navigationController!)
         view.addSubview(movieCategories)
     }
     
