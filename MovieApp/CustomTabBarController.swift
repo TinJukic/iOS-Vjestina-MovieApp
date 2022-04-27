@@ -35,7 +35,8 @@ class CustomTabBarController: UITabBarController {
     func createTabBarItem(tabBarTitle: String, tabBarImage: UIImage, viewController: UIViewController) -> UINavigationController {
         let navigationController = UINavigationController(rootViewController: viewController)
         navigationItem.title = "TMDB"
-        navigationItem.backButtonTitle = "back"
+        navigationController.navigationBar.tintColor = .black
+        navigationController.navigationBar.topItem?.backBarButtonItem = UIBarButtonItem(title: "Back", style: .plain, target: nil, action: nil)
         
         let appearance = UINavigationBarAppearance()
         appearance.configureWithOpaqueBackground()

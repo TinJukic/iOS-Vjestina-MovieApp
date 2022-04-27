@@ -10,8 +10,66 @@ import UIKit
 import PureLayout
 import MovieAppData
 
+struct GenreDescription: Codable {
+    let id: Int
+    let name: String
+}
+
+struct Genres: Codable {
+    let genres: [GenreDescription]
+}
+
+struct MovieDetails: Codable {
+    let adult: Bool
+    let backdropPath: String
+    let genreIds: [Int]
+    let id: Int
+    let originalLanguage: String
+    let originalTitle: String
+    let overview: String
+    let popularity: Float
+    let posterPath: String
+    let releaseDate: String
+    let title: String
+    let video: Bool
+    let voteAverage: Float
+    let voteCount: Int
+    
+    enum CodingKeys: String, CodingKey {
+        case adult
+        case backdropPath = "backdrop_path"
+        case genreIds = "genre_ids"
+        case id
+        case originalLanguage = "original_language"
+        case originalTitle = "original_title"
+        case overview
+        case popularity
+        case posterPath = "poster_path"
+        case releaseDate = "release_date"
+        case title
+        case video
+        case voteAverage = "vote_average"
+        case voteCount = "vote_count"
+    }
+}
+
+struct Popular: Codable {
+    let page: Int
+    let results: [MovieDetails]
+    let totalPages: Int
+    let totalResults: Int
+    
+    enum CodingKeys: String, CodingKey {
+        case page
+        case results
+        case totalPages = "total_pages"
+        case totalResults = "total_results"
+    }
+}
+
 class WhatsPopularView: UIView {
     var navigationController: UINavigationController!
+    var networkService: NetworkService!
     
     init(navigationController: UINavigationController) {
         super.init(frame: .zero)
@@ -39,6 +97,7 @@ class WhatsPopularView: UIView {
     let cellIdentifier = "cellId"
     var cellHeight = 0.0
     var selectedCategory = MovieFilter.streaming
+    var data: Genres!
     
     func unboldButtons(boldedButton: UIButton) {
         buttonList.forEach({
@@ -78,6 +137,8 @@ class WhatsPopularView: UIView {
     
     func buildViews() {
         isUserInteractionEnabled = true
+        
+        networkService = NetworkService()
         
         whatsPopularLabel = UILabel()
         whatsPopularLabel.text = "What's popular"
@@ -133,6 +194,17 @@ class WhatsPopularView: UIView {
         moviesCollectionView.register(MovieCollectionViewCell.self, forCellWithReuseIdentifier: MovieCollectionViewCell.cellIdentifier)
         moviesCollectionView.dataSource = self
         moviesCollectionView.delegate = self
+        
+        let urlRequestString = "https://api.themoviedb.org/3/genre/movie/list?language=en-US&api_key=59afefdb9064ea17898a694d311e247e"
+        let urlRequest = URLRequest(url: URL(string: urlRequestString)!)
+        networkService.executeUrlRequest(urlRequest) { (result: Result<Genres, RequestError>) in
+            switch result {
+            case .success(let value):
+                self.data = value
+            case .failure(let failure):
+                print("failure")
+            }
+        }
     }
     
     func addConstraints() {

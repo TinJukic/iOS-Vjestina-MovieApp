@@ -8,7 +8,18 @@
 import Foundation
 import UIKit
 import PureLayout
+import Network
 
+// ZADACI:
+    // Potrebno je napraviti neke API zahtjeve:
+        // 1. popularni filmovi API zahtjev
+        // 2. trending filmovi API zahtjev
+        // 3. top rated filmovi API zahtjev
+        // 4. recommended filmovi API zahtjev
+    // Svaki zahtjev napravi u odgovarajucem view-u -> od tamo se dohvacaju svi potrebni podaci za prikaz
+    // bazni URL za slike: https://image.tmdb.org/t/p/original, npr. https://image.tmdb.org/t/p/original/ekstpH614fwDX8DUln1a2Opz0N8.jpg
+    // filtere je potrebno popuniti listom zanrova koji dobijem API zahtjevom
+    // MovieDetailsViewController prikazuje podatke za odabrani film pomocu odgovarajuceg API zahtjeva
 
 class MovieListViewController: UIViewController {
     var searchBarView: SearchBarView!

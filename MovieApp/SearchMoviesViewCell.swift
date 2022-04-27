@@ -51,11 +51,6 @@ class SearchMoviesViewCell: UIView {
         movieTitle.numberOfLines = 0
         self.addSubview(movieTitle)
         
-//        print(Movies.all()[index].title)
-//        print(Movies.all()[index].year)
-//        print(Movies.all()[index].description)
-//        print()
-        
         movieDescription = UILabel()
         movieDescription.text = Movies.all()[index].description
         movieDescription.font = UIFont.systemFont(ofSize: 16)

@@ -44,8 +44,8 @@ class MovieCategoriesView: UIScrollView {
         whatsPopularView = WhatsPopularView(navigationController: navigationController)
         stackView.addArrangedSubview(whatsPopularView)
         
-        freeToWatchView = FreeToWatchView(navigationController: navigationController)
-        stackView.addArrangedSubview(freeToWatchView)
+//        freeToWatchView = FreeToWatchView(navigationController: navigationController)
+//        stackView.addArrangedSubview(freeToWatchView)
         
         trendingView = TrendingView(navigationController: navigationController)
         stackView.addArrangedSubview(trendingView)

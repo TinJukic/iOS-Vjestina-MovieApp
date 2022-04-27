@@ -93,7 +93,7 @@ class UpcomingView: UIView {
     
     func buildViews() {
         upcomingLabel = UILabel()
-        upcomingLabel.text = "Trending"
+        upcomingLabel.text = "Recommended"
         upcomingLabel.font = UIFont.boldSystemFont(ofSize: 20)
         self.addSubview(upcomingLabel)
         

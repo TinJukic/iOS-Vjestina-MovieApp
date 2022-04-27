@@ -19,8 +19,6 @@ class MovieDetailsViewController: UIViewController {
     var yearAndCountryLabel: UILabel!
     var genreLabel: UILabel!
     var durationLabel: UILabel!
-//    var circle: UIImageView!
-//    var starIcon: UIImageView!
     var favoritesButton: UIButton!
     
     
@@ -34,6 +32,9 @@ class MovieDetailsViewController: UIViewController {
     var bottomFirst: UILabel!
     var bottomSecond: UILabel!
     var bottomThird: UILabel!
+    var verticalStackView: UIStackView!
+    var horizontalStackView1: UIStackView!
+    var horizontalStackView2: UIStackView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -123,14 +124,7 @@ class MovieDetailsViewController: UIViewController {
         durationLabel.textColor = .white
         view.addSubview(durationLabel)
         
-//        let config = UIImage.SymbolConfiguration(pointSize: 32)
-//        let circleImage = UIImage(systemName: "circle.fill", withConfiguration: config)?.withTintColor(.gray, renderingMode: .alwaysOriginal)
-//        circle = UIImageView(image: circleImage)
-//        view.addSubview(circle)
-        
         let starImage = UIImage(systemName: "star")?.withTintColor(.white, renderingMode: .alwaysOriginal)
-//        starIcon = UIImageView(image: starImage)
-//        view.addSubview(starIcon)
         
         favoritesButton = UIButton()
         favoritesButton.setImage(starImage, for: .normal)
@@ -139,6 +133,27 @@ class MovieDetailsViewController: UIViewController {
         view.addSubview(favoritesButton)
         
         // DRUGA POLOVICA
+        verticalStackView = UIStackView()
+        verticalStackView.axis = .vertical
+        verticalStackView.alignment = .fill
+        verticalStackView.distribution = .fillEqually
+        verticalStackView.spacing = 15
+        view.addSubview(verticalStackView)
+        
+        horizontalStackView1 = UIStackView()
+        horizontalStackView1.axis = .horizontal
+        horizontalStackView1.alignment = .fill
+        horizontalStackView1.distribution = .fillEqually
+        horizontalStackView1.spacing = 5
+        view.addSubview(horizontalStackView1)
+        
+        horizontalStackView2 = UIStackView()
+        horizontalStackView2.axis = .horizontal
+        horizontalStackView2.alignment = .fill
+        horizontalStackView2.distribution = .fillEqually
+        horizontalStackView2.spacing = 5
+        view.addSubview(horizontalStackView2)
+        
         overviewLabel = UILabel()
         overviewLabel.text = "Overview"
         overviewLabel.font = UIFont.init(name: "Proxima Nova", size: 20)
@@ -161,7 +176,7 @@ class MovieDetailsViewController: UIViewController {
             NSAttributedString.Key.font: UIFont(name: "HelveticaNeue-Light", size: 14)!
         ]
         
-        boldText = NSAttributedString(string: "Don HeckHeckHeckHeckHeckHeck\n", attributes: boldAttribute)
+        boldText = NSAttributedString(string: "Don Heck\n", attributes: boldAttribute)
         regularText = NSAttributedString(string: "Characters", attributes: regularAttribute)
         var text = NSMutableAttributedString()
         text.append(boldText)
@@ -169,7 +184,7 @@ class MovieDetailsViewController: UIViewController {
         topFirst = UILabel()
         topFirst.attributedText = text
         topFirst.numberOfLines = 0
-        view.addSubview(topFirst)
+        horizontalStackView1.addArrangedSubview(topFirst)
         
         boldText = NSAttributedString(string: "Jack Kirby\n", attributes: boldAttribute)
         regularText = NSAttributedString(string: "Characters", attributes: regularAttribute)
@@ -179,7 +194,7 @@ class MovieDetailsViewController: UIViewController {
         topSecond = UILabel()
         topSecond.attributedText = text
         topSecond.numberOfLines = 0
-        view.addSubview(topSecond)
+        horizontalStackView1.addArrangedSubview(topSecond)
         
         boldText = NSAttributedString(string: "Jon Favreau\n", attributes: boldAttribute)
         regularText = NSAttributedString(string: "Director", attributes: regularAttribute)
@@ -189,7 +204,7 @@ class MovieDetailsViewController: UIViewController {
         topThird = UILabel()
         topThird.attributedText = text
         topThird.numberOfLines = 0
-        view.addSubview(topThird)
+        horizontalStackView1.addArrangedSubview(topThird)
         
         boldText = NSAttributedString(string: "Don Heck\n", attributes: boldAttribute)
         regularText = NSAttributedString(string: "Screenplay", attributes: regularAttribute)
@@ -199,7 +214,7 @@ class MovieDetailsViewController: UIViewController {
         bottomFirst = UILabel()
         bottomFirst.attributedText = text
         bottomFirst.numberOfLines = 0
-        view.addSubview(bottomFirst)
+        horizontalStackView2.addArrangedSubview(bottomFirst)
         
         boldText = NSAttributedString(string: "Jack Marcum\n", attributes: boldAttribute)
         regularText = NSAttributedString(string: "Screenplay", attributes: regularAttribute)
@@ -207,9 +222,9 @@ class MovieDetailsViewController: UIViewController {
         text.append(boldText)
         text.append(regularText)
         bottomSecond = UILabel()
-//        bottomSecond.attributedText = text
+        bottomSecond.attributedText = text
         bottomSecond.numberOfLines = 0
-        view.addSubview(bottomSecond)
+        horizontalStackView2.addArrangedSubview(bottomSecond)
         
         boldText = NSAttributedString(string: "Matt Holloway\n", attributes: boldAttribute)
         regularText = NSAttributedString(string: "Screenplay", attributes: regularAttribute)
@@ -219,7 +234,10 @@ class MovieDetailsViewController: UIViewController {
         bottomThird = UILabel()
         bottomThird.attributedText = text
         bottomThird.numberOfLines = 0
-        view.addSubview(bottomThird)
+        horizontalStackView2.addArrangedSubview(bottomThird)
+        
+        verticalStackView.addArrangedSubview(horizontalStackView1)
+        verticalStackView.addArrangedSubview(horizontalStackView2)
     }
     
     func addConstraints() {
@@ -245,11 +263,6 @@ class MovieDetailsViewController: UIViewController {
         favoritesButton.autoPinEdge(.top, to: .bottom, of: shortDescription, withOffset: 15)
         favoritesButton.autoPinEdge(toSuperviewSafeArea: .leading, withInset: 18)
         
-//        starIcon.auto.autoAlignAxis(.vertical, toSameAxisOf: circle)
-//        starIcon.autoAlignAxis(.horizontal, toSameAxisOf: circle)
-//        starIcon.autoPinEdge(.top, to: .top, of: circle, withOffset: 9)
-//        starIcon.autoPinEdge(.leading, to: .leading, of: circle, withOffset: 9)
-        
         // DRUGA POLOVICA
         overviewLabel.autoPinEdge(toSuperviewSafeArea: .leading, withInset: 18)
         overviewLabel.autoPinEdge(toSuperviewSafeArea: .trailing, withInset: 30)
@@ -259,21 +272,8 @@ class MovieDetailsViewController: UIViewController {
         descriptionText.autoPinEdge(toSuperviewSafeArea: .trailing, withInset: 27)
         descriptionText.autoPinEdge(.top, to: .bottom, of: overviewLabel, withOffset: 8)
         
-        topFirst.autoPinEdge(toSuperviewSafeArea: .leading, withInset: 16)
-        topFirst.autoPinEdge(.top, to: .bottom, of: descriptionText, withOffset: 22)
-        
-        topSecond.autoPinEdge(.leading, to: .trailing, of: topFirst, withOffset: 44)
-        topSecond.autoPinEdge(.top, to: .bottom, of: descriptionText, withOffset: 22)
-        
-        topThird.autoPinEdge(.leading, to: .trailing, of: topSecond, withOffset: 55)
-        topThird.autoPinEdge(.top, to: .bottom, of: descriptionText, withOffset: 22)
-        
-        bottomFirst.autoPinEdge(.top, to: .bottom, of: topFirst, withOffset: 26)
-        bottomFirst.autoPinEdge(toSuperviewSafeArea: .leading, withInset: 16)
-        
-        bottomSecond.autoPinEdge(.top, to: .bottom, of: topSecond, withOffset: 26)
-        bottomSecond.autoPinEdge(.leading, to: .trailing, of: bottomFirst, withOffset: 42)
-        
-        bottomThird.autoPinEdge(.top, to: .bottom, of: topThird, withOffset: 26)
-        bottomThird.autoPinEdge(.leading, to: .trailing, of: bottomSecond, withOffset: 36)    }
+        verticalStackView.autoPinEdge(.top, to: .bottom, of: descriptionText, withOffset: 22)
+        verticalStackView.autoPinEdge(toSuperviewSafeArea: .leading, withInset: 18)
+        verticalStackView.autoPinEdge(toSuperviewSafeArea: .trailing, withInset: 18)
+    }
 }
