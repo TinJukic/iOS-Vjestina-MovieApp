@@ -40,6 +40,7 @@ class UpcomingView: UIView {
     let cellIdentifier = "cellId"
     var cellHeight = 0.0
     var selectedCategory = "Movies"
+    var stackScrollView: UIScrollView!
     
     func unboldButtons(boldedButton: UIButton) {
         buttonList.forEach({
@@ -92,6 +93,13 @@ class UpcomingView: UIView {
     }
     
     func buildViews() {
+        stackScrollView = {
+            let v = UIScrollView()
+            v.translatesAutoresizingMaskIntoConstraints = false
+            v.backgroundColor = .systemCyan
+            return v
+        }()
+        
         upcomingLabel = UILabel()
         upcomingLabel.text = "Recommended"
         upcomingLabel.font = UIFont.boldSystemFont(ofSize: 20)
@@ -102,7 +110,7 @@ class UpcomingView: UIView {
         upcomingStackView.alignment = .fill
         upcomingStackView.distribution = .fillEqually
         upcomingStackView.spacing = 1
-        self.addSubview(upcomingStackView)
+//        self.addSubview(upcomingStackView)
         
         dramaButton = UIButton()
         dramaButton.setTitle("Drama", for: .normal)
@@ -152,6 +160,9 @@ class UpcomingView: UIView {
         buttonList.append(sciFiButton)
         upcomingStackView.addArrangedSubview(sciFiButton)
         
+        stackScrollView.addSubview(upcomingStackView)
+        self.addSubview(stackScrollView)
+        
         let flowLayout = UICollectionViewFlowLayout()
         flowLayout.scrollDirection = .horizontal
         moviesCollectionView = UICollectionView(
@@ -172,6 +183,12 @@ class UpcomingView: UIView {
         upcomingStackView.autoPinEdge(toSuperviewSafeArea: .leading, withInset: 0)
         upcomingStackView.autoPinEdge(toSuperviewSafeArea: .trailing, withInset: 0)
         upcomingStackView.autoPinEdge(.top, to: .bottom, of: upcomingLabel, withOffset: 8)
+        upcomingStackView.autoSetDimension(.height, toSize: 20)
+        
+        stackScrollView.autoPinEdge(toSuperviewSafeArea: .leading, withInset: 0)
+        stackScrollView.autoPinEdge(toSuperviewSafeArea: .trailing, withInset: 0)
+        stackScrollView.autoPinEdge(.top, to: .bottom, of: upcomingLabel, withOffset: 8)
+        stackScrollView.autoSetDimension(.height, toSize: 20)
         
         moviesCollectionView.autoPinEdge(toSuperviewSafeArea: .leading, withInset: 0)
         moviesCollectionView.autoPinEdge(toSuperviewSafeArea: .trailing, withInset: 0)

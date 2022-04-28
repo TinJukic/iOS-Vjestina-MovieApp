@@ -87,7 +87,7 @@ class WhatsPopularView: UIView {
     }
     
     var whatsPopularLabel: UILabel!
-    @objc var streamingButton: UIButton!
+    var streamingButton: UIButton!
     var onTVButton: UIButton!
     var forRentButton: UIButton!
     var inTheatersButton: UIButton!
@@ -97,7 +97,8 @@ class WhatsPopularView: UIView {
     let cellIdentifier = "cellId"
     var cellHeight = 0.0
     var selectedCategory = MovieFilter.streaming
-    var data: Genres!
+    var genres: [Genres]!
+    var stackScrollView: UIScrollView!
     
     func unboldButtons(boldedButton: UIButton) {
         buttonList.forEach({
@@ -140,6 +141,13 @@ class WhatsPopularView: UIView {
         
         networkService = NetworkService()
         
+        stackScrollView = {
+            let v = UIScrollView()
+            v.translatesAutoresizingMaskIntoConstraints = false
+            v.backgroundColor = .systemCyan
+            return v
+        }()
+        
         whatsPopularLabel = UILabel()
         whatsPopularLabel.text = "What's popular"
         whatsPopularLabel.font = UIFont.boldSystemFont(ofSize: 20)
@@ -150,7 +158,7 @@ class WhatsPopularView: UIView {
         whatsPopularStackView.alignment = .fill
         whatsPopularStackView.distribution = .fillProportionally
         whatsPopularStackView.spacing = 12
-        self.addSubview(whatsPopularStackView)
+//        self.addSubview(whatsPopularStackView)
         
         streamingButton = UIButton()
         streamingButton.setTitle("Streaming", for: .normal)
@@ -184,6 +192,9 @@ class WhatsPopularView: UIView {
         buttonList.append(inTheatersButton)
         whatsPopularStackView.addArrangedSubview(inTheatersButton)
         
+        stackScrollView.addSubview(whatsPopularStackView)
+        self.addSubview(stackScrollView)
+        
         let flowLayout = UICollectionViewFlowLayout()
         flowLayout.scrollDirection = .horizontal
         moviesCollectionView = UICollectionView(
@@ -198,9 +209,9 @@ class WhatsPopularView: UIView {
         let urlRequestString = "https://api.themoviedb.org/3/genre/movie/list?language=en-US&api_key=59afefdb9064ea17898a694d311e247e"
         let urlRequest = URLRequest(url: URL(string: urlRequestString)!)
         networkService.executeUrlRequest(urlRequest) { (result: Result<Genres, RequestError>) in
-            switch result {
+        switch result {
             case .success(let value):
-                self.data = value
+                self.genres = [value]
             case .failure(let failure):
                 print("failure")
             }
@@ -215,6 +226,12 @@ class WhatsPopularView: UIView {
         whatsPopularStackView.autoPinEdge(toSuperviewSafeArea: .leading, withInset: 0)
         whatsPopularStackView.autoPinEdge(toSuperviewSafeArea: .trailing, withInset: 0)
         whatsPopularStackView.autoPinEdge(.top, to: .bottom, of: whatsPopularLabel, withOffset: 8)
+        whatsPopularStackView.autoSetDimension(.height, toSize: 20)
+        
+        stackScrollView.autoPinEdge(toSuperviewSafeArea: .leading, withInset: 0)
+        stackScrollView.autoPinEdge(toSuperviewSafeArea: .trailing, withInset: 0)
+        stackScrollView.autoPinEdge(.top, to: .bottom, of: whatsPopularLabel, withOffset: 8)
+        stackScrollView.autoSetDimension(.height, toSize: 20)
         
         moviesCollectionView.autoPinEdge(toSuperviewSafeArea: .leading, withInset: 0)
         moviesCollectionView.autoPinEdge(toSuperviewSafeArea: .trailing, withInset: 0)

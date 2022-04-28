@@ -38,6 +38,7 @@ class TopRatedView: UIView {
     let cellIdentifier = "cellId"
     var cellHeight = 0.0
     var selectedCategory = "Movies"
+    var stackScrollView: UIScrollView!
     
     func unboldButtons(boldedButton: UIButton) {
         buttonList.forEach({
@@ -76,6 +77,13 @@ class TopRatedView: UIView {
     }
     
     func buildViews() {
+        stackScrollView = {
+            let v = UIScrollView()
+            v.translatesAutoresizingMaskIntoConstraints = false
+            v.backgroundColor = .systemCyan
+            return v
+        }()
+        
         topRatedLabel = UILabel()
         topRatedLabel.text = "Top rated"
         topRatedLabel.font = UIFont.boldSystemFont(ofSize: 20)
@@ -86,7 +94,7 @@ class TopRatedView: UIView {
         topRatedStackView.alignment = .fill
         topRatedStackView.distribution = .fillEqually
         topRatedStackView.spacing = 1
-        self.addSubview(topRatedStackView)
+//        self.addSubview(topRatedStackView)
         
         dayButton = UIButton()
         dayButton.setTitle("Day", for: .normal)
@@ -120,6 +128,9 @@ class TopRatedView: UIView {
         buttonList.append(allTimeButton)
         topRatedStackView.addArrangedSubview(allTimeButton)
         
+        stackScrollView.addSubview(topRatedStackView)
+        self.addSubview(stackScrollView)
+        
         let flowLayout = UICollectionViewFlowLayout()
         flowLayout.scrollDirection = .horizontal
         moviesCollectionView = UICollectionView(
@@ -140,6 +151,12 @@ class TopRatedView: UIView {
         topRatedStackView.autoPinEdge(toSuperviewSafeArea: .leading, withInset: 0)
         topRatedStackView.autoPinEdge(toSuperviewSafeArea: .trailing, withInset: 0)
         topRatedStackView.autoPinEdge(.top, to: .bottom, of: topRatedLabel, withOffset: 8)
+        topRatedStackView.autoSetDimension(.height, toSize: 20)
+        
+        stackScrollView.autoPinEdge(toSuperviewSafeArea: .leading, withInset: 0)
+        stackScrollView.autoPinEdge(toSuperviewSafeArea: .trailing, withInset: 0)
+        stackScrollView.autoPinEdge(.top, to: .bottom, of: topRatedLabel, withOffset: 8)
+        stackScrollView.autoSetDimension(.height, toSize: 20)
         
         moviesCollectionView.autoPinEdge(toSuperviewSafeArea: .leading, withInset: 0)
         moviesCollectionView.autoPinEdge(toSuperviewSafeArea: .trailing, withInset: 0)

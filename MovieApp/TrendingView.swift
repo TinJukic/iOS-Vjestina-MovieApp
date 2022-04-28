@@ -38,6 +38,7 @@ class TrendingView: UIView {
     let cellIdentifier = "cellId"
     var cellHeight = 0.0
     var selectedCategory = "Movies"
+    var stackScrollView: UIScrollView!
     
     func unboldButtons(boldedButton: UIButton) {
         buttonList.forEach({
@@ -76,6 +77,13 @@ class TrendingView: UIView {
     }
     
     func buildViews() {
+        stackScrollView = {
+            let v = UIScrollView()
+            v.translatesAutoresizingMaskIntoConstraints = false
+            v.backgroundColor = .systemCyan
+            return v
+        }()
+        
         trendingLabel = UILabel()
         trendingLabel.text = "Trending"
         trendingLabel.font = UIFont.boldSystemFont(ofSize: 20)
@@ -86,7 +94,7 @@ class TrendingView: UIView {
         trendingStackView.alignment = .fill
         trendingStackView.distribution = .fillEqually
         trendingStackView.spacing = 1
-        self.addSubview(trendingStackView)
+//        self.addSubview(trendingStackView)
         
         dayButton = UIButton()
         dayButton.setTitle("Day", for: .normal)
@@ -120,6 +128,9 @@ class TrendingView: UIView {
         buttonList.append(allTimeButton)
         trendingStackView.addArrangedSubview(allTimeButton)
         
+        stackScrollView.addSubview(trendingStackView)
+        self.addSubview(stackScrollView)
+        
         let flowLayout = UICollectionViewFlowLayout()
         flowLayout.scrollDirection = .horizontal
         moviesCollectionView = UICollectionView(
@@ -140,6 +151,12 @@ class TrendingView: UIView {
         trendingStackView.autoPinEdge(toSuperviewSafeArea: .leading, withInset: 0)
         trendingStackView.autoPinEdge(toSuperviewSafeArea: .trailing, withInset: 0)
         trendingStackView.autoPinEdge(.top, to: .bottom, of: trendingLabel, withOffset: 8)
+        trendingStackView.autoSetDimension(.height, toSize: 20)
+        
+        stackScrollView.autoPinEdge(toSuperviewSafeArea: .leading, withInset: 0)
+        stackScrollView.autoPinEdge(toSuperviewSafeArea: .trailing, withInset: 0)
+        stackScrollView.autoPinEdge(.top, to: .bottom, of: trendingLabel, withOffset: 8)
+        stackScrollView.autoSetDimension(.height, toSize: 20)
         
         moviesCollectionView.autoPinEdge(toSuperviewSafeArea: .leading, withInset: 0)
         moviesCollectionView.autoPinEdge(toSuperviewSafeArea: .trailing, withInset: 0)
