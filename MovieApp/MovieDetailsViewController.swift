@@ -114,6 +114,10 @@ struct SpokenLanguage: Codable {
 }
 
 class MovieDetailsViewController: UIViewController {
+    var id: Int!
+    var movieDetails: DetailsForMovie!
+    var networkService: NetworkService!
+    
     // PRVA POLOVICA
     var imageView: UIImageView!
     var userScoreLabel: UILabel!
@@ -140,6 +144,19 @@ class MovieDetailsViewController: UIViewController {
     var horizontalStackView1: UIStackView!
     var horizontalStackView2: UIStackView!
     
+    convenience init() {
+        self.init(id: 0)
+    }
+    
+    init(id: Int) {
+        self.id = id
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -164,6 +181,24 @@ class MovieDetailsViewController: UIViewController {
         appearance.backgroundColor = .systemBlue
         navigationController?.navigationBar.standardAppearance = appearance
         navigationController?.navigationBar.scrollEdgeAppearance = appearance
+        
+        // priprema podataka za dohvat
+        networkService = NetworkService()
+        let movieDescriptionUrlString = "https://api.themoviedb.org/3/movie/" + String(id) + "/recommendations?language=en-US&page=1&api_key=59afefdb9064ea17898a694d311e247e"
+        guard let movieDescriptionUrl = URL(string: movieDescriptionUrlString) else { return }
+        var movieDescriptionUrlRequest = URLRequest(url: movieDescriptionUrl)
+        movieDescriptionUrlRequest.httpMethod = "GET"
+        movieDescriptionUrlRequest.setValue("movie/" + String(id) + "/recommendations/json", forHTTPHeaderField: "Content-Type")
+        print(movieDescriptionUrlRequest)
+        networkService.executeUrlRequest(movieDescriptionUrlRequest) { (result: Result<DetailsForMovie, RequestError>) in
+            switch result {
+            case .success(let success):
+                self.movieDetails = success
+                print(self.movieDetails)
+            case .failure(let failure):
+                print("failure in MovieDetailsViewController")
+            }
+        }
         
         // PRVA POLOVICA
         imageView = UIImageView(image: UIImage(named: "IronMan"))
