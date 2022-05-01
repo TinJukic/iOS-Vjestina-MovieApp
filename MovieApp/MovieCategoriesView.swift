@@ -26,42 +26,46 @@ class MovieCategoriesView: UIScrollView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    var stackView: UIStackView!
-    var whatsPopularView: WhatsPopularView!
-    var freeToWatchView: FreeToWatchView!
-    var trendingView: TrendingView!
-    var topRatedView: TopRatedView!
-    var upcomingView: UpcomingView!
+//    var stackView: UIStackView!
+//    var whatsPopularView: WhatsPopularView!
+//    var freeToWatchView: FreeToWatchView!
+//    var trendingView: TrendingView!
+//    var topRatedView: TopRatedView!
+//    var upcomingView: UpcomingView!
+    var viewStackView: ViewStackView!
     
     func buildViews() {
-        stackView = UIStackView()
-        stackView.axis = .vertical
-        stackView.alignment = .fill
-        stackView.distribution = .fillEqually
-        stackView.spacing = 5
-        self.addSubview(stackView)
+        viewStackView = ViewStackView(navigationController: navigationController)
+        self.addSubview(viewStackView)
         
-        whatsPopularView = WhatsPopularView(navigationController: navigationController)
-        stackView.addArrangedSubview(whatsPopularView)
+//        stackView = UIStackView()
+//        stackView.axis = .vertical
+//        stackView.alignment = .fill
+//        stackView.distribution = .fillEqually
+//        stackView.spacing = 5
+//        self.addSubview(stackView)
+//
+//        whatsPopularView = WhatsPopularView(navigationController: navigationController)
+//        stackView.addArrangedSubview(whatsPopularView)
         
 //        freeToWatchView = FreeToWatchView(navigationController: navigationController)
 //        stackView.addArrangedSubview(freeToWatchView)
         
-        trendingView = TrendingView(navigationController: navigationController)
-        stackView.addArrangedSubview(trendingView)
-        
-        topRatedView = TopRatedView(navigationController: navigationController)
-        stackView.addArrangedSubview(topRatedView)
-        
-        upcomingView = UpcomingView(navigationController: navigationController)
-        stackView.addArrangedSubview(upcomingView)
+//        trendingView = TrendingView(navigationController: navigationController)
+//        stackView.addArrangedSubview(trendingView)
+//
+//        topRatedView = TopRatedView(navigationController: navigationController)
+//        stackView.addArrangedSubview(topRatedView)
+//
+//        upcomingView = UpcomingView(navigationController: navigationController)
+//        stackView.addArrangedSubview(upcomingView)
     }
     
     func addConstraints() {
-        stackView.autoPinEdgesToSuperviewEdges()
-        stackView.autoSetDimension(.width, toSize: 395)
+//        stackView.autoPinEdgesToSuperviewEdges()
+//        stackView.autoSetDimension(.width, toSize: 395)
 //        stackView.autoSetDimensions(to: CGSize(width: self.bounds.width, height: self.bounds.height))
         
-        
+        viewStackView.autoPinEdgesToSuperviewEdges()
     }
 }

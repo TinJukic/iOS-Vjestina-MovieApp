@@ -10,6 +10,7 @@ import UIKit
 import PureLayout
 import MovieAppData
 
+// struct je vidljiv u svim klasama
 struct GenreDescription: Codable {
     let id: Int
     let name: String
@@ -53,7 +54,7 @@ struct MovieDetails: Codable {
     }
 }
 
-struct Popular: Codable {
+struct SearchResults: Codable {
     let page: Int
     let results: [MovieDetails]
     let totalPages: Int
@@ -97,7 +98,7 @@ class WhatsPopularView: UIView {
     let cellIdentifier = "cellId"
     var cellHeight = 0.0
     var selectedCategory = MovieFilter.streaming
-    var genres: [Genres]!
+    var genres: Genres!
     var stackScrollView: UIScrollView!
     
     func unboldButtons(boldedButton: UIButton) {
@@ -137,9 +138,24 @@ class WhatsPopularView: UIView {
     }
     
     func buildViews() {
-        isUserInteractionEnabled = true
-        
         networkService = NetworkService()
+
+        let urlRequestString = "https://api.themoviedb.org/3/genre/movie/list?language=en-US&api_key=59afefdb9064ea17898a694d311e247e"
+        guard let url = URL(string: urlRequestString) else { return }
+        var urlRequest = URLRequest(url: url)
+        urlRequest.httpMethod = "GET"
+        urlRequest.setValue("genre/movie/list/json", forHTTPHeaderField: "Content-Type")
+        print(urlRequest)
+        networkService.executeUrlRequest(urlRequest) { (result: Result<Genres, RequestError>) in
+        switch result {
+            case .success(let value):
+                self.genres = value
+            case .failure(let failure):
+                print("failure in WhatsPopularView")
+            }
+        }
+        
+        isUserInteractionEnabled = true
         
         stackScrollView = {
             let v = UIScrollView()
@@ -205,17 +221,6 @@ class WhatsPopularView: UIView {
         moviesCollectionView.register(MovieCollectionViewCell.self, forCellWithReuseIdentifier: MovieCollectionViewCell.cellIdentifier)
         moviesCollectionView.dataSource = self
         moviesCollectionView.delegate = self
-        
-        let urlRequestString = "https://api.themoviedb.org/3/genre/movie/list?language=en-US&api_key=59afefdb9064ea17898a694d311e247e"
-        let urlRequest = URLRequest(url: URL(string: urlRequestString)!)
-        networkService.executeUrlRequest(urlRequest) { (result: Result<Genres, RequestError>) in
-        switch result {
-            case .success(let value):
-                self.genres = [value]
-            case .failure(let failure):
-                print("failure")
-            }
-        }
     }
     
     func addConstraints() {
@@ -247,6 +252,7 @@ extension WhatsPopularView: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        print(self.genres!.genres)
         let movies = Movies.all()
         return movies.filter({$0.group.contains(MovieGroup.popular)}).count
     }

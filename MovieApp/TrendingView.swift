@@ -10,6 +10,20 @@ import UIKit
 import PureLayout
 import MovieAppData
 
+struct Trending: Codable {
+    let page: Int
+    let results: [MovieDetails]
+    let totalPages: Int
+    let totalResults: Int
+    
+    enum CodingKeys: String, CodingKey {
+        case page
+        case results
+        case totalPages = "total_pages"
+        case totalResults = "total_results"
+    }
+}
+
 class TrendingView: UIView {
     var navigationController: UINavigationController!
     

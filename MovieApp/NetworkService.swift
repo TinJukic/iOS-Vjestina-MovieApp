@@ -27,12 +27,12 @@ class NetworkService {
                 return
             }
             
-            guard let value = try? JSONDecoder().decode(String.self, from: data) else {
+            guard let value = try? JSONDecoder().decode(T.self, from: data) else {
                 completionHandler(.failure(.dataDecodingError))
                 return
             }
             
-            completionHandler(.success(value as! T))
+            completionHandler(.success(value))
         }
         
         dataTask.resume()
