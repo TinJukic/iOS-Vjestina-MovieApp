@@ -115,7 +115,7 @@ class UpcomingView: UIView {
         }
         
         // dohvat podataka za filmove i njihov prikaz
-        let popularMoviesUrlRequestString = "https://api.themoviedb.org/3/movie/top_rated?language=en-US&page=1&api_key=59afefdb9064ea17898a694d311e247e"
+        let popularMoviesUrlRequestString = "https://api.themoviedb.org/3/movie/103/recommendations?language=en-US&page=1&api_key=59afefdb9064ea17898a694d311e247e"
         // ne mogu prikazati link koji mi treba za ovaj view: https://api.themoviedb.org/3/movie/103/recommendations?language=en-US&page=1&api_key=59afefdb9064ea17898a694d311e247e
         guard let popularMoviesUrl = URL(string: popularMoviesUrlRequestString) else { return }
         var popularMoviesUrlRequest = URLRequest(url: popularMoviesUrl)
@@ -138,7 +138,7 @@ class UpcomingView: UIView {
         stackScrollView = {
             let v = UIScrollView()
             v.translatesAutoresizingMaskIntoConstraints = false
-            v.backgroundColor = .systemCyan
+            v.backgroundColor = .white
             return v
         }()
         
@@ -151,8 +151,7 @@ class UpcomingView: UIView {
         upcomingStackView.axis = .horizontal
         upcomingStackView.alignment = .fill
         upcomingStackView.distribution = .fillEqually
-        upcomingStackView.spacing = 1
-//        self.addSubview(upcomingStackView)
+        upcomingStackView.spacing = 20
         
         dramaButton = UIButton()
         dramaButton.setTitle("Drama", for: .normal)
@@ -222,15 +221,14 @@ class UpcomingView: UIView {
         upcomingLabel.autoPinEdge(toSuperviewSafeArea: .trailing, withInset: 0)
         upcomingLabel.autoPinEdge(toSuperviewSafeArea: .top, withInset: 0)
         
-        upcomingStackView.autoPinEdge(toSuperviewSafeArea: .leading, withInset: 0)
-        upcomingStackView.autoPinEdge(toSuperviewSafeArea: .trailing, withInset: 0)
-        upcomingStackView.autoPinEdge(.top, to: .bottom, of: upcomingLabel, withOffset: 8)
-        upcomingStackView.autoSetDimension(.height, toSize: 20)
+        upcomingStackView.autoPinEdge(toSuperviewEdge: .leading, withInset: 0)
+        upcomingStackView.autoPinEdge(toSuperviewEdge: .trailing, withInset: 0)
+        upcomingStackView.autoMatch(.height, to: .height, of: stackScrollView)
         
         stackScrollView.autoPinEdge(toSuperviewSafeArea: .leading, withInset: 0)
         stackScrollView.autoPinEdge(toSuperviewSafeArea: .trailing, withInset: 0)
         stackScrollView.autoPinEdge(.top, to: .bottom, of: upcomingLabel, withOffset: 8)
-        stackScrollView.autoSetDimension(.height, toSize: 20)
+        stackScrollView.autoSetDimension(.height, toSize: 30)
         
         moviesCollectionView.autoPinEdge(toSuperviewSafeArea: .leading, withInset: 0)
         moviesCollectionView.autoPinEdge(toSuperviewSafeArea: .trailing, withInset: 0)
@@ -261,7 +259,7 @@ extension UpcomingView: UICollectionViewDataSource {
         let movies = self.moviesSearchResult.results
         
 //        let pictureURL = movies[indexPath.row].imageUrl
-        let pictureURL = "https://image.tmdb.org/t/p/original" + movies[indexPath.row].posterPath
+        let pictureURL = "https://image.tmdb.org/t/p/original" + movies[indexPath.row].posterPath!
         cell.setImageURL(imageURL: pictureURL)
         
         return cell
@@ -273,7 +271,8 @@ extension UpcomingView: UICollectionViewDelegate {
 //        logic when cell is selected
         print("Clicked on cell number \(indexPath.row)")
         
-        let movieDetailsViewsController = MovieDetailsViewController()
+        let movie = self.moviesSearchResult.results[indexPath.row]
+        let movieDetailsViewsController = MovieDetailsViewController(id: self.moviesSearchResult.results[indexPath.row].id!, movie: movie)
         movieDetailsViewsController.tabBarController?.selectedIndex = indexPath.row
         
         self.navigationController.pushViewController(movieDetailsViewsController, animated: true)

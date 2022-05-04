@@ -46,7 +46,7 @@ class SearchMoviesViewCell: UIView {
 //            print(error)
 //        }
         do {
-            let url = URL(string: "https://image.tmdb.org/t/p/original" + moviesSearchResult.results[index].posterPath)!
+            let url = URL(string: "https://image.tmdb.org/t/p/original" + moviesSearchResult.results[index].posterPath!)!
             let data = try Data(contentsOf: url)
             movieImage.image = UIImage(data: data)
         } catch {

@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 import PureLayout
 
-class NoNetworkConnectionView: UIView {
+class NoInternetConnectionView: UIView {
     var label: UILabel!
     
     init() {
@@ -28,7 +28,9 @@ class NoNetworkConnectionView: UIView {
         label.text = "Your iPhone is not connected to the internet. Please connect your iPhone to the internet and try again!"
         label.numberOfLines = 0
         label.font = UIFont.boldSystemFont(ofSize: 14)
+        label.textAlignment = .center
         label.textColor = .black
+        self.addSubview(label)
     }
     
     func addConstraints() {

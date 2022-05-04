@@ -20,20 +20,20 @@ struct Genres: Codable {
 }
 
 struct MovieDetails: Codable {
-    let adult: Bool
-    let backdropPath: String
-    let genreIds: [Int]
-    let id: Int
-    let originalLanguage: String
-    let originalTitle: String
-    let overview: String
-    let popularity: Float
-    let posterPath: String
-    let releaseDate: String
-    let title: String
-    let video: Bool
-    let voteAverage: Float
-    let voteCount: Int
+    let adult: Bool?
+    let backdropPath: String?
+    let genreIds: [Int?]
+    let id: Int?
+    let originalLanguage: String?
+    let originalTitle: String?
+    let overview: String?
+    let popularity: Float?
+    let posterPath: String?
+    let releaseDate: String?
+    let title: String?
+    let video: Bool?
+    let voteAverage: Float?
+    let voteCount: Int?
     
     enum CodingKeys: String, CodingKey {
         case adult
@@ -67,32 +67,46 @@ struct SearchResults: Codable {
     }
 }
 
-struct DetailsForMovie: Codable {
-    let adult: Bool
-    let backdropPath: String
-    let belongsToCollection: Bool
-    let budget: Int
-    let genres: Genres
-    let homepage: String
+struct CollectionForMovie: Codable {
     let id: Int
-    let imdbId: Int
-    let originalLanguage: String
-    let originalTitle: String
-    let overview: String
-    let popularity: Float
+    let name: String
     let posterPath: String
-    let productionCompanies: ProductionCompanies
-    let productionCountries: ProductionCountries
-    let releaseDate: String
-    let revenue: Int
-    let runtime: Int
-    let spokenLanguages: SpokenLanguages
-    let status: String
-    let tagline: String
-    let title: String
-    let video: Bool
-    let voteAverage: Float
-    let voteCount: Int
+    let backdropPath: String
+    
+    enum CodingKeys: String, CodingKey {
+        case id
+        case name
+        case posterPath = "poster_path"
+        case backdropPath = "backdrop_path"
+    }
+}
+
+struct DetailsForMovie: Codable {
+    let adult: Bool?
+    let backdropPath: String?
+    let belongsToCollection: CollectionForMovie?
+    let budget: Int?
+    let genres: [GenreDescription]?
+    let homepage: String?
+    let id: Int?
+    let imdbId: String?
+    let originalLanguage: String?
+    let originalTitle: String?
+    let overview: String?
+    let popularity: Float?
+    let posterPath: String?
+    let productionCompanies: [ProductionCompanie?]
+    let productionCountries: [ProductionCountry?]
+    let releaseDate: String?
+    let revenue: Int?
+    let runtime: Int?
+    let spokenLanguages: SpokenLanguages?
+    let status: String?
+    let tagline: String?
+    let title: String?
+    let video: Bool?
+    let voteAverage: Float?
+    let voteCount: Int?
     
     enum CodingKeys: String, CodingKey {
         case adult
@@ -123,15 +137,11 @@ struct DetailsForMovie: Codable {
     }
 }
 
-struct ProductionCompanies: Codable {
-    let productionCompanies: [ProductionCompanie]
-}
-
 struct ProductionCompanie: Codable {
-    let id: Int
-    let logoPath: String
-    let name: String
-    let originCountry: String
+    let id: Int?
+    let logoPath: String?
+    let name: String?
+    let originCountry: String?
     
     enum CodingKeys: String, CodingKey {
         case id
@@ -139,10 +149,6 @@ struct ProductionCompanie: Codable {
         case name
         case originCountry = "origin_country"
     }
-}
-
-struct ProductionCountries: Codable {
-    let productionCountries: [ProductionCountry]
 }
 
 struct ProductionCountry: Codable {

@@ -27,7 +27,16 @@ class NetworkService {
                 return
             }
             
-            guard let value = try? JSONDecoder().decode(T.self, from: data) else {
+//            guard let value = try? JSONDecoder().decode(T.self, from: data) else {
+//                completionHandler(.failure(.dataDecodingError))
+//                return
+//            }
+            
+            var value: T!
+            do {
+                value = try JSONDecoder().decode(T.self, from: data)
+            } catch let jsonError as NSError {
+                print("JSON ERROR \(jsonError)")
                 completionHandler(.failure(.dataDecodingError))
                 return
             }

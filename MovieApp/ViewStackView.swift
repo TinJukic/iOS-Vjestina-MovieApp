@@ -17,7 +17,7 @@ class ViewStackView: UIView {
         
         self.navigationController = navigationController
         
-        backgroundColor = .yellow
+        backgroundColor = .white
         
         buildViews()
         addConstraints()
@@ -57,7 +57,5 @@ class ViewStackView: UIView {
     
     func addConstraints() {
         stackView.autoPinEdgesToSuperviewEdges()
-        stackView.autoSetDimension(.width, toSize: 395)
-//        stackView.autoSetDimension(.width, toSize: self.bounds.width)
     }
 }

@@ -22,9 +22,11 @@ import Network
     // MovieDetailsViewController prikazuje podatke za odabrani film pomocu odgovarajuceg API zahtjeva
 
 class MovieListViewController: UIViewController {
+    var noInternetConnectionView: NoInternetConnectionView!
     var searchBarView: SearchBarView!
     var searchMoviesView: SearchMoviesView!
     var movieCategories: MovieCategoriesView!
+    var connected = true
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,37 +40,62 @@ class MovieListViewController: UIViewController {
         navigationController?.navigationBar.standardAppearance = appearance
         navigationController?.navigationBar.scrollEdgeAppearance = appearance
         
+        let monitor = NWPathMonitor()
+        let queue = DispatchQueue(label: "InternetConnectionMonitor")
+        
+        monitor.pathUpdateHandler = { pathUpdateHandler in
+            if pathUpdateHandler.status == .satisfied {
+                print("Connected!")
+                self.connected = true
+            } else {
+                print("Not connected!")
+                self.connected = false
+            }
+        }
+        monitor.start(queue: queue)
+        
         buildViews()
         addConstraints()
     }
     
     func buildViews() {
-        // adding searchBar to the main view
+        noInternetConnectionView = NoInternetConnectionView()
         searchBarView = SearchBarView(delegate: self)
-        view.addSubview(searchBarView)
-
-        searchMoviesView = SearchMoviesView()
-        searchMoviesView.isHidden = true
-        view.addSubview(searchMoviesView)
-        
+        searchMoviesView = SearchMoviesView(navigationController: self.navigationController!)
         movieCategories = MovieCategoriesView(navigationController: self.navigationController!)
-        view.addSubview(movieCategories)
+        
+        if(connected == true) {
+            // adding searchBar to the main view
+            view.addSubview(searchBarView)
+            
+            searchMoviesView.isHidden = true
+            view.addSubview(searchMoviesView)
+            
+            view.addSubview(movieCategories)
+        } else {
+            // first check if device is connected to the internet
+            view.addSubview(noInternetConnectionView)
+        }
     }
     
     func addConstraints() {
-        searchBarView.autoPinEdge(toSuperviewSafeArea: .leading, withInset: 18)
-        searchBarView.autoPinEdge(toSuperviewSafeArea: .trailing, withInset: 18)
-        searchBarView.autoPinEdge(toSuperviewSafeArea: .top, withInset: 22)
-        searchBarView.layer.cornerRadius = 10
-        
-        movieCategories.autoPinEdge(toSuperviewSafeArea: .leading, withInset: 18)
-        movieCategories.autoPinEdge(toSuperviewSafeArea: .trailing, withInset: 18)
-        movieCategories.autoPinEdge(.top, to: .bottom, of: searchBarView, withOffset: 20)
-        movieCategories.autoPinEdge(toSuperviewSafeArea: .bottom, withInset: 18)
-        
-        searchMoviesView.autoPinEdge(toSuperviewSafeArea: .leading, withInset: 18)
-        searchMoviesView.autoPinEdge(toSuperviewSafeArea: .trailing, withInset: 18)
-        searchMoviesView.autoPinEdge(.top, to: .bottom, of: searchBarView, withOffset: 20)
+        if(connected == true) {
+            searchBarView.autoPinEdge(toSuperviewSafeArea: .leading, withInset: 18)
+            searchBarView.autoPinEdge(toSuperviewSafeArea: .trailing, withInset: 18)
+            searchBarView.autoPinEdge(toSuperviewSafeArea: .top, withInset: 22)
+            searchBarView.layer.cornerRadius = 10
+            
+            movieCategories.autoPinEdge(toSuperviewSafeArea: .leading, withInset: 18)
+            movieCategories.autoPinEdge(toSuperviewSafeArea: .trailing, withInset: 18)
+            movieCategories.autoPinEdge(.top, to: .bottom, of: searchBarView, withOffset: 20)
+            movieCategories.autoPinEdge(toSuperviewSafeArea: .bottom, withInset: 18)
+            
+            searchMoviesView.autoPinEdge(toSuperviewSafeArea: .leading, withInset: 18)
+            searchMoviesView.autoPinEdge(toSuperviewSafeArea: .trailing, withInset: 18)
+            searchMoviesView.autoPinEdge(.top, to: .bottom, of: searchBarView, withOffset: 20)
+        } else {
+            noInternetConnectionView.autoPinEdgesToSuperviewSafeArea()
+        }
     }
 }
 

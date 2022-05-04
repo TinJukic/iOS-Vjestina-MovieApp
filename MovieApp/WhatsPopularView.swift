@@ -133,7 +133,7 @@ class WhatsPopularView: UIView {
         stackScrollView = {
             let v = UIScrollView()
             v.translatesAutoresizingMaskIntoConstraints = false
-            v.backgroundColor = .systemCyan
+            v.backgroundColor = .white
             return v
         }()
         
@@ -145,9 +145,8 @@ class WhatsPopularView: UIView {
         whatsPopularStackView = UIStackView()
         whatsPopularStackView.axis = .horizontal
         whatsPopularStackView.alignment = .fill
-        whatsPopularStackView.distribution = .fillProportionally
-        whatsPopularStackView.spacing = 12
-//        self.addSubview(whatsPopularStackView)
+        whatsPopularStackView.distribution = .fillEqually
+        whatsPopularStackView.spacing = 20
         
         streamingButton = UIButton()
         streamingButton.setTitle("Streaming", for: .normal)
@@ -201,15 +200,15 @@ class WhatsPopularView: UIView {
         whatsPopularLabel.autoPinEdge(toSuperviewSafeArea: .trailing, withInset: 0)
         whatsPopularLabel.autoPinEdge(toSuperviewSafeArea: .top, withInset: 0)
         
-        whatsPopularStackView.autoPinEdge(toSuperviewSafeArea: .leading, withInset: 0)
-        whatsPopularStackView.autoPinEdge(toSuperviewSafeArea: .trailing, withInset: 0)
+        whatsPopularStackView.autoPinEdge(toSuperviewEdge: .leading, withInset: 0)
+        whatsPopularStackView.autoPinEdge(toSuperviewEdge: .trailing, withInset: 0)
         whatsPopularStackView.autoPinEdge(.top, to: .bottom, of: whatsPopularLabel, withOffset: 8)
-        whatsPopularStackView.autoSetDimension(.height, toSize: 20)
+        whatsPopularStackView.autoMatch(.height, to: .height, of: stackScrollView)
         
         stackScrollView.autoPinEdge(toSuperviewSafeArea: .leading, withInset: 0)
         stackScrollView.autoPinEdge(toSuperviewSafeArea: .trailing, withInset: 0)
         stackScrollView.autoPinEdge(.top, to: .bottom, of: whatsPopularLabel, withOffset: 8)
-        stackScrollView.autoSetDimension(.height, toSize: 20)
+        stackScrollView.autoSetDimension(.height, toSize: 30)
         
         moviesCollectionView.autoPinEdge(toSuperviewSafeArea: .leading, withInset: 0)
         moviesCollectionView.autoPinEdge(toSuperviewSafeArea: .trailing, withInset: 0)
@@ -263,7 +262,7 @@ extension WhatsPopularView: UICollectionViewDataSource {
         // MovieDetails
         
 //        let pictureURL = movies[indexPath.row].imageUrl
-        let pictureURL = "https://image.tmdb.org/t/p/original" + movies[indexPath.row].posterPath
+        let pictureURL = "https://image.tmdb.org/t/p/original" + movies[indexPath.row].posterPath!
         cell.setImageURL(imageURL: pictureURL)
         
         return cell
@@ -275,7 +274,8 @@ extension WhatsPopularView: UICollectionViewDelegate {
 //        logic when cell is selected
         print("Clicked on cell number \(indexPath.row)")
         
-        let movieDetailsViewsController = MovieDetailsViewController(id: self.moviesSearchResult.results[indexPath.row].id)
+        let movie = self.moviesSearchResult.results[indexPath.row]
+        let movieDetailsViewsController = MovieDetailsViewController(id: self.moviesSearchResult.results[indexPath.row].id!, movie: movie)
         movieDetailsViewsController.tabBarController?.selectedIndex = indexPath.row
         
         self.navigationController.pushViewController(movieDetailsViewsController, animated: true)

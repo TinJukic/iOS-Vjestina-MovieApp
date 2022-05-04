@@ -121,7 +121,7 @@ class TrendingView: UIView {
         stackScrollView = {
             let v = UIScrollView()
             v.translatesAutoresizingMaskIntoConstraints = false
-            v.backgroundColor = .systemCyan
+            v.backgroundColor = .white
             return v
         }()
         
@@ -134,8 +134,7 @@ class TrendingView: UIView {
         trendingStackView.axis = .horizontal
         trendingStackView.alignment = .fill
         trendingStackView.distribution = .fillEqually
-        trendingStackView.spacing = 1
-//        self.addSubview(trendingStackView)
+        trendingStackView.spacing = 20
         
         dayButton = UIButton()
         dayButton.setTitle("Day", for: .normal)
@@ -189,15 +188,14 @@ class TrendingView: UIView {
         trendingLabel.autoPinEdge(toSuperviewSafeArea: .trailing, withInset: 0)
         trendingLabel.autoPinEdge(toSuperviewSafeArea: .top, withInset: 0)
         
-        trendingStackView.autoPinEdge(toSuperviewSafeArea: .leading, withInset: 0)
-        trendingStackView.autoPinEdge(toSuperviewSafeArea: .trailing, withInset: 0)
-        trendingStackView.autoPinEdge(.top, to: .bottom, of: trendingLabel, withOffset: 8)
-        trendingStackView.autoSetDimension(.height, toSize: 20)
+        trendingStackView.autoPinEdge(toSuperviewEdge: .leading, withInset: 0)
+        trendingStackView.autoPinEdge(toSuperviewEdge: .trailing, withInset: 0)
+        trendingStackView.autoMatch(.height, to: .height, of: stackScrollView)
         
         stackScrollView.autoPinEdge(toSuperviewSafeArea: .leading, withInset: 0)
         stackScrollView.autoPinEdge(toSuperviewSafeArea: .trailing, withInset: 0)
         stackScrollView.autoPinEdge(.top, to: .bottom, of: trendingLabel, withOffset: 8)
-        stackScrollView.autoSetDimension(.height, toSize: 20)
+        stackScrollView.autoSetDimension(.height, toSize: 30)
         
         moviesCollectionView.autoPinEdge(toSuperviewSafeArea: .leading, withInset: 0)
         moviesCollectionView.autoPinEdge(toSuperviewSafeArea: .trailing, withInset: 0)
@@ -228,7 +226,7 @@ extension TrendingView: UICollectionViewDataSource {
         let movies = self.moviesSearchResult.results
         
 //        let pictureURL = movies[indexPath.row].imageUrl
-        let pictureURL = "https://image.tmdb.org/t/p/original" + movies[indexPath.row].posterPath
+        let pictureURL = "https://image.tmdb.org/t/p/original" + movies[indexPath.row].posterPath!
         cell.setImageURL(imageURL: pictureURL)
         
         return cell
@@ -240,7 +238,8 @@ extension TrendingView: UICollectionViewDelegate {
 //        logic when cell is selected
         print("Clicked on cell number \(indexPath.row)")
         
-        let movieDetailsViewsController = MovieDetailsViewController()
+        let movie = self.moviesSearchResult.results[indexPath.row]
+        let movieDetailsViewsController = MovieDetailsViewController(id: self.moviesSearchResult.results[indexPath.row].id!, movie: movie)
         movieDetailsViewsController.tabBarController?.selectedIndex = indexPath.row
         
         self.navigationController.pushViewController(movieDetailsViewsController, animated: true)

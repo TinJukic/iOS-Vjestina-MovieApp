@@ -17,11 +17,14 @@ class SearchMoviesView: UIView {
     var labela: UILabel!
     var networkService: NetworkService!
     var moviesSearchResult: SearchResults!
+    var navigationController: UINavigationController!
     
-    init() {
+    init(navigationController: UINavigationController) {
         super.init(frame: .zero)
         
         self.backgroundColor = .white
+        
+        self.navigationController = navigationController
         
         buildViews()
         addConstraints()
@@ -96,6 +99,15 @@ extension SearchMoviesView: UICollectionViewDataSource {
 extension SearchMoviesView: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 //        logic when cell is selected
+        print("Clicked on cell number \(indexPath.row)")
+        
+        let movie = self.moviesSearchResult.results[indexPath.row]
+        let movieDetailsViewsController = MovieDetailsViewController(id: self.moviesSearchResult.results[indexPath.row].id!, movie: movie)
+        movieDetailsViewsController.tabBarController?.selectedIndex = indexPath.row
+        
+        self.navigationController.pushViewController(movieDetailsViewsController, animated: true)
+        
+        print("Obavio sam sto sam trebao...")
     }
 }
 

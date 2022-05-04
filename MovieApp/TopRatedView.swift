@@ -121,7 +121,7 @@ class TopRatedView: UIView {
         stackScrollView = {
             let v = UIScrollView()
             v.translatesAutoresizingMaskIntoConstraints = false
-            v.backgroundColor = .systemCyan
+            v.backgroundColor = .white
             return v
         }()
         
@@ -134,8 +134,7 @@ class TopRatedView: UIView {
         topRatedStackView.axis = .horizontal
         topRatedStackView.alignment = .fill
         topRatedStackView.distribution = .fillEqually
-        topRatedStackView.spacing = 1
-//        self.addSubview(topRatedStackView)
+        topRatedStackView.spacing = 20
         
         dayButton = UIButton()
         dayButton.setTitle("Day", for: .normal)
@@ -189,15 +188,14 @@ class TopRatedView: UIView {
         topRatedLabel.autoPinEdge(toSuperviewSafeArea: .trailing, withInset: 0)
         topRatedLabel.autoPinEdge(toSuperviewSafeArea: .top, withInset: 0)
         
-        topRatedStackView.autoPinEdge(toSuperviewSafeArea: .leading, withInset: 0)
-        topRatedStackView.autoPinEdge(toSuperviewSafeArea: .trailing, withInset: 0)
-        topRatedStackView.autoPinEdge(.top, to: .bottom, of: topRatedLabel, withOffset: 8)
-        topRatedStackView.autoSetDimension(.height, toSize: 20)
+        topRatedStackView.autoPinEdge(toSuperviewEdge: .leading, withInset: 0)
+        topRatedStackView.autoPinEdge(toSuperviewEdge: .trailing, withInset: 0)
+        topRatedStackView.autoMatch(.height, to: .height, of: stackScrollView)
         
         stackScrollView.autoPinEdge(toSuperviewSafeArea: .leading, withInset: 0)
         stackScrollView.autoPinEdge(toSuperviewSafeArea: .trailing, withInset: 0)
         stackScrollView.autoPinEdge(.top, to: .bottom, of: topRatedLabel, withOffset: 8)
-        stackScrollView.autoSetDimension(.height, toSize: 20)
+        stackScrollView.autoSetDimension(.height, toSize: 30)
         
         moviesCollectionView.autoPinEdge(toSuperviewSafeArea: .leading, withInset: 0)
         moviesCollectionView.autoPinEdge(toSuperviewSafeArea: .trailing, withInset: 0)
@@ -228,7 +226,7 @@ extension TopRatedView: UICollectionViewDataSource {
         let movies = self.moviesSearchResult.results
         
 //        let pictureURL = movies[indexPath.row].imageUrl
-        let pictureURL = "https://image.tmdb.org/t/p/original" + movies[indexPath.row].posterPath
+        let pictureURL = "https://image.tmdb.org/t/p/original" + movies[indexPath.row].posterPath!
         cell.setImageURL(imageURL: pictureURL)
         
         return cell
@@ -240,7 +238,8 @@ extension TopRatedView: UICollectionViewDelegate {
 //        logic when cell is selected
         print("Clicked on cell number \(indexPath.row)")
         
-        let movieDetailsViewsController = MovieDetailsViewController()
+        let movie = self.moviesSearchResult.results[indexPath.row]
+        let movieDetailsViewsController = MovieDetailsViewController(id: self.moviesSearchResult.results[indexPath.row].id!, movie: movie)
         movieDetailsViewsController.tabBarController?.selectedIndex = indexPath.row
         
         self.navigationController.pushViewController(movieDetailsViewsController, animated: true)
