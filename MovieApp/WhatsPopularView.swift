@@ -10,64 +10,6 @@ import UIKit
 import PureLayout
 import MovieAppData
 
-// struct je vidljiv u svim klasama
-struct GenreDescription: Codable {
-    let id: Int
-    let name: String
-}
-
-struct Genres: Codable {
-    let genres: [GenreDescription]
-}
-
-struct MovieDetails: Codable {
-    let adult: Bool
-    let backdropPath: String
-    let genreIds: [Int]
-    let id: Int
-    let originalLanguage: String
-    let originalTitle: String
-    let overview: String
-    let popularity: Float
-    let posterPath: String
-    let releaseDate: String
-    let title: String
-    let video: Bool
-    let voteAverage: Float
-    let voteCount: Int
-    
-    enum CodingKeys: String, CodingKey {
-        case adult
-        case backdropPath = "backdrop_path"
-        case genreIds = "genre_ids"
-        case id
-        case originalLanguage = "original_language"
-        case originalTitle = "original_title"
-        case overview
-        case popularity
-        case posterPath = "poster_path"
-        case releaseDate = "release_date"
-        case title
-        case video
-        case voteAverage = "vote_average"
-        case voteCount = "vote_count"
-    }
-}
-
-struct SearchResults: Codable {
-    let page: Int
-    let results: [MovieDetails]
-    let totalPages: Int
-    let totalResults: Int
-    
-    enum CodingKeys: String, CodingKey {
-        case page
-        case results
-        case totalPages = "total_pages"
-        case totalResults = "total_results"
-    }
-}
-
 class WhatsPopularView: UIView {
     var navigationController: UINavigationController!
     var networkService: NetworkService!
@@ -178,6 +120,9 @@ class WhatsPopularView: UIView {
             switch result {
             case .success(let success):
                 self.moviesSearchResult = success
+                DispatchQueue.main.async {
+                    self.moviesCollectionView.reloadData()
+                }
             case .failure(let failure):
                 print("failure in WhatsPopularView")
             }
@@ -282,25 +227,25 @@ extension WhatsPopularView: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
 //        let movies = Movies.all()
 //        return movies.filter({$0.group.contains(MovieGroup.popular)}).count
-        var genreId = -1
-        self.genres.genres.forEach({
-            if($0.name == self.selectedCategory) {
-                genreId = $0.id
-                return
-            }
-        })
-        
-        print("Printam broj...")
-        print(self.genres.genres.count)
-        
-        var count = 0
-        self.moviesSearchResult.results.forEach({
-            $0.genreIds.forEach { genre in
-                if(genre == genreId) {
-                    count += 1
-                }
-            }
-        })
+//        var genreId = -1
+//        self.genres.genres.forEach({
+//            if($0.name == self.selectedCategory) {
+//                genreId = $0.id
+//                return
+//            }
+//        })
+//        
+//        print("Printam broj...")
+//        print(self.genres.genres.count)
+//        
+//        var count = 0
+//        self.moviesSearchResult.results.forEach({
+//            $0.genreIds.forEach { genre in
+//                if(genre == genreId) {
+//                    count += 1
+//                }
+//            }
+//        })
         
         return self.moviesSearchResult.totalResults
     }
@@ -314,7 +259,7 @@ extension WhatsPopularView: UICollectionViewDataSource {
 //        var movies = Movies.all()
 //        movies = movies.filter({$0.group.contains(MovieGroup.popular)})
         
-        var movies = self.moviesSearchResult.results
+        let movies = self.moviesSearchResult.results
         // MovieDetails
         
 //        let pictureURL = movies[indexPath.row].imageUrl

@@ -11,19 +11,21 @@ import PureLayout
 import MovieAppData
 
 class SearchMoviesViewCell: UIView {
+    var moviesSearchResult: SearchResults!
     var movieImage: UIImageView!
     var movieTitle: UILabel!
     var movieDescription: UILabel!
     var index = 0
     var cell: UICollectionViewCell!
     
-    init(index: Int, cell: UICollectionViewCell) {
+    init(index: Int, cell: UICollectionViewCell, moviesSearchResult: SearchResults) {
         super.init(frame: .zero)
         
         self.backgroundColor = .white
         
         self.index = index
         self.cell = cell
+        self.moviesSearchResult = moviesSearchResult
         
         buildViews()
         addConstraints()
@@ -35,24 +37,33 @@ class SearchMoviesViewCell: UIView {
     
     func buildViews() {
         movieImage = UIImageView()
+//        do {
+//            let url = URL(string: Movies.all()[index].imageUrl)!
+//            let data = try Data(contentsOf: url)
+//            movieImage.image = UIImage(data: data)
+//        }
+//        catch{
+//            print(error)
+//        }
         do {
-            let url = URL(string: Movies.all()[index].imageUrl)!
+            let url = URL(string: "https://image.tmdb.org/t/p/original" + moviesSearchResult.results[index].posterPath)!
             let data = try Data(contentsOf: url)
             movieImage.image = UIImage(data: data)
-        }
-        catch{
+        } catch {
             print(error)
         }
         self.addSubview(movieImage)
         
         movieTitle = UILabel()
-        movieTitle.text = Movies.all()[index].title + " (" + String(Movies.all()[index].year) + ")"
+//        movieTitle.text = Movies.all()[index].title + " (" + String(Movies.all()[index].year) + ")"
+        movieTitle.text = moviesSearchResult.results[index].title
         movieTitle.font = UIFont.boldSystemFont(ofSize: 16)
         movieTitle.numberOfLines = 0
         self.addSubview(movieTitle)
         
         movieDescription = UILabel()
-        movieDescription.text = Movies.all()[index].description
+//        movieDescription.text = Movies.all()[index].description
+        movieDescription.text = moviesSearchResult.results[index].overview
         movieDescription.font = UIFont.systemFont(ofSize: 16)
         movieDescription.numberOfLines = 0
         self.addSubview(movieDescription)

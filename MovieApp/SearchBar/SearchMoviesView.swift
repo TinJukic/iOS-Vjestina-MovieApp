@@ -15,6 +15,8 @@ class SearchMoviesView: UIView {
     var moviesCollectionView: UICollectionView!
     let cellIdentifier = "cellId"
     var labela: UILabel!
+    var networkService: NetworkService!
+    var moviesSearchResult: SearchResults!
     
     init() {
         super.init(frame: .zero)
@@ -30,6 +32,28 @@ class SearchMoviesView: UIView {
     }
     
     func buildViews() {
+        networkService = NetworkService()
+        
+        // dohvat podataka za filmove i njihov prikaz
+        let popularMoviesUrlRequestString = "https://api.themoviedb.org/3/movie/popular?language=en-US&page=1&api_key=59afefdb9064ea17898a694d311e247e"
+        guard let popularMoviesUrl = URL(string: popularMoviesUrlRequestString) else { return }
+        var popularMoviesUrlRequest = URLRequest(url: popularMoviesUrl)
+        popularMoviesUrlRequest.httpMethod = "GET"
+        popularMoviesUrlRequest.setValue("movie/popular/json", forHTTPHeaderField: "Content-Type")
+        print()
+        print(popularMoviesUrlRequest)
+        networkService.executeUrlRequest(popularMoviesUrlRequest) { (result: Result<SearchResults, RequestError>) in
+            switch result {
+            case .success(let success):
+                self.moviesSearchResult = success
+                DispatchQueue.main.async {
+                    self.moviesCollectionView.reloadData()
+                }
+            case .failure(let failure):
+                print("failure in WhatsPopularView")
+            }
+        }
+        
         let flowLayout = UICollectionViewFlowLayout()
         flowLayout.scrollDirection = .vertical
         moviesCollectionView = UICollectionView(
@@ -62,7 +86,7 @@ extension SearchMoviesView: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath)
-        let contentForCell = SearchMoviesViewCell(index: indexPath.row, cell: cell)
+        let contentForCell = SearchMoviesViewCell(index: indexPath.row, cell: cell, moviesSearchResult: self.moviesSearchResult)
         cell.contentView.addSubview(contentForCell)
         cell.layer.cornerRadius = 10
         return cell

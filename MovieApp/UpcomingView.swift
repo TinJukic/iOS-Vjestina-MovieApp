@@ -12,6 +12,7 @@ import MovieAppData
 
 class UpcomingView: UIView {
     var navigationController: UINavigationController!
+    var networkService: NetworkService!
     
     init(navigationController: UINavigationController) {
         super.init(frame: .zero)
@@ -41,6 +42,8 @@ class UpcomingView: UIView {
     var cellHeight = 0.0
     var selectedCategory = "Movies"
     var stackScrollView: UIScrollView!
+    var genres: Genres!
+    var moviesSearchResult: SearchResults!
     
     func unboldButtons(boldedButton: UIButton) {
         buttonList.forEach({
@@ -93,6 +96,45 @@ class UpcomingView: UIView {
     }
     
     func buildViews() {
+        networkService = NetworkService()
+        
+        // dohvat podataka za genres
+        let genresUrlRequestString = "https://api.themoviedb.org/3/genre/movie/list?language=en-US&api_key=59afefdb9064ea17898a694d311e247e"
+        guard let genresUrl = URL(string: genresUrlRequestString) else { return }
+        var genresUrlRequest = URLRequest(url: genresUrl)
+        genresUrlRequest.httpMethod = "GET"
+        genresUrlRequest.setValue("genre/movie/list/json", forHTTPHeaderField: "Content-Type")
+        print(genresUrlRequest)
+        networkService.executeUrlRequest(genresUrlRequest) { (result: Result<Genres, RequestError>) in
+        switch result {
+            case .success(let value):
+                self.genres = value
+            case .failure(let failure):
+                print("failure in WhatsPopularView")
+            }
+        }
+        
+        // dohvat podataka za filmove i njihov prikaz
+        let popularMoviesUrlRequestString = "https://api.themoviedb.org/3/movie/top_rated?language=en-US&page=1&api_key=59afefdb9064ea17898a694d311e247e"
+        // ne mogu prikazati link koji mi treba za ovaj view: https://api.themoviedb.org/3/movie/103/recommendations?language=en-US&page=1&api_key=59afefdb9064ea17898a694d311e247e
+        guard let popularMoviesUrl = URL(string: popularMoviesUrlRequestString) else { return }
+        var popularMoviesUrlRequest = URLRequest(url: popularMoviesUrl)
+        popularMoviesUrlRequest.httpMethod = "GET"
+        popularMoviesUrlRequest.setValue("movie/103/recommendations/json", forHTTPHeaderField: "Content-Type")
+        print()
+        print(popularMoviesUrlRequest)
+        networkService.executeUrlRequest(popularMoviesUrlRequest) { (result: Result<SearchResults, RequestError>) in
+            switch result {
+            case .success(let success):
+                self.moviesSearchResult = success
+                DispatchQueue.main.async {
+                    self.moviesCollectionView.reloadData()
+                }
+            case .failure(let failure):
+                print("failure in RecommendedView")
+            }
+        }
+        
         stackScrollView = {
             let v = UIScrollView()
             v.translatesAutoresizingMaskIntoConstraints = false
@@ -204,17 +246,22 @@ extension UpcomingView: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        let movies = Movies.all()
-        return movies.filter({$0.group.contains(MovieGroup.upcoming)}).count
+//        let movies = Movies.all()
+//        return movies.filter({$0.group.contains(MovieGroup.upcoming)}).count
+        
+        return self.moviesSearchResult.totalResults
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MovieCollectionViewCell.cellIdentifier, for: indexPath) as! MovieCollectionViewCell
         
-        var movies = Movies.all()
-        movies = movies.filter({$0.group.contains(MovieGroup.upcoming)})
+//        var movies = Movies.all()
+//        movies = movies.filter({$0.group.contains(MovieGroup.upcoming)})
         
-        let pictureURL = movies[indexPath.row].imageUrl
+        let movies = self.moviesSearchResult.results
+        
+//        let pictureURL = movies[indexPath.row].imageUrl
+        let pictureURL = "https://image.tmdb.org/t/p/original" + movies[indexPath.row].posterPath
         cell.setImageURL(imageURL: pictureURL)
         
         return cell
