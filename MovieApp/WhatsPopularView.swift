@@ -21,8 +21,7 @@ class WhatsPopularView: UIView {
         
         backgroundColor = .white
         
-        buildViews()
-        addConstraints()
+        fetchButtons()
     }
     
     required init?(coder: NSCoder) {
@@ -42,7 +41,31 @@ class WhatsPopularView: UIView {
     var selectedCategory = "Streaming"
     var genres: Genres!
     var stackScrollView: UIScrollView!
-    var moviesSearchResult: SearchResults!
+    var moviesSearchResult: SearchResults?
+    
+    func fetchButtons() {
+        networkService = NetworkService()
+
+        // dohvat podataka za genres
+        let genresUrlRequestString = "https://api.themoviedb.org/3/genre/movie/list?language=en-US&api_key=59afefdb9064ea17898a694d311e247e"
+        guard let genresUrl = URL(string: genresUrlRequestString) else { return }
+        var genresUrlRequest = URLRequest(url: genresUrl)
+        genresUrlRequest.httpMethod = "GET"
+        genresUrlRequest.setValue("genre/movie/list/json", forHTTPHeaderField: "Content-Type")
+        print(genresUrlRequest)
+        networkService.executeUrlRequest(genresUrlRequest) { (result: Result<Genres, RequestError>) in
+        switch result {
+            case .success(let value):
+                self.genres = value
+            DispatchQueue.main.async {
+                self.buildViews()
+                self.addConstraints()
+            }
+            case .failure(let failure):
+                print("failure in WhatsPopularView")
+            }
+        }
+    }
     
     func changeGenre(newGenre: String) {
         self.genres.genres.forEach({
@@ -59,6 +82,11 @@ class WhatsPopularView: UIView {
                 $0.titleLabel?.font = UIFont.systemFont(ofSize: 16)
             }
         })
+    }
+    
+    @objc func buttonTapped() {
+        print("Button tapped!")
+        
     }
     
     @objc func streamingButtonPressed() {
@@ -90,24 +118,6 @@ class WhatsPopularView: UIView {
     }
     
     func buildViews() {
-        networkService = NetworkService()
-
-        // dohvat podataka za genres
-        let genresUrlRequestString = "https://api.themoviedb.org/3/genre/movie/list?language=en-US&api_key=59afefdb9064ea17898a694d311e247e"
-        guard let genresUrl = URL(string: genresUrlRequestString) else { return }
-        var genresUrlRequest = URLRequest(url: genresUrl)
-        genresUrlRequest.httpMethod = "GET"
-        genresUrlRequest.setValue("genre/movie/list/json", forHTTPHeaderField: "Content-Type")
-        print(genresUrlRequest)
-        networkService.executeUrlRequest(genresUrlRequest) { (result: Result<Genres, RequestError>) in
-        switch result {
-            case .success(let value):
-                self.genres = value
-            case .failure(let failure):
-                print("failure in WhatsPopularView")
-            }
-        }
-        
         // dohvat podataka za filmove i njihov prikaz
         let popularMoviesUrlRequestString = "https://api.themoviedb.org/3/movie/popular?language=en-US&page=1&api_key=59afefdb9064ea17898a694d311e247e"
         guard let popularMoviesUrl = URL(string: popularMoviesUrlRequestString) else { return }
@@ -224,29 +234,7 @@ extension WhatsPopularView: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-//        let movies = Movies.all()
-//        return movies.filter({$0.group.contains(MovieGroup.popular)}).count
-//        var genreId = -1
-//        self.genres.genres.forEach({
-//            if($0.name == self.selectedCategory) {
-//                genreId = $0.id
-//                return
-//            }
-//        })
-//        
-//        print("Printam broj...")
-//        print(self.genres.genres.count)
-//        
-//        var count = 0
-//        self.moviesSearchResult.results.forEach({
-//            $0.genreIds.forEach { genre in
-//                if(genre == genreId) {
-//                    count += 1
-//                }
-//            }
-//        })
-        
-        return self.moviesSearchResult.totalResults
+        return self.moviesSearchResult?.totalResults ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -255,13 +243,8 @@ extension WhatsPopularView: UICollectionViewDataSource {
         print(self.genres!.genres[0].name)
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MovieCollectionViewCell.cellIdentifier, for: indexPath) as! MovieCollectionViewCell
         
-//        var movies = Movies.all()
-//        movies = movies.filter({$0.group.contains(MovieGroup.popular)})
+        let movies = self.moviesSearchResult?.results ?? []
         
-        let movies = self.moviesSearchResult.results
-        // MovieDetails
-        
-//        let pictureURL = movies[indexPath.row].imageUrl
         let pictureURL = "https://image.tmdb.org/t/p/original" + movies[indexPath.row].posterPath!
         cell.setImageURL(imageURL: pictureURL)
         
@@ -274,8 +257,8 @@ extension WhatsPopularView: UICollectionViewDelegate {
 //        logic when cell is selected
         print("Clicked on cell number \(indexPath.row)")
         
-        let movie = self.moviesSearchResult.results[indexPath.row]
-        let movieDetailsViewsController = MovieDetailsViewController(id: self.moviesSearchResult.results[indexPath.row].id!, movie: movie)
+        let movie = self.moviesSearchResult?.results[indexPath.row] ?? MovieDetails.init(adult: nil, backdropPath: nil, genreIds: nil, id: nil, originalLanguage: nil, originalTitle: nil, overview: nil, popularity: nil, posterPath: nil, releaseDate: nil, title: nil, video: nil, voteAverage: nil, voteCount: nil)
+        let movieDetailsViewsController = MovieDetailsViewController(id: self.moviesSearchResult?.results[indexPath.row].id! ?? 0, movie: movie)
         movieDetailsViewsController.tabBarController?.selectedIndex = indexPath.row
         
         self.navigationController.pushViewController(movieDetailsViewsController, animated: true)

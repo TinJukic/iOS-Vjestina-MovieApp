@@ -20,8 +20,7 @@ class TrendingView: UIView {
         self.navigationController = navigationController
         backgroundColor = .white
         
-        buildViews()
-        addConstraints()
+        fetchButtons()
     }
     
     required init?(coder: NSCoder) {
@@ -41,7 +40,31 @@ class TrendingView: UIView {
     var selectedCategory = "Movies"
     var stackScrollView: UIScrollView!
     var genres: Genres!
-    var moviesSearchResult: SearchResults!
+    var moviesSearchResult: SearchResults?
+    
+    func fetchButtons() {
+        networkService = NetworkService()
+        
+        // dohvat podataka za genres
+        let genresUrlRequestString = "https://api.themoviedb.org/3/genre/movie/list?language=en-US&api_key=59afefdb9064ea17898a694d311e247e"
+        guard let genresUrl = URL(string: genresUrlRequestString) else { return }
+        var genresUrlRequest = URLRequest(url: genresUrl)
+        genresUrlRequest.httpMethod = "GET"
+        genresUrlRequest.setValue("genre/movie/list/json", forHTTPHeaderField: "Content-Type")
+        print(genresUrlRequest)
+        networkService.executeUrlRequest(genresUrlRequest) { (result: Result<Genres, RequestError>) in
+        switch result {
+            case .success(let value):
+                self.genres = value
+            DispatchQueue.main.async {
+                self.buildViews()
+                self.addConstraints()
+            }
+            case .failure(let failure):
+                print("failure in TrendingView \(failure)")
+            }
+        }
+    }
     
     func unboldButtons(boldedButton: UIButton) {
         buttonList.forEach({
@@ -80,24 +103,6 @@ class TrendingView: UIView {
     }
     
     func buildViews() {
-        networkService = NetworkService()
-        
-        // dohvat podataka za genres
-        let genresUrlRequestString = "https://api.themoviedb.org/3/genre/movie/list?language=en-US&api_key=59afefdb9064ea17898a694d311e247e"
-        guard let genresUrl = URL(string: genresUrlRequestString) else { return }
-        var genresUrlRequest = URLRequest(url: genresUrl)
-        genresUrlRequest.httpMethod = "GET"
-        genresUrlRequest.setValue("genre/movie/list/json", forHTTPHeaderField: "Content-Type")
-        print(genresUrlRequest)
-        networkService.executeUrlRequest(genresUrlRequest) { (result: Result<Genres, RequestError>) in
-        switch result {
-            case .success(let value):
-                self.genres = value
-            case .failure(let failure):
-                print("failure in WhatsPopularView")
-            }
-        }
-        
         // dohvat podataka za filmove i njihov prikaz
         let popularMoviesUrlRequestString = "https://api.themoviedb.org/3/trending/movie/day?api_key=59afefdb9064ea17898a694d311e247e&page=1"
         guard let popularMoviesUrl = URL(string: popularMoviesUrlRequestString) else { return }
@@ -114,7 +119,7 @@ class TrendingView: UIView {
                     self.moviesCollectionView.reloadData()
                 }
             case .failure(let failure):
-                print("failure in TrendingView")
+                print("failure in TrendingView \(failure)")
             }
         }
         
@@ -211,21 +216,14 @@ extension TrendingView: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-//        let movies = Movies.all()
-//        return movies.filter({$0.group.contains(MovieGroup.trending)}).count
-        
-        return self.moviesSearchResult.totalResults
+        return self.moviesSearchResult?.totalResults ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MovieCollectionViewCell.cellIdentifier, for: indexPath) as! MovieCollectionViewCell
         
-//        var movies = Movies.all()
-//        movies = movies.filter({$0.group.contains(MovieGroup.trending)})
+        let movies = self.moviesSearchResult?.results ?? []
         
-        let movies = self.moviesSearchResult.results
-        
-//        let pictureURL = movies[indexPath.row].imageUrl
         let pictureURL = "https://image.tmdb.org/t/p/original" + movies[indexPath.row].posterPath!
         cell.setImageURL(imageURL: pictureURL)
         
@@ -238,8 +236,8 @@ extension TrendingView: UICollectionViewDelegate {
 //        logic when cell is selected
         print("Clicked on cell number \(indexPath.row)")
         
-        let movie = self.moviesSearchResult.results[indexPath.row]
-        let movieDetailsViewsController = MovieDetailsViewController(id: self.moviesSearchResult.results[indexPath.row].id!, movie: movie)
+        let movie = self.moviesSearchResult?.results[indexPath.row] ?? MovieDetails.init(adult: nil, backdropPath: nil, genreIds: nil, id: nil, originalLanguage: nil, originalTitle: nil, overview: nil, popularity: nil, posterPath: nil, releaseDate: nil, title: nil, video: nil, voteAverage: nil, voteCount: nil)
+        let movieDetailsViewsController = MovieDetailsViewController(id: self.moviesSearchResult?.results[indexPath.row].id! ?? 0, movie: movie)
         movieDetailsViewsController.tabBarController?.selectedIndex = indexPath.row
         
         self.navigationController.pushViewController(movieDetailsViewsController, animated: true)

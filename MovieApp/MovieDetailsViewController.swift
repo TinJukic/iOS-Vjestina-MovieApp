@@ -42,7 +42,7 @@ class MovieDetailsViewController: UIViewController {
     var horizontalStackView2: UIStackView!
     
     convenience init() {
-        self.init(id: 0, movie: MovieDetails.init(adult: nil, backdropPath: nil, genreIds: [nil], id: nil, originalLanguage: nil, originalTitle: nil, overview: nil, popularity: nil, posterPath: nil, releaseDate: nil, title: nil, video: nil, voteAverage: nil, voteCount: nil))
+        self.init(id: 0, movie: MovieDetails.init(adult: nil, backdropPath: nil, genreIds: nil, id: nil, originalLanguage: nil, originalTitle: nil, overview: nil, popularity: nil, posterPath: nil, releaseDate: nil, title: nil, video: nil, voteAverage: nil, voteCount: nil))
     }
     
     init(id: Int, movie: MovieDetails) {
@@ -67,15 +67,14 @@ class MovieDetailsViewController: UIViewController {
         navigationItem.backButtonTitle = "back"
         navigationItem.backButtonDisplayMode = .default
         
-        self.viewWillAppear(true)
+//        self.viewWillAppear(true)
         
-        buildViews()
-        addConstraints()
+//        buildViews()
+//        addConstraints()
+        fetchData()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(true)
-        
+    func fetchData() {
         // priprema podataka za dohvat
         networkService = NetworkService()
         let movieDescriptionUrlString = "https://api.themoviedb.org/3/movie/" + String(id) + "?language=en-US&page=1&api_key=59afefdb9064ea17898a694d311e247e"
@@ -90,7 +89,9 @@ class MovieDetailsViewController: UIViewController {
                 self.movieDetails = success
 //                print(self.movieDetails)
                 DispatchQueue.main.async {
-                    self.reloadInputViews()
+                    self.buildViews()
+                    self.addConstraints()
+//                    self.reloadInputViews()
                 }
             case .failure(let failure):
                 print("failure in MovieDetailsViewController \(failure)")
@@ -117,7 +118,8 @@ class MovieDetailsViewController: UIViewController {
 //        let pictureURL = "https://image.tmdb.org/t/p/original" + movies[indexPath.row].posterPath!
         imageView = UIImageView(image: UIImage(named: "IronMan"))
         do {
-            let url = URL(string: "https://image.tmdb.org/t/p/original" + movie.posterPath!)!
+//            let url = URL(string: "https://image.tmdb.org/t/p/original" + movie.posterPath!)!
+            let url = URL(string: "https://image.tmdb.org/t/p/original" + movieDetails.posterPath!)!
             let data = try Data(contentsOf: url)
             imageView.image = UIImage(data: data)
         } catch {
@@ -133,7 +135,7 @@ class MovieDetailsViewController: UIViewController {
         userScoreLabel.font = UIFont.boldSystemFont(ofSize: 15)
         view.addSubview(userScoreLabel)
         userScorePercLabel = UILabel()
-        userScorePercLabel.text = String(Int(100 - movie.voteAverage!))
+        userScorePercLabel.text = String(Int(100 - movieDetails.voteAverage!))
         userScorePercLabel.textColor = .white
         userScorePercLabel.font = UIFont.boldSystemFont(ofSize: 15)
         view.addSubview(userScorePercLabel)
@@ -145,13 +147,14 @@ class MovieDetailsViewController: UIViewController {
         var regularAttribute = [
               NSAttributedString.Key.font: UIFont(name: "HelveticaNeue-Light", size: 24.0)!
            ]
-        var boldText = NSAttributedString(string: movie.title! + " ", attributes: boldAttribute)
-        var regularText = NSAttributedString(string: String(movie.releaseDate!.split(separator: "-")[0]), attributes: regularAttribute)
+        var boldText = NSAttributedString(string: movieDetails.title! + " ", attributes: boldAttribute)
+        var regularText = NSAttributedString(string: String(movieDetails.releaseDate!.split(separator: "-")[0]), attributes: regularAttribute)
         let movieNameYearString = NSMutableAttributedString()
         movieNameYearString.append(boldText)
         movieNameYearString.append(regularText)
         movieNameLabel.attributedText = movieNameYearString
         movieNameLabel.textColor = .white
+        movieNameLabel.numberOfLines = 0
         view.addSubview(movieNameLabel)
         
         shortDescription = UILabel()
@@ -161,10 +164,19 @@ class MovieDetailsViewController: UIViewController {
         regularAttribute = [
               NSAttributedString.Key.font: UIFont(name: "HelveticaNeue-Light", size: 14.0)!
            ]
-        var dateSplit = movie.releaseDate!.split(separator: "-")
-        let dateCountry = String(dateSplit[2]) + "/" + String(dateSplit[1]) + "/" + String(dateSplit[0]) + " (" + String(movie.id!) + ")\n"
-        boldText = NSAttributedString(string: "2h 6m", attributes: boldAttribute)
-        regularText = NSAttributedString(string: dateCountry + "Action, Science Fiction, Adventure ", attributes: regularAttribute)
+        var dateSplit = movieDetails.releaseDate!.split(separator: "-")
+        let dateCountry = String(dateSplit[2]) + "/" + String(dateSplit[1]) + "/" + String(dateSplit[0]) + " (" + String(movieDetails.originalLanguage!) + ")\n"
+        boldText = NSAttributedString(string: String(movieDetails.runtime!) + " min", attributes: boldAttribute)
+        var genresString = ""
+        movieDetails.genres!.forEach({ genre in
+            genresString.append(contentsOf: genre.name)
+            if(genre.name != movieDetails.genres![self.movieDetails.genres!.count - 1].name) {
+                genresString += ", "
+            } else {
+                genresString += " "
+            }
+        })
+        regularText = NSAttributedString(string: dateCountry + genresString, attributes: regularAttribute)
         let shortDescriptionString = NSMutableAttributedString()
         shortDescriptionString.append(regularText)
         shortDescriptionString.append(boldText)
@@ -177,14 +189,14 @@ class MovieDetailsViewController: UIViewController {
         yearAndCountryLabel.text = dateCountry
         yearAndCountryLabel.textColor = .white
         view.addSubview(yearAndCountryLabel)
-        genreLabel = UILabel()
-        genreLabel.text = "Action, Science Fiction, Adventure"
-        genreLabel.textColor = .white
-        view.addSubview(genreLabel)
-        durationLabel = UILabel()
-        durationLabel.text = "2h 6m"
-        durationLabel.textColor = .white
-        view.addSubview(durationLabel)
+//        genreLabel = UILabel()
+//        genreLabel.text = "Action, Science Fiction, Adventure"
+//        genreLabel.textColor = .white
+//        view.addSubview(genreLabel)
+//        durationLabel = UILabel()
+//        durationLabel.text = "2h 6m"
+//        durationLabel.textColor = .white
+//        view.addSubview(durationLabel)
         
         let starImage = UIImage(systemName: "star")?.withTintColor(.white, renderingMode: .alwaysOriginal)
         
@@ -223,7 +235,7 @@ class MovieDetailsViewController: UIViewController {
         view.addSubview(overviewLabel)
         
         descriptionText = UILabel()
-        descriptionText.text = movie.overview
+        descriptionText.text = movieDetails.overview!
         descriptionText.font = UIFont.init(name: descriptionText.font.fontName, size: 14)
         descriptionText.numberOfLines = 0
         view.addSubview(descriptionText)
@@ -316,6 +328,7 @@ class MovieDetailsViewController: UIViewController {
         userScoreLabel.autoPinEdge(toSuperviewSafeArea: .top, withInset: 121)
         
         movieNameLabel.autoPinEdge(toSuperviewSafeArea: .leading, withInset: 18)
+        movieNameLabel.autoPinEdge(toSuperviewSafeArea: .trailing, withInset: 18)
         movieNameLabel.autoPinEdge(toSuperviewSafeArea: .top, withInset: 159)
         
         shortDescription.autoPinEdge(toSuperviewSafeArea: .leading, withInset: 18)

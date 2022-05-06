@@ -16,7 +16,7 @@ class SearchMoviesView: UIView {
     let cellIdentifier = "cellId"
     var labela: UILabel!
     var networkService: NetworkService!
-    var moviesSearchResult: SearchResults!
+    var moviesSearchResult: SearchResults?
     var navigationController: UINavigationController!
     
     init(navigationController: UINavigationController) {
@@ -84,12 +84,13 @@ extension SearchMoviesView: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return Movies.all().count
+        return self.moviesSearchResult?.totalResults ?? 0
+//        return Movies.all().count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath)
-        let contentForCell = SearchMoviesViewCell(index: indexPath.row, cell: cell, moviesSearchResult: self.moviesSearchResult)
+        let contentForCell = SearchMoviesViewCell(index: indexPath.row, cell: cell, moviesSearchResult: self.moviesSearchResult ?? SearchResults.init(page: 0, results: [], totalPages: 0, totalResults: 0))
         cell.contentView.addSubview(contentForCell)
         cell.layer.cornerRadius = 10
         return cell
@@ -101,8 +102,8 @@ extension SearchMoviesView: UICollectionViewDelegate {
 //        logic when cell is selected
         print("Clicked on cell number \(indexPath.row)")
         
-        let movie = self.moviesSearchResult.results[indexPath.row]
-        let movieDetailsViewsController = MovieDetailsViewController(id: self.moviesSearchResult.results[indexPath.row].id!, movie: movie)
+        let movie = self.moviesSearchResult?.results[indexPath.row] ?? MovieDetails.init(adult: nil, backdropPath: nil, genreIds: nil, id: nil, originalLanguage: nil, originalTitle: nil, overview: nil, popularity: nil, posterPath: nil, releaseDate: nil, title: nil, video: nil, voteAverage: nil, voteCount: nil)
+        let movieDetailsViewsController = MovieDetailsViewController(id: self.moviesSearchResult?.results[indexPath.row].id! ?? 0, movie: movie)
         movieDetailsViewsController.tabBarController?.selectedIndex = indexPath.row
         
         self.navigationController.pushViewController(movieDetailsViewsController, animated: true)

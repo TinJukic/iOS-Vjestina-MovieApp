@@ -22,7 +22,7 @@ struct Genres: Codable {
 struct MovieDetails: Codable {
     let adult: Bool?
     let backdropPath: String?
-    let genreIds: [Int?]
+    let genreIds: [Int]?
     let id: Int?
     let originalLanguage: String?
     let originalTitle: String?
@@ -95,8 +95,8 @@ struct DetailsForMovie: Codable {
     let overview: String?
     let popularity: Float?
     let posterPath: String?
-    let productionCompanies: [ProductionCompanie?]
-    let productionCountries: [ProductionCountry?]
+    let productionCompanies: [ProductionCompanie]?
+    let productionCountries: [ProductionCountry]?
     let releaseDate: String?
     let revenue: Int?
     let runtime: Int?
