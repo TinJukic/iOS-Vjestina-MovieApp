@@ -53,11 +53,14 @@ class UpcomingView: UIView {
         var genresUrlRequest = URLRequest(url: genresUrl)
         genresUrlRequest.httpMethod = "GET"
         genresUrlRequest.setValue("genre/movie/list/json", forHTTPHeaderField: "Content-Type")
-        print(genresUrlRequest)
         networkService.executeUrlRequest(genresUrlRequest) { (result: Result<Genres, RequestError>) in
         switch result {
             case .success(let value):
                 self.genres = value
+            DispatchQueue.main.async {
+                self.buildViews()
+                self.addConstraints()
+            }
             case .failure(let failure):
                 print("failure in RecommendedView \(failure)")
             }
@@ -72,58 +75,19 @@ class UpcomingView: UIView {
         })
     }
     
-    @objc func dramaButtonPressed() {
-        print("Drama button")
-        selectedCategory = "Drama"
-        dramaButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
-        unboldButtons(boldedButton: dramaButton)
-    }
-    
-    @objc func thrillerButtonPressed() {
-        print("Thriller button")
-        selectedCategory = "Thriller"
-        thrillerButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
-        unboldButtons(boldedButton: thrillerButton)
-    }
-    
-    @objc func horrorButtonPressed() {
-        print("Horror button")
-        selectedCategory = "Horror"
-        horrorButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
-        unboldButtons(boldedButton: horrorButton)
-    }
-    
-    @objc func comedyButtonPressed() {
-        print("Comedy button")
-        selectedCategory = "Comedy"
-        comedyButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
-        unboldButtons(boldedButton: comedyButton)
-    }
-    
-    @objc func actionButtonPressed() {
-        print("Action button")
-        selectedCategory = "Action"
-        actionButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
-        unboldButtons(boldedButton: actionButton)
-    }
-    
-    @objc func sciFiButtonPressed() {
-        print("Sci-fi button")
-        selectedCategory = "SciFi"
-        sciFiButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
-        unboldButtons(boldedButton: sciFiButton)
+    @objc func buttonTapped(button: UIButton) {
+        print("Button \(button.titleLabel?.text ?? "button") tapped!")
+        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+        unboldButtons(boldedButton: button)
     }
     
     func buildViews() {
         // dohvat podataka za filmove i njihov prikaz
         let popularMoviesUrlRequestString = "https://api.themoviedb.org/3/movie/103/recommendations?language=en-US&page=1&api_key=59afefdb9064ea17898a694d311e247e"
-        // ne mogu prikazati link koji mi treba za ovaj view: https://api.themoviedb.org/3/movie/103/recommendations?language=en-US&page=1&api_key=59afefdb9064ea17898a694d311e247e
         guard let popularMoviesUrl = URL(string: popularMoviesUrlRequestString) else { return }
         var popularMoviesUrlRequest = URLRequest(url: popularMoviesUrl)
         popularMoviesUrlRequest.httpMethod = "GET"
         popularMoviesUrlRequest.setValue("movie/103/recommendations/json", forHTTPHeaderField: "Content-Type")
-        print()
-        print(popularMoviesUrlRequest)
         networkService.executeUrlRequest(popularMoviesUrlRequest) { (result: Result<SearchResults, RequestError>) in
             switch result {
             case .success(let success):
@@ -154,53 +118,16 @@ class UpcomingView: UIView {
         upcomingStackView.distribution = .fillEqually
         upcomingStackView.spacing = 20
         
-        dramaButton = UIButton()
-        dramaButton.setTitle("Drama", for: .normal)
-        dramaButton.setTitleColor(.black, for: .normal)
-        dramaButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
-        dramaButton.addTarget(self, action: #selector(dramaButtonPressed), for: .touchUpInside)
-        buttonList.append(dramaButton)
-        upcomingStackView.addArrangedSubview(dramaButton)
-        
-        thrillerButton = UIButton()
-        thrillerButton.setTitle("Thriller", for: .normal)
-        thrillerButton.setTitleColor(.black, for: .normal)
-        thrillerButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
-        thrillerButton.addTarget(self, action: #selector(thrillerButtonPressed), for: .touchUpInside)
-        buttonList.append(thrillerButton)
-        upcomingStackView.addArrangedSubview(thrillerButton)
-        
-        horrorButton = UIButton()
-        horrorButton.setTitle("Horror", for: .normal)
-        horrorButton.setTitleColor(.black, for: .normal)
-        horrorButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
-        horrorButton.addTarget(self, action: #selector(horrorButtonPressed), for: .touchUpInside)
-        buttonList.append(horrorButton)
-        upcomingStackView.addArrangedSubview(horrorButton)
-        
-        comedyButton = UIButton()
-        comedyButton.setTitle("Comedy", for: .normal)
-        comedyButton.setTitleColor(.black, for: .normal)
-        comedyButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
-        comedyButton.addTarget(self, action: #selector(comedyButtonPressed), for: .touchUpInside)
-        buttonList.append(comedyButton)
-        upcomingStackView.addArrangedSubview(comedyButton)
-        
-        actionButton = UIButton()
-        actionButton.setTitle("Action", for: .normal)
-        actionButton.setTitleColor(.black, for: .normal)
-        actionButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
-        actionButton.addTarget(self, action: #selector(actionButtonPressed), for: .touchUpInside)
-        buttonList.append(actionButton)
-        upcomingStackView.addArrangedSubview(actionButton)
-        
-        sciFiButton = UIButton()
-        sciFiButton.setTitle("Sci-fi", for: .normal)
-        sciFiButton.setTitleColor(.black, for: .normal)
-        sciFiButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
-        sciFiButton.addTarget(self, action: #selector(sciFiButtonPressed), for: .touchUpInside)
-        buttonList.append(sciFiButton)
-        upcomingStackView.addArrangedSubview(sciFiButton)
+        self.genres.genres.forEach({ genre in
+            let genreButton = UIButton()
+            genreButton.setTitle(genre.name, for: .normal)
+            genreButton.setTitleColor(.black, for: .normal)
+            genreButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
+            genreButton.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
+            self.buttonList.append(genreButton)
+            self.upcomingStackView.addArrangedSubview(genreButton)
+        })
+        buttonList[0].titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
         
         stackScrollView.addSubview(upcomingStackView)
         self.addSubview(stackScrollView)
@@ -270,8 +197,6 @@ extension UpcomingView: UICollectionViewDelegate {
         movieDetailsViewsController.tabBarController?.selectedIndex = indexPath.row
         
         self.navigationController.pushViewController(movieDetailsViewsController, animated: true)
-        
-        print("Obavio sam sto sam trebao...")
     }
 }
 

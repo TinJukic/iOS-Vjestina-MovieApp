@@ -43,8 +43,6 @@ class SearchMoviesView: UIView {
         var popularMoviesUrlRequest = URLRequest(url: popularMoviesUrl)
         popularMoviesUrlRequest.httpMethod = "GET"
         popularMoviesUrlRequest.setValue("movie/popular/json", forHTTPHeaderField: "Content-Type")
-        print()
-        print(popularMoviesUrlRequest)
         networkService.executeUrlRequest(popularMoviesUrlRequest) { (result: Result<SearchResults, RequestError>) in
             switch result {
             case .success(let success):
@@ -53,7 +51,7 @@ class SearchMoviesView: UIView {
                     self.moviesCollectionView.reloadData()
                 }
             case .failure(let failure):
-                print("failure in WhatsPopularView")
+                print("failure in SearchMoviesView \(failure)")
             }
         }
         
@@ -85,7 +83,6 @@ extension SearchMoviesView: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return self.moviesSearchResult?.totalResults ?? 0
-//        return Movies.all().count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -107,8 +104,6 @@ extension SearchMoviesView: UICollectionViewDelegate {
         movieDetailsViewsController.tabBarController?.selectedIndex = indexPath.row
         
         self.navigationController.pushViewController(movieDetailsViewsController, animated: true)
-        
-        print("Obavio sam sto sam trebao...")
     }
 }
 

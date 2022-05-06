@@ -67,10 +67,6 @@ class MovieDetailsViewController: UIViewController {
         navigationItem.backButtonTitle = "back"
         navigationItem.backButtonDisplayMode = .default
         
-//        self.viewWillAppear(true)
-        
-//        buildViews()
-//        addConstraints()
         fetchData()
     }
     
@@ -82,28 +78,21 @@ class MovieDetailsViewController: UIViewController {
         var movieDescriptionUrlRequest = URLRequest(url: movieDescriptionUrl)
         movieDescriptionUrlRequest.httpMethod = "GET"
         movieDescriptionUrlRequest.setValue("movie/" + String(id) + "/recommendations/json", forHTTPHeaderField: "Content-Type")
-        print(movieDescriptionUrlRequest)
         networkService.executeUrlRequest(movieDescriptionUrlRequest) { (result: Result<DetailsForMovie, RequestError>) in
             switch result {
             case .success(let success):
                 self.movieDetails = success
-//                print(self.movieDetails)
                 DispatchQueue.main.async {
                     self.buildViews()
                     self.addConstraints()
-//                    self.reloadInputViews()
                 }
             case .failure(let failure):
                 print("failure in MovieDetailsViewController \(failure)")
             }
         }
-        print("ovo ovdje")
-        print(self.movieDetails)
     }
     
     func buildViews() {
-        print(self.movieDetails)
-        
         view.backgroundColor = .white
         
         let appearance = UINavigationBarAppearance()
@@ -112,13 +101,9 @@ class MovieDetailsViewController: UIViewController {
         navigationController?.navigationBar.standardAppearance = appearance
         navigationController?.navigationBar.scrollEdgeAppearance = appearance
         
-        // dohvat nekad bio tu
-        
         // PRVA POLOVICA
-//        let pictureURL = "https://image.tmdb.org/t/p/original" + movies[indexPath.row].posterPath!
         imageView = UIImageView(image: UIImage(named: "IronMan"))
         do {
-//            let url = URL(string: "https://image.tmdb.org/t/p/original" + movie.posterPath!)!
             let url = URL(string: "https://image.tmdb.org/t/p/original" + movieDetails.posterPath!)!
             let data = try Data(contentsOf: url)
             imageView.image = UIImage(data: data)
@@ -189,14 +174,6 @@ class MovieDetailsViewController: UIViewController {
         yearAndCountryLabel.text = dateCountry
         yearAndCountryLabel.textColor = .white
         view.addSubview(yearAndCountryLabel)
-//        genreLabel = UILabel()
-//        genreLabel.text = "Action, Science Fiction, Adventure"
-//        genreLabel.textColor = .white
-//        view.addSubview(genreLabel)
-//        durationLabel = UILabel()
-//        durationLabel.text = "2h 6m"
-//        durationLabel.textColor = .white
-//        view.addSubview(durationLabel)
         
         let starImage = UIImage(systemName: "star")?.withTintColor(.white, renderingMode: .alwaysOriginal)
         
@@ -239,9 +216,6 @@ class MovieDetailsViewController: UIViewController {
         descriptionText.font = UIFont.init(name: descriptionText.font.fontName, size: 14)
         descriptionText.numberOfLines = 0
         view.addSubview(descriptionText)
-        
-//        overviewSectionView = OverviewView()
-//        view.addSubview(overviewSectionView)
         
         boldAttribute = [
             NSAttributedString.Key.font: UIFont(name: "HelveticaNeue-Bold", size: 14)!

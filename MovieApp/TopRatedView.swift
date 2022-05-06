@@ -51,7 +51,6 @@ class TopRatedView: UIView {
         var genresUrlRequest = URLRequest(url: genresUrl)
         genresUrlRequest.httpMethod = "GET"
         genresUrlRequest.setValue("genre/movie/list/json", forHTTPHeaderField: "Content-Type")
-        print(genresUrlRequest)
         networkService.executeUrlRequest(genresUrlRequest) { (result: Result<Genres, RequestError>) in
         switch result {
             case .success(let value):
@@ -74,32 +73,10 @@ class TopRatedView: UIView {
         })
     }
     
-    @objc func dayButtonPressed() {
-        print("Day button")
-        selectedCategory = "Day"
-        dayButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
-        unboldButtons(boldedButton: dayButton)
-    }
-    
-    @objc func weekButtonPressed() {
-        print("Week button")
-        selectedCategory = "Week"
-        weekButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
-        unboldButtons(boldedButton: weekButton)
-    }
-    
-    @objc func monthButtonPressed() {
-        print("Month button")
-        selectedCategory = "Month"
-        monthButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
-        unboldButtons(boldedButton: monthButton)
-    }
-    
-    @objc func allTimeButtonPressed() {
-        print("All time button")
-        selectedCategory = "All time"
-        allTimeButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
-        unboldButtons(boldedButton: allTimeButton)
+    @objc func buttonTapped(button: UIButton) {
+        print("Button \(button.titleLabel?.text ?? "button") tapped!")
+        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+        unboldButtons(boldedButton: button)
     }
     
     func buildViews() {
@@ -109,8 +86,6 @@ class TopRatedView: UIView {
         var popularMoviesUrlRequest = URLRequest(url: popularMoviesUrl)
         popularMoviesUrlRequest.httpMethod = "GET"
         popularMoviesUrlRequest.setValue("movie/top_rated/json", forHTTPHeaderField: "Content-Type")
-        print()
-        print(popularMoviesUrlRequest)
         networkService.executeUrlRequest(popularMoviesUrlRequest) { (result: Result<SearchResults, RequestError>) in
             switch result {
             case .success(let success):
@@ -141,37 +116,16 @@ class TopRatedView: UIView {
         topRatedStackView.distribution = .fillEqually
         topRatedStackView.spacing = 20
         
-        dayButton = UIButton()
-        dayButton.setTitle("Day", for: .normal)
-        dayButton.setTitleColor(.black, for: .normal)
-        dayButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
-        dayButton.addTarget(self, action: #selector(dayButtonPressed), for: .touchUpInside)
-        buttonList.append(dayButton)
-        topRatedStackView.addArrangedSubview(dayButton)
-        
-        weekButton = UIButton()
-        weekButton.setTitle("Week", for: .normal)
-        weekButton.setTitleColor(.black, for: .normal)
-        weekButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
-        weekButton.addTarget(self, action: #selector(weekButtonPressed), for: .touchUpInside)
-        buttonList.append(weekButton)
-        topRatedStackView.addArrangedSubview(weekButton)
-        
-        monthButton = UIButton()
-        monthButton.setTitle("Month", for: .normal)
-        monthButton.setTitleColor(.black, for: .normal)
-        monthButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
-        monthButton.addTarget(self, action: #selector(monthButtonPressed), for: .touchUpInside)
-        buttonList.append(monthButton)
-        topRatedStackView.addArrangedSubview(monthButton)
-        
-        allTimeButton = UIButton()
-        allTimeButton.setTitle("All time", for: .normal)
-        allTimeButton.setTitleColor(.black, for: .normal)
-        allTimeButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
-        allTimeButton.addTarget(self, action: #selector(allTimeButtonPressed), for: .touchUpInside)
-        buttonList.append(allTimeButton)
-        topRatedStackView.addArrangedSubview(allTimeButton)
+        self.genres.genres.forEach({ genre in
+            let genreButton = UIButton()
+            genreButton.setTitle(genre.name, for: .normal)
+            genreButton.setTitleColor(.black, for: .normal)
+            genreButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
+            genreButton.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
+            self.buttonList.append(genreButton)
+            self.topRatedStackView.addArrangedSubview(genreButton)
+        })
+        buttonList[0].titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
         
         stackScrollView.addSubview(topRatedStackView)
         self.addSubview(stackScrollView)
@@ -241,8 +195,6 @@ extension TopRatedView: UICollectionViewDelegate {
         movieDetailsViewsController.tabBarController?.selectedIndex = indexPath.row
         
         self.navigationController.pushViewController(movieDetailsViewsController, animated: true)
-        
-        print("Obavio sam sto sam trebao...")
     }
 }
 

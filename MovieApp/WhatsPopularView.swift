@@ -52,7 +52,6 @@ class WhatsPopularView: UIView {
         var genresUrlRequest = URLRequest(url: genresUrl)
         genresUrlRequest.httpMethod = "GET"
         genresUrlRequest.setValue("genre/movie/list/json", forHTTPHeaderField: "Content-Type")
-        print(genresUrlRequest)
         networkService.executeUrlRequest(genresUrlRequest) { (result: Result<Genres, RequestError>) in
         switch result {
             case .success(let value):
@@ -84,37 +83,10 @@ class WhatsPopularView: UIView {
         })
     }
     
-    @objc func buttonTapped() {
-        print("Button tapped!")
-        
-    }
-    
-    @objc func streamingButtonPressed() {
-        print("Streaming button")
-        selectedCategory = "Streaming"
-        streamingButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
-        unboldButtons(boldedButton: streamingButton)
-    }
-    
-    @objc func onTVButtonPressed() {
-        print("On TV button")
-        selectedCategory = "On TV"
-        onTVButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
-        unboldButtons(boldedButton: onTVButton)
-    }
-    
-    @objc func forRentButtonPressed() {
-        print("For rent button")
-        selectedCategory = "For rent"
-        forRentButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
-        unboldButtons(boldedButton: forRentButton)
-    }
-    
-    @objc func inTheatersButtonPressed() {
-        print("In theaters button")
-        selectedCategory = "In theaters"
-        inTheatersButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
-        unboldButtons(boldedButton: inTheatersButton)
+    @objc func buttonTapped(button: UIButton) {
+        print("Button \(button.titleLabel?.text) tapped!")
+        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+        unboldButtons(boldedButton: button)
     }
     
     func buildViews() {
@@ -124,8 +96,6 @@ class WhatsPopularView: UIView {
         var popularMoviesUrlRequest = URLRequest(url: popularMoviesUrl)
         popularMoviesUrlRequest.httpMethod = "GET"
         popularMoviesUrlRequest.setValue("movie/popular/json", forHTTPHeaderField: "Content-Type")
-        print()
-        print(popularMoviesUrlRequest)
         networkService.executeUrlRequest(popularMoviesUrlRequest) { (result: Result<SearchResults, RequestError>) in
             switch result {
             case .success(let success):
@@ -158,37 +128,16 @@ class WhatsPopularView: UIView {
         whatsPopularStackView.distribution = .fillEqually
         whatsPopularStackView.spacing = 20
         
-        streamingButton = UIButton()
-        streamingButton.setTitle("Streaming", for: .normal)
-        streamingButton.setTitleColor(.black, for: .normal)
-        streamingButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
-        streamingButton.addTarget(self, action: #selector(streamingButtonPressed), for: .touchUpInside)
-        buttonList.append(streamingButton)
-        whatsPopularStackView.addArrangedSubview(streamingButton)
-        
-        onTVButton = UIButton()
-        onTVButton.setTitle("On TV", for: .normal)
-        onTVButton.setTitleColor(.black, for: .normal)
-        onTVButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
-        onTVButton.addTarget(self, action: #selector(onTVButtonPressed), for: .touchUpInside)
-        buttonList.append(onTVButton)
-        whatsPopularStackView.addArrangedSubview(onTVButton)
-        
-        forRentButton = UIButton()
-        forRentButton.setTitle("For rent", for: .normal)
-        forRentButton.setTitleColor(.black, for: .normal)
-        forRentButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
-        forRentButton.addTarget(self, action: #selector(forRentButtonPressed), for: .touchUpInside)
-        buttonList.append(forRentButton)
-        whatsPopularStackView.addArrangedSubview(forRentButton)
-        
-        inTheatersButton = UIButton()
-        inTheatersButton.setTitle("In theaters", for: .normal)
-        inTheatersButton.setTitleColor(.black, for: .normal)
-        inTheatersButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
-        inTheatersButton.addTarget(self, action: #selector(inTheatersButtonPressed), for: .touchUpInside)
-        buttonList.append(inTheatersButton)
-        whatsPopularStackView.addArrangedSubview(inTheatersButton)
+        self.genres.genres.forEach({ genre in
+            let genreButton = UIButton()
+            genreButton.setTitle(genre.name, for: .normal)
+            genreButton.setTitleColor(.black, for: .normal)
+            genreButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
+            genreButton.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
+            self.buttonList.append(genreButton)
+            self.whatsPopularStackView.addArrangedSubview(genreButton)
+        })
+        buttonList[0].titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
         
         stackScrollView.addSubview(whatsPopularStackView)
         self.addSubview(stackScrollView)
@@ -262,8 +211,6 @@ extension WhatsPopularView: UICollectionViewDelegate {
         movieDetailsViewsController.tabBarController?.selectedIndex = indexPath.row
         
         self.navigationController.pushViewController(movieDetailsViewsController, animated: true)
-        
-        print("Obavio sam sto sam trebao...")
     }
 }
 
