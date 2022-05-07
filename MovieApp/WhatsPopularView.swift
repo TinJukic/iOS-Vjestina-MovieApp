@@ -61,7 +61,7 @@ class WhatsPopularView: UIView {
                 self.addConstraints()
             }
             case .failure(let failure):
-                print("failure in WhatsPopularView")
+                print("failure in WhatsPopularView \(failure)")
             }
         }
     }
@@ -84,7 +84,7 @@ class WhatsPopularView: UIView {
     }
     
     @objc func buttonTapped(button: UIButton) {
-        print("Button \(button.titleLabel?.text) tapped!")
+        print("Button \(button.titleLabel?.text ?? "button") tapped!")
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
         unboldButtons(boldedButton: button)
     }
@@ -104,7 +104,7 @@ class WhatsPopularView: UIView {
                     self.moviesCollectionView.reloadData()
                 }
             case .failure(let failure):
-                print("failure in WhatsPopularView")
+                print("failure in WhatsPopularView \(failure)")
             }
         }
         
@@ -126,7 +126,7 @@ class WhatsPopularView: UIView {
         whatsPopularStackView.axis = .horizontal
         whatsPopularStackView.alignment = .fill
         whatsPopularStackView.distribution = .fillEqually
-        whatsPopularStackView.spacing = 20
+        whatsPopularStackView.spacing = 10
         
         self.genres.genres.forEach({ genre in
             let genreButton = UIButton()
@@ -183,13 +183,10 @@ extension WhatsPopularView: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.moviesSearchResult?.totalResults ?? 0
+        return self.moviesSearchResult?.results.count ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        print("Dosao sam na tebe sad")
-        print(self.moviesSearchResult!.totalResults)
-        print(self.genres!.genres[0].name)
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MovieCollectionViewCell.cellIdentifier, for: indexPath) as! MovieCollectionViewCell
         
         let movies = self.moviesSearchResult?.results ?? []

@@ -74,7 +74,7 @@ class TrendingView: UIView {
     }
     
     @objc func buttonTapped(button: UIButton) {
-        print("Button \(button.titleLabel?.text) tapped!")
+        print("Button \(button.titleLabel?.text ?? "button") tapped!")
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
         unboldButtons(boldedButton: button)
     }
@@ -114,7 +114,7 @@ class TrendingView: UIView {
         trendingStackView.axis = .horizontal
         trendingStackView.alignment = .fill
         trendingStackView.distribution = .fillEqually
-        trendingStackView.spacing = 20
+        trendingStackView.spacing = 10
         
         self.genres.genres.forEach({ genre in
             let genreButton = UIButton()
@@ -170,7 +170,7 @@ extension TrendingView: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.moviesSearchResult?.totalResults ?? 0
+        return self.moviesSearchResult?.results.count ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {

@@ -40,13 +40,18 @@ class MovieCollectionViewCell: UICollectionViewCell {
     
     public func setImageURL(imageURL: String) {
         moviePicture = UIImageView()
-        do {
-            let url = URL(string: imageURL)!
-            let data = try Data(contentsOf: url)
-            moviePicture.image = UIImage(data: data)
-        }
-        catch{
-            print("Doslo je do pogreske")
+        DispatchQueue.global().async {
+            do {
+                let url = URL(string: imageURL)!
+                let data = try Data(contentsOf: url)
+                
+                DispatchQueue.main.async {
+                    self.moviePicture.image = UIImage(data: data)
+                }
+            }
+            catch{
+                print("Doslo je do pogreske")
+            }
         }
         self.addSubview(moviePicture)
         

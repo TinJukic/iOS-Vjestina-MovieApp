@@ -114,7 +114,7 @@ class TopRatedView: UIView {
         topRatedStackView.axis = .horizontal
         topRatedStackView.alignment = .fill
         topRatedStackView.distribution = .fillEqually
-        topRatedStackView.spacing = 20
+        topRatedStackView.spacing = 10
         
         self.genres.genres.forEach({ genre in
             let genreButton = UIButton()
@@ -170,7 +170,7 @@ extension TopRatedView: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.moviesSearchResult?.totalResults ?? 0
+        return self.moviesSearchResult?.results.count ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {

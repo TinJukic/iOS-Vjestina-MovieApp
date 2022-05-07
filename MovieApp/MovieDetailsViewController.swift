@@ -102,13 +102,18 @@ class MovieDetailsViewController: UIViewController {
         navigationController?.navigationBar.scrollEdgeAppearance = appearance
         
         // PRVA POLOVICA
-        imageView = UIImageView(image: UIImage(named: "IronMan"))
-        do {
-            let url = URL(string: "https://image.tmdb.org/t/p/original" + movieDetails.posterPath!)!
-            let data = try Data(contentsOf: url)
-            imageView.image = UIImage(data: data)
-        } catch {
-            print(error)
+        imageView = UIImageView()
+        DispatchQueue.global().async {
+            do {
+                let url = URL(string: "https://image.tmdb.org/t/p/original" + self.movieDetails.posterPath!)!
+                let data = try Data(contentsOf: url)
+                
+                DispatchQueue.main.async {
+                    self.imageView.image = UIImage(data: data)
+                }
+            } catch {
+                print(error)
+            }
         }
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true

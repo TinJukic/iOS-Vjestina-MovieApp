@@ -37,12 +37,17 @@ class SearchMoviesViewCell: UIView {
     
     func buildViews() {
         movieImage = UIImageView()
-        do {
-            let url = URL(string: "https://image.tmdb.org/t/p/original" + moviesSearchResult.results[index].posterPath!)!
-            let data = try Data(contentsOf: url)
-            movieImage.image = UIImage(data: data)
-        } catch {
-            print(error)
+        DispatchQueue.global().async {
+            do {
+                let url = URL(string: "https://image.tmdb.org/t/p/original" + self.moviesSearchResult.results[self.index].posterPath!)!
+                let data = try Data(contentsOf: url)
+                
+                DispatchQueue.main.async {
+                    self.movieImage.image = UIImage(data: data)
+                }
+            } catch {
+                print(error)
+            }
         }
         self.addSubview(movieImage)
         

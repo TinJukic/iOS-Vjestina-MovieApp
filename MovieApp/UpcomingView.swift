@@ -116,7 +116,7 @@ class UpcomingView: UIView {
         upcomingStackView.axis = .horizontal
         upcomingStackView.alignment = .fill
         upcomingStackView.distribution = .fillEqually
-        upcomingStackView.spacing = 20
+        upcomingStackView.spacing = 10
         
         self.genres.genres.forEach({ genre in
             let genreButton = UIButton()
@@ -172,7 +172,7 @@ extension UpcomingView: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.moviesSearchResult?.totalResults ?? 0
+        return self.moviesSearchResult?.results.count ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
