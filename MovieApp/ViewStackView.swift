@@ -39,7 +39,7 @@ class ViewStackView: UIView {
         stackView.axis = .vertical
         stackView.alignment = .fill
         stackView.distribution = .fillEqually
-        stackView.spacing = 5
+        stackView.spacing = 40
         self.addSubview(stackView)
         
         whatsPopularView = WhatsPopularView(navigationController: navigationController)
