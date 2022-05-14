@@ -127,24 +127,40 @@
 				52C4765E27E7964D00DBAD72 /* Info.plist */,
 				5249114E2822AA66008E4497 /* SearchBar */,
 				5249114D2822A10B008E4497 /* Network */,
-				52E9847F27F9DE4E00D7990A /* MovieListViewController.swift */,
-				52C4766427E7983F00DBAD72 /* MovieDetailsViewController.swift */,
-				52E899FF27FEFF63003B1E3A /* WhatsPopularView.swift */,
-				5233C0D12800595E007F26EE /* FreeToWatchView.swift */,
-				527E314F2803027F0006B0E5 /* InitialViewController.swift */,
+				52D69B2E282FD93200D47AD4 /* ViewControllers */,
+				52D69B2F282FD97A00D47AD4 /* Views */,
 				527E315128031AEC0006B0E5 /* MovieCollectionViewCell.swift */,
-				5244E9C4280800E800A8AB43 /* TrendingView.swift */,
-				5244E9C62808044500A8AB43 /* MovieCategoriesView.swift */,
-				5244E9C828080BC000A8AB43 /* TopRatedView.swift */,
-				5244E9CC28080CEC00A8AB43 /* UpcomingView.swift */,
-				5234E4972815B8E20040D65B /* FavoritesViewController.swift */,
-				5234E49B2815C08D0040D65B /* CustomTabBarController.swift */,
-				527196A12819BE220026CB5A /* NoInternetConnectionView.swift */,
-				528C7627281D7E5E00B9ABDB /* ViewStackView.swift */,
 				5249114F2822AEC4008E4497 /* Structs.swift */,
-				521B02BD27FC962B005C709A /* OverviewView.swift */,
 			);
 			path = MovieApp;
+			sourceTree = "<group>";
+		};
+		52D69B2E282FD93200D47AD4 /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				52E9847F27F9DE4E00D7990A /* MovieListViewController.swift */,
+				52C4766427E7983F00DBAD72 /* MovieDetailsViewController.swift */,
+				527E314F2803027F0006B0E5 /* InitialViewController.swift */,
+				5234E4972815B8E20040D65B /* FavoritesViewController.swift */,
+				5234E49B2815C08D0040D65B /* CustomTabBarController.swift */,
+			);
+			path = ViewControllers;
+			sourceTree = "<group>";
+		};
+		52D69B2F282FD97A00D47AD4 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				5233C0D12800595E007F26EE /* FreeToWatchView.swift */,
+				52E899FF27FEFF63003B1E3A /* WhatsPopularView.swift */,
+				5244E9C4280800E800A8AB43 /* TrendingView.swift */,
+				5244E9CC28080CEC00A8AB43 /* UpcomingView.swift */,
+				5244E9C828080BC000A8AB43 /* TopRatedView.swift */,
+				527196A12819BE220026CB5A /* NoInternetConnectionView.swift */,
+				5244E9C62808044500A8AB43 /* MovieCategoriesView.swift */,
+				528C7627281D7E5E00B9ABDB /* ViewStackView.swift */,
+				521B02BD27FC962B005C709A /* OverviewView.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
