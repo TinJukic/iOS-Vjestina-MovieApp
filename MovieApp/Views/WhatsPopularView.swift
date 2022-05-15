@@ -29,10 +29,6 @@ class WhatsPopularView: UIView {
     }
     
     var whatsPopularLabel: UILabel!
-    var streamingButton: UIButton!
-    var onTVButton: UIButton!
-    var forRentButton: UIButton!
-    var inTheatersButton: UIButton!
     var whatsPopularStackView: UIStackView!
     var moviesCollectionView: UICollectionView!
     var buttonList:[UIButton] = []

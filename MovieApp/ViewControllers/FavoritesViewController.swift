@@ -8,12 +8,15 @@
 import Foundation
 import UIKit
 import PureLayout
+import CoreData
 
 class FavoritesViewController: UIViewController {
+    var favoritesView: FavoritesView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = .systemGreen
+        view.backgroundColor = .white
         
         navigationItem.title = "TMDB"
         
@@ -28,10 +31,14 @@ class FavoritesViewController: UIViewController {
     }
     
     func buildViews() {
-        
+        favoritesView = FavoritesView(navigationController: self.navigationController!)
+        view.addSubview(favoritesView)
     }
     
     func addConstraints() {
-        
+        favoritesView.autoPinEdge(toSuperviewSafeArea: .leading, withInset: 18)
+        favoritesView.autoPinEdge(toSuperviewSafeArea: .trailing, withInset: 18)
+        favoritesView.autoPinEdge(toSuperviewSafeArea: .top, withInset: 30)
+        favoritesView.autoPinEdge(toSuperviewSafeArea: .bottom, withInset: 0)
     }
 }

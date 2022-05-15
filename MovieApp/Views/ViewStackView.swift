@@ -29,7 +29,6 @@ class ViewStackView: UIView {
     
     var stackView: UIStackView!
     var whatsPopularView: WhatsPopularView!
-    var freeToWatchView: FreeToWatchView!
     var trendingView: TrendingView!
     var topRatedView: TopRatedView!
     var upcomingView: UpcomingView!

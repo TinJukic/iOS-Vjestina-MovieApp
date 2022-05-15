@@ -9,6 +9,7 @@ import Foundation
 import UIKit
 import PureLayout
 import Network
+import CoreData
 
 // ZADACI:
     // Potrebno je napraviti neke API zahtjeve:
