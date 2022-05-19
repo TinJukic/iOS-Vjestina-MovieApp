@@ -28,6 +28,8 @@ class MovieListViewController: UIViewController {
     var searchMoviesView: SearchMoviesView!
     var movieCategories: MovieCategoriesView!
     var connected = true
+    var context: NSManagedObjectContext!
+    var moviesRepository: MoviesRepository!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -66,6 +68,10 @@ class MovieListViewController: UIViewController {
         movieCategories = MovieCategoriesView(navigationController: self.navigationController!)
         
         if(connected == true) {
+            // ako ima interneta, potrebno dohvatiti podatke i spremiti ih u bazu podataka
+            self.context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+            self.moviesRepository = MoviesRepository(managedContext: self.context)
+            
             // adding searchBar to the main view
             view.addSubview(searchBarView)
             

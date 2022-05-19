@@ -2,7 +2,7 @@
 //  MovieGroup+CoreDataProperties.swift
 //  MovieApp
 //
-//  Created by FIVE on 15.05.2022..
+//  Created by FIVE on 18.05.2022..
 //
 //
 

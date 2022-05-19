@@ -12,6 +12,8 @@ import CoreData
 
 class FavoritesViewController: UIViewController {
     var favoritesView: FavoritesView!
+    var context: NSManagedObjectContext!
+    var moviesRepository: MoviesRepository!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,6 +27,10 @@ class FavoritesViewController: UIViewController {
         appearance.backgroundColor = .systemBlue
         navigationController?.navigationBar.standardAppearance = appearance
         navigationController?.navigationBar.scrollEdgeAppearance = appearance
+        
+        // zaduzen za spremanjem i pristupom podacima u CoreData
+        self.context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+        self.moviesRepository = MoviesRepository(managedContext: self.context)
         
         buildViews()
         addConstraints()
