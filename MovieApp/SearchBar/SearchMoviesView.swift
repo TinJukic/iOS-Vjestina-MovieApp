@@ -10,6 +10,12 @@ import UIKit
 import PureLayout
 import MovieAppData
 
+// prilikom pretrazivanja filmova za prikaz, svaki put kada korisnik nesto upise u search bar,
+// treba se ponovno pokrenuti dohvat filmova iz baze podataka po imenu filma
+// i rezultat te pretrage se treba prikazati -> treba promijeniti da se podaci dohvacaju na promjen
+// text fielda unutar SearchBar-a (VALJDA)
+// trebam poslati referencu na MoviesRepository i preko njega trebam spremati i dohvacati sve podatke
+
 class SearchMoviesView: UIView {
     var searched: String!
     var moviesCollectionView: UICollectionView!
@@ -18,13 +24,15 @@ class SearchMoviesView: UIView {
     var networkService: NetworkService!
     var moviesSearchResult: SearchResults?
     var navigationController: UINavigationController!
+    var repository: MoviesRepository!
     
-    init(navigationController: UINavigationController) {
+    init(navigationController: UINavigationController, repository: MoviesRepository) {
         super.init(frame: .zero)
         
         self.backgroundColor = .white
         
         self.navigationController = navigationController
+        self.repository = repository
         
         buildViews()
         addConstraints()
@@ -35,6 +43,8 @@ class SearchMoviesView: UIView {
     }
     
     func buildViews() {
+        print(repository.moviesDatabaseDataSource?.fetchAllMovies().count)
+        
         networkService = NetworkService()
         
         // dohvat podataka za filmove i njihov prikaz

@@ -11,6 +11,13 @@ import PureLayout
 import Network
 import CoreData
 
+// svaki put kada se pokrene aplikacija, ako ima interneta, potrebno je dohvatiti podatke s interneta i
+// spremiti ih u memoriju uredjaja uz pomoc CoreData-e
+// dohvat s interneta je samo potrebno obaviti u ovom dijelu aplikacije
+// kada se naidje na film koji je vec u bazi podataka, potrebno je azurirati njegovu vrijednost
+// -> na taj nacin ostaje spremljen podatak je li film spremljen u favorite ili nije
+// znaci, ako je film vec u bazi podataka, potrebno je samo azurirati podatke koje mozes dohvatiti s interneta
+
 // ZADACI:
     // Potrebno je napraviti neke API zahtjeve:
         // 1. popularni filmovi API zahtjev
@@ -57,6 +64,9 @@ class MovieListViewController: UIViewController {
         }
         monitor.start(queue: queue)
         
+        self.context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+        self.moviesRepository = MoviesRepository(managedContext: context)
+        
         buildViews()
         addConstraints()
     }
@@ -64,7 +74,7 @@ class MovieListViewController: UIViewController {
     func buildViews() {
         noInternetConnectionView = NoInternetConnectionView()
         searchBarView = SearchBarView(delegate: self)
-        searchMoviesView = SearchMoviesView(navigationController: self.navigationController!)
+        searchMoviesView = SearchMoviesView(navigationController: self.navigationController!, repository: self.moviesRepository)
         movieCategories = MovieCategoriesView(navigationController: self.navigationController!)
         
         if(connected == true) {

@@ -13,13 +13,18 @@ class MoviesNetworkDataSource {
     // preporuca se da iskoristimo network service iz prethodne zadace
     // nakon sto se podaci dohvate, potrebno ih je spremiti -> to se radi u MoviesDatabaseDataSource
     
+    // za svaki film moram prvo provjeriti je li vec spremljen u bazu podataka
+        // ako nije, spremam ga
+        // ako je, potrebno je azurirati dohvacene vrijednosti -> ocuvana oznaka favorite
+    
+    // ova klasa samo radi dohvat s interneta -> prosljedjuje sto je dohvaceno s interneta dalje aplikaciji
+    
     var networkService: NetworkService!
     
     init() { networkService = NetworkService() }
     
     var genres: Genres?
-    var genreDescriptions: [GenreDescription]?
-    func fetchGenres() -> [GenreDescription]? {
+    func getGenres() -> Genres? {
         // dohvat podataka za genres
         let genresUrlRequestString = "https://api.themoviedb.org/3/genre/movie/list?language=en-US&api_key=59afefdb9064ea17898a694d311e247e"
         guard let genresUrl = URL(string: genresUrlRequestString) else { return nil }
@@ -30,42 +35,16 @@ class MoviesNetworkDataSource {
         switch result {
             case .success(let value):
                 self.genres = value
-            DispatchQueue.main.async {
-                self.genreDescriptions = self.genres?.genres ?? []
-            }
             case .failure(let failure):
                 print("failure in WhatsPopularView \(failure)")
             }
         }
         
-        return genreDescriptions
-    }
-    
-    func saveDataForMovie(movieDetails: MovieDetails) -> Movie {
-        let movie = Movie()
-        
-        movie.originalTitle = movieDetails.originalTitle
-        movie.originalLanguage = movieDetails.originalLanguage
-        movie.adult = movieDetails.adult!
-        movie.backdropPath = movieDetails.backdropPath
-        movie.genreIds = movieDetails.genreIds as NSObject?
-        movie.id = movie.id
-        movie.voteCount = Int32(movieDetails.voteCount!)
-        movie.voteAverage = movieDetails.voteAverage!
-        movie.overview = movieDetails.overview
-        movie.popularity = movieDetails.popularity!
-        movie.posterPath = movieDetails.posterPath
-        movie.releaseDate = movieDetails.releaseDate
-        movie.title = movieDetails.title
-        movie.video = movieDetails.video!
-        movie.favorite = false // inicijalno niti jedan film nije u favoritima
-        
-        return movie
+        return self.genres
     }
     
     var whatsPopularMovieSearchResult: SearchResults?
-    var whatsPopularMovieData: [Movie]?
-    func fetchWhatsPopularData() -> [Movie]? {
+    func getWhatsPopularData() -> SearchResults? {
         // dohvacanje podataka s interneta i spremanje informacija o pojedinom filmu u Movie
         // vracam listu koja sadrzi sve filmove s njihovim podacima
         
@@ -78,27 +57,26 @@ class MoviesNetworkDataSource {
             switch result {
             case .success(let success):
                 self.whatsPopularMovieSearchResult = success
-                DispatchQueue.main.async {
-                    // ovdje cu spremati podatke za filmove
-                    self.whatsPopularMovieData = []
-                    let results = self.whatsPopularMovieSearchResult?.results ?? []
-                    let dataSize: Int = results.count
-                    
-                    for i in 0...dataSize {
-                        self.whatsPopularMovieData?[i] = self.saveDataForMovie(movieDetails: results[i])
-                    }
-                }
+//                DispatchQueue.main.async {
+//                    // ovdje cu spremati podatke za filmove
+//                    self.whatsPopularMovieData = []
+//                    let results = self.whatsPopularMovieSearchResult?.results ?? []
+//                    let dataSize: Int = results.count
+//
+//                    for i in 0...dataSize {
+//                        self.whatsPopularMovieData?[i] = self.saveDataForMovie(movieDetails: results[i])
+//                    }
+//                }
             case .failure(let failure):
                 print("failure in WhatsPopularView \(failure)")
             }
         }
         
-        return whatsPopularMovieData
+        return self.whatsPopularMovieSearchResult
     }
     
     var trendingMovieSearchResult: SearchResults?
-    var trendingMovieData: [Movie]?
-    func fetchTrendingData() -> [Movie]? {
+    func getTrendingData() -> SearchResults? {
         let popularMoviesUrlRequestString = "https://api.themoviedb.org/3/trending/movie/day?api_key=59afefdb9064ea17898a694d311e247e&page=1"
         guard let popularMoviesUrl = URL(string: popularMoviesUrlRequestString) else { return nil }
         var popularMoviesUrlRequest = URLRequest(url: popularMoviesUrl)
@@ -108,27 +86,26 @@ class MoviesNetworkDataSource {
             switch result {
             case .success(let success):
                 self.trendingMovieSearchResult = success
-                DispatchQueue.main.async {
-                    // ovdje cu spremati podatke za filmove
-                    self.trendingMovieData = []
-                    let results = self.trendingMovieSearchResult?.results ?? []
-                    let dataSize: Int = results.count
-                    
-                    for i in 0...dataSize {
-                        self.trendingMovieData?[i] = self.saveDataForMovie(movieDetails: results[i])
-                    }
-                }
+//                DispatchQueue.main.async {
+//                    // ovdje cu spremati podatke za filmove
+//                    self.trendingMovieData = []
+//                    let results = self.trendingMovieSearchResult?.results ?? []
+//                    let dataSize: Int = results.count
+//
+//                    for i in 0...dataSize {
+//                        self.trendingMovieData?[i] = self.saveDataForMovie(movieDetails: results[i])
+//                    }
+//                }
             case .failure(let failure):
                 print("failure in TrendingView \(failure)")
             }
         }
         
-        return self.trendingMovieData
+        return self.trendingMovieSearchResult
     }
     
     var recommendedMovieSearchresult: SearchResults?
-    var recommendedMovieData: [Movie]?
-    func fetchRecommendedData() -> [Movie]? {
+    func getRecommendedData() -> SearchResults? {
         let popularMoviesUrlRequestString = "https://api.themoviedb.org/3/movie/103/recommendations?language=en-US&page=1&api_key=59afefdb9064ea17898a694d311e247e"
         guard let popularMoviesUrl = URL(string: popularMoviesUrlRequestString) else { return nil }
         var popularMoviesUrlRequest = URLRequest(url: popularMoviesUrl)
@@ -138,27 +115,26 @@ class MoviesNetworkDataSource {
             switch result {
             case .success(let success):
                 self.recommendedMovieSearchresult = success
-                DispatchQueue.main.async {
-                    // ovdje cu spremati podatke za filmove
-                    self.recommendedMovieData = []
-                    let results = self.recommendedMovieSearchresult?.results ?? []
-                    let dataSize: Int = results.count
-                    
-                    for i in 0...dataSize {
-                        self.recommendedMovieData?[i] = self.saveDataForMovie(movieDetails: results[i])
-                    }
-                }
+//                DispatchQueue.main.async {
+//                    // ovdje cu spremati podatke za filmove
+//                    self.recommendedMovieData = []
+//                    let results = self.recommendedMovieSearchresult?.results ?? []
+//                    let dataSize: Int = results.count
+//
+//                    for i in 0...dataSize {
+//                        self.recommendedMovieData?[i] = self.saveDataForMovie(movieDetails: results[i])
+//                    }
+//                }
             case .failure(let failure):
                 print("failure in RecommendedView \(failure)")
             }
         }
         
-        return self.recommendedMovieData
+        return self.recommendedMovieSearchresult
     }
     
     var topRatedMovieSearchResult: SearchResults?
-    var topRatedMovieData: [Movie]?
-    func fetchTopRatedData() -> [Movie]? {
+    func getTopRatedData() -> SearchResults? {
         let popularMoviesUrlRequestString = "https://api.themoviedb.org/3/movie/top_rated?language=en-US&page=1&api_key=59afefdb9064ea17898a694d311e247e"
         guard let popularMoviesUrl = URL(string: popularMoviesUrlRequestString) else { return nil }
         var popularMoviesUrlRequest = URLRequest(url: popularMoviesUrl)
@@ -168,21 +144,21 @@ class MoviesNetworkDataSource {
             switch result {
             case .success(let success):
                 self.topRatedMovieSearchResult = success
-                DispatchQueue.main.async {
-                    // ovdje cu spremati podatke za filmove
-                    self.topRatedMovieData = []
-                    let results = self.topRatedMovieSearchResult?.results ?? []
-                    let dataSize: Int = results.count
-                    
-                    for i in 0...dataSize {
-                        self.topRatedMovieData?[i] = self.saveDataForMovie(movieDetails: results[i])
-                    }
-                }
+//                DispatchQueue.main.async {
+//                    // ovdje cu spremati podatke za filmove
+//                    self.topRatedMovieData = []
+//                    let results = self.topRatedMovieSearchResult?.results ?? []
+//                    let dataSize: Int = results.count
+//
+//                    for i in 0...dataSize {
+//                        self.topRatedMovieData?[i] = self.saveDataForMovie(movieDetails: results[i])
+//                    }
+//                }
             case .failure(let failure):
                 print("failure in TopRatedView \(failure)")
             }
         }
         
-        return topRatedMovieData
+        return self.topRatedMovieSearchResult
     }
 }
