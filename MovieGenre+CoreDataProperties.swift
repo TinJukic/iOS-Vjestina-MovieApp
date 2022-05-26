@@ -1,8 +1,8 @@
 //
-//  MovieGroup+CoreDataProperties.swift
+//  MovieGenre+CoreDataProperties.swift
 //  MovieApp
 //
-//  Created by FIVE on 18.05.2022..
+//  Created by FIVE on 25.05.2022..
 //
 //
 
@@ -10,19 +10,20 @@ import Foundation
 import CoreData
 
 
-extension MovieGroup {
+extension MovieGenre {
 
-    @nonobjc public class func fetchRequest() -> NSFetchRequest<MovieGroup> {
-        return NSFetchRequest<MovieGroup>(entityName: "MovieGroup")
+    @nonobjc public class func fetchRequest() -> NSFetchRequest<MovieGenre> {
+        return NSFetchRequest<MovieGenre>(entityName: "MovieGenre")
     }
 
     @NSManaged public var name: String?
+    @NSManaged public var id: Int64
     @NSManaged public var movies: NSSet?
 
 }
 
 // MARK: Generated accessors for movies
-extension MovieGroup {
+extension MovieGenre {
 
     @objc(addMoviesObject:)
     @NSManaged public func addToMovies(_ value: Movie)
@@ -38,6 +39,6 @@ extension MovieGroup {
 
 }
 
-extension MovieGroup : Identifiable {
+extension MovieGenre : Identifiable {
 
 }

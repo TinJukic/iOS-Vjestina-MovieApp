@@ -36,7 +36,7 @@ class MoviesDatabaseDataSource {
     }
     
     // dohvacanje tocno odredjenog filma (po id-u)
-    func fetchMovie(withId id: UUID) -> Movie? {
+    func fetchMovie(withId id: Int64) -> Movie? {
         let request: NSFetchRequest<Movie> = Movie.fetchRequest()
         let predicate = NSPredicate(format: "id = %@", "\(id)")
         request.predicate = predicate
@@ -71,7 +71,7 @@ class MoviesDatabaseDataSource {
     }
     
     // azuriranje vrijednosti za favorite svojstvo filma na pritisak gumba
-    func updateFavorite(withId id: UUID) {
+    func updateFavorite(withId id: Int64) {
         let movie = fetchMovie(withId: id)
         
         if(movie?.favorite == true) {
@@ -134,12 +134,14 @@ class MoviesDatabaseDataSource {
         let group = MovieGroup(context: managedContext)
         group.name = "Whats popular"
         
+        print("HELLO! Moj count je: \(whatsPopularSearchResults?.results.count)")
+        
         // dalje moram dohvatiti sve filmove koji odgovaraju ovom pozivu i postaviti vezu izmedju njih i grupe kojoj pripadaju
         // uvijek moram provjeriti postoji li taj film vec u bazi podataka
         do {
             try whatsPopularSearchResults?.results.forEach({ searchResult in
-                let id = searchResult.id! as! UUID
-                let movieInDatabase = fetchMovie(withId: id)
+                print("ID: \(searchResult.id ?? -1)")
+                let movieInDatabase = fetchMovie(withId: Int64(searchResult.id!))
                 
                 if(movieInDatabase == nil) {
                     group.addToMovies(saveMovie(movieDetails: searchResult))
@@ -162,8 +164,7 @@ class MoviesDatabaseDataSource {
         // uvijek moram provjeriti postoji li taj film vec u bazi podataka
         do {
             try trendingSearchResults?.results.forEach({ searchResult in
-                let id = searchResult.id! as! UUID
-                let movieInDatabase = fetchMovie(withId: id)
+                let movieInDatabase = fetchMovie(withId: Int64(searchResult.id!))
                 
                 if(movieInDatabase == nil) {
                     group.addToMovies(saveMovie(movieDetails: searchResult))
@@ -186,8 +187,7 @@ class MoviesDatabaseDataSource {
         // uvijek moram provjeriti postoji li taj film vec u bazi podataka
         do {
             try recomendedSearchResults?.results.forEach({ searchResult in
-                let id = searchResult.id! as! UUID
-                let movieInDatabase = fetchMovie(withId: id)
+                let movieInDatabase = fetchMovie(withId: Int64(searchResult.id!))
                 
                 if(movieInDatabase == nil) {
                     group.addToMovies(saveMovie(movieDetails: searchResult))
@@ -210,8 +210,7 @@ class MoviesDatabaseDataSource {
         // uvijek moram provjeriti postoji li taj film vec u bazi podataka
         do {
             try topRatedSearchResults?.results.forEach({ searchResult in
-                let id = searchResult.id! as! UUID
-                let movieInDatabase = fetchMovie(withId: id)
+                let movieInDatabase = fetchMovie(withId: Int64(searchResult.id!))
                 
                 if(movieInDatabase == nil) {
                     group.addToMovies(saveMovie(movieDetails: searchResult))
@@ -233,10 +232,10 @@ class MoviesDatabaseDataSource {
             movieInDatabase!.title = fetchedMovie.title
             movieInDatabase!.originalTitle = fetchedMovie.originalTitle
             movieInDatabase!.adult = fetchedMovie.adult!
-            movieInDatabase!.voteCount = Int32(fetchedMovie.voteCount!)
+            movieInDatabase!.voteCount = Int64(fetchedMovie.voteCount!)
             movieInDatabase!.voteAverage = fetchedMovie.voteAverage!
             movieInDatabase!.backdropPath = fetchedMovie.backdropPath
-            movieInDatabase!.genreIds = fetchedMovie.genreIds as NSObject?
+            movieInDatabase!.genreIds = fetchedMovie.genreIds as! [Int64]
             movieInDatabase!.originalLanguage = fetchedMovie.originalLanguage
             movieInDatabase!.overview = fetchedMovie.overview
             movieInDatabase!.popularity = fetchedMovie.popularity!
@@ -249,13 +248,21 @@ class MoviesDatabaseDataSource {
     func saveMovie(movieDetails: MovieDetails) -> Movie {
         let movie = Movie()
         
-        movie.originalTitle = movieDetails.originalTitle
+        print("Spremam film u bazu podataka")
+        print(movieDetails.originalTitle!)
+                
+        if movie != nil {
+            print("Ja ti nisam nil")
+            print("Ja sam ti: \(NSStringFromClass(movie.classForCoder))")
+        }
+        
+        movie.originalTitle = movieDetails.originalTitle! as! String
         movie.originalLanguage = movieDetails.originalLanguage
         movie.adult = movieDetails.adult!
         movie.backdropPath = movieDetails.backdropPath
-        movie.genreIds = movieDetails.genreIds as NSObject?
-        movie.id = movieDetails.id as! UUID
-        movie.voteCount = Int32(movieDetails.voteCount!)
+        movie.genreIds = movieDetails.genreIds as! [Int64]
+        movie.id = Int64(movieDetails.id!)
+        movie.voteCount = Int64(movieDetails.voteCount!)
         movie.voteAverage = movieDetails.voteAverage!
         movie.overview = movieDetails.overview
         movie.popularity = movieDetails.popularity!
@@ -265,6 +272,7 @@ class MoviesDatabaseDataSource {
         movie.video = movieDetails.video!
         movie.favorite = false // inicijalno niti jedan film nije u favoritima
         
+        print("Spremio sam ga")
         return movie
     }
 }

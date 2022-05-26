@@ -17,7 +17,7 @@ class MoviesRepository {
     init(managedContext: NSManagedObjectContext) {
         self.managedContext = managedContext
         
-        self.moviesNetworkDataSource = MoviesNetworkDataSource()
+        self.moviesNetworkDataSource = MoviesNetworkDataSource(managedContext: self.managedContext)
         self.moviesDatabaseDataSource = MoviesDatabaseDataSource(managedContext: self.managedContext)
     }
     
@@ -32,8 +32,9 @@ class MoviesRepository {
     }
     
     func whatsPopularData() {
-        let whatsPopularMovieData = moviesNetworkDataSource?.whatsPopularMovieSearchResult
-        moviesDatabaseDataSource?.saveWhatsPopularMovieData(whatsPopularSearchResults: whatsPopularMovieData)
+//        let whatsPopularMovieData = moviesNetworkDataSource?.whatsPopularMovieSearchResult
+//        moviesDatabaseDataSource?.saveWhatsPopularMovieData(whatsPopularSearchResults: whatsPopularMovieData)
+        var get = moviesNetworkDataSource?.getWhatsPopularData()
     }
     
     func trendingData() {

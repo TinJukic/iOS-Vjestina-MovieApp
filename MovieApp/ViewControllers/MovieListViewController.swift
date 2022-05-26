@@ -81,6 +81,7 @@ class MovieListViewController: UIViewController {
             // ako ima interneta, potrebno dohvatiti podatke i spremiti ih u bazu podataka
             self.context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
             self.moviesRepository = MoviesRepository(managedContext: self.context)
+            self.moviesRepository.appLaunch()
             
             // adding searchBar to the main view
             view.addSubview(searchBarView)

@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+import CoreData
 
 class MoviesNetworkDataSource {
     // zaduzena za dohvat filmova s mreze
@@ -20,8 +21,14 @@ class MoviesNetworkDataSource {
     // ova klasa samo radi dohvat s interneta -> prosljedjuje sto je dohvaceno s interneta dalje aplikaciji
     
     var networkService: NetworkService!
+    var moviesDatabaseDatasource: MoviesDatabaseDataSource!
+    var managedContext: NSManagedObjectContext!
     
-    init() { networkService = NetworkService() }
+    init(managedContext: NSManagedObjectContext) {
+        networkService = NetworkService()
+        self.managedContext = managedContext
+        self.moviesDatabaseDatasource = MoviesDatabaseDataSource(managedContext: managedContext)
+    }
     
     var genres: Genres?
     func getGenres() -> Genres? {
@@ -57,16 +64,7 @@ class MoviesNetworkDataSource {
             switch result {
             case .success(let success):
                 self.whatsPopularMovieSearchResult = success
-//                DispatchQueue.main.async {
-//                    // ovdje cu spremati podatke za filmove
-//                    self.whatsPopularMovieData = []
-//                    let results = self.whatsPopularMovieSearchResult?.results ?? []
-//                    let dataSize: Int = results.count
-//
-//                    for i in 0...dataSize {
-//                        self.whatsPopularMovieData?[i] = self.saveDataForMovie(movieDetails: results[i])
-//                    }
-//                }
+                self.moviesDatabaseDatasource.saveWhatsPopularMovieData(whatsPopularSearchResults: self.whatsPopularMovieSearchResult)
             case .failure(let failure):
                 print("failure in WhatsPopularView \(failure)")
             }
