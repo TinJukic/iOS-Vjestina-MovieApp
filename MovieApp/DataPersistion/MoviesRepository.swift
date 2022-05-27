@@ -29,26 +29,23 @@ class MoviesRepository {
         trendingData()
         recomendedData()
         topRatedData()
+        
+        print("Gotov sam")
     }
     
     func whatsPopularData() {
-//        let whatsPopularMovieData = moviesNetworkDataSource?.whatsPopularMovieSearchResult
-//        moviesDatabaseDataSource?.saveWhatsPopularMovieData(whatsPopularSearchResults: whatsPopularMovieData)
-        var get = moviesNetworkDataSource?.getWhatsPopularData()
+        moviesNetworkDataSource?.getWhatsPopularData()
     }
     
     func trendingData() {
-        let trendingMovieData = moviesNetworkDataSource?.trendingMovieSearchResult
-        moviesDatabaseDataSource?.saveTrendingMovieData(trendingSearchResults: trendingMovieData)
+        moviesNetworkDataSource?.getTrendingData()
     }
     
     func recomendedData() {
-        let recomendedMovieData = moviesNetworkDataSource?.recommendedMovieSearchresult
-        moviesDatabaseDataSource?.saveRecomendedMovieData(recomendedSearchResults: recomendedMovieData)
+        moviesNetworkDataSource?.getRecommendedData()
     }
     
     func topRatedData() {
-        let topRatedMovieData = moviesNetworkDataSource?.topRatedMovieSearchResult
-        moviesDatabaseDataSource?.saveTopRatedMovieData(topRatedSearchResults: topRatedMovieData)
+        moviesNetworkDataSource?.getTopRatedData()
     }
 }

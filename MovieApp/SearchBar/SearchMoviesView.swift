@@ -25,14 +25,17 @@ class SearchMoviesView: UIView {
     var moviesSearchResult: SearchResults?
     var navigationController: UINavigationController!
     var repository: MoviesRepository!
+    var movies: [Movie]!
     
-    init(navigationController: UINavigationController, repository: MoviesRepository) {
+    init(navigationController: UINavigationController, repository: MoviesRepository, searchBarView: SearchBarView) {
         super.init(frame: .zero)
         
         self.backgroundColor = .white
         
         self.navigationController = navigationController
         self.repository = repository
+        
+        searchBarView.typingDelegate = self
         
         buildViews()
         addConstraints()
@@ -43,9 +46,8 @@ class SearchMoviesView: UIView {
     }
     
     func buildViews() {
-        print(repository.moviesDatabaseDataSource?.fetchAllMovies().count)
-        
         networkService = NetworkService()
+        movies = repository.moviesDatabaseDataSource?.fetchAllMovies()
         
         // dohvat podataka za filmove i njihov prikaz
         let popularMoviesUrlRequestString = "https://api.themoviedb.org/3/movie/popular?language=en-US&page=1&api_key=59afefdb9064ea17898a694d311e247e"
@@ -92,12 +94,12 @@ extension SearchMoviesView: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.moviesSearchResult?.results.count ?? 0
+        return self.movies.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath)
-        let contentForCell = SearchMoviesViewCell(index: indexPath.row, cell: cell, moviesSearchResult: self.moviesSearchResult ?? SearchResults.init(page: 0, results: [], totalPages: 0, totalResults: 0))
+        let contentForCell = SearchMoviesViewCell(cell: cell, movie: movies[indexPath.row])
         cell.contentView.addSubview(contentForCell)
         cell.layer.cornerRadius = 10
         return cell
@@ -109,8 +111,9 @@ extension SearchMoviesView: UICollectionViewDelegate {
 //        logic when cell is selected
         print("Clicked on cell number \(indexPath.row)")
         
-        let movie = self.moviesSearchResult?.results[indexPath.row] ?? MovieDetails.init(adult: nil, backdropPath: nil, genreIds: nil, id: nil, originalLanguage: nil, originalTitle: nil, overview: nil, popularity: nil, posterPath: nil, releaseDate: nil, title: nil, video: nil, voteAverage: nil, voteCount: nil)
-        let movieDetailsViewsController = MovieDetailsViewController(id: self.moviesSearchResult?.results[indexPath.row].id! ?? 0, movie: movie)
+        let movie = self.movies[indexPath.row]
+        let movieDetailsViewsController = MovieDetailsViewController(id: Int(movie.id))
+        movieDetailsViewsController.delegate = self
         movieDetailsViewsController.tabBarController?.selectedIndex = indexPath.row
         
         self.navigationController.pushViewController(movieDetailsViewsController, animated: true)
@@ -120,5 +123,25 @@ extension SearchMoviesView: UICollectionViewDelegate {
 extension SearchMoviesView: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: self.bounds.width, height: 140)
+    }
+}
+
+extension SearchMoviesView: SearchBarTypingProtocol {
+    func textTyping(text: String) {
+        print(text)
+        
+        if(text == "") {
+            movies = repository.moviesDatabaseDataSource?.fetchAllMovies()
+        } else {
+            movies = repository.moviesDatabaseDataSource?.fetchMoviesByNameSearch(withName: text)
+        }
+        
+        moviesCollectionView.reloadData()
+    }
+}
+
+extension SearchMoviesView: MovieDetailsViewControllerProtocol {
+    func reloadCollection() {
+        moviesCollectionView.reloadData()
     }
 }

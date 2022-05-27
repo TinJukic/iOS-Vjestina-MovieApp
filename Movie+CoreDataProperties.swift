@@ -2,7 +2,7 @@
 //  Movie+CoreDataProperties.swift
 //  MovieApp
 //
-//  Created by FIVE on 25.05.2022..
+//  Created by FIVE on 26.05.2022..
 //
 //
 
@@ -31,8 +31,42 @@ extension Movie {
     @NSManaged public var video: Bool
     @NSManaged public var voteAverage: Float
     @NSManaged public var voteCount: Int64
-    @NSManaged public var genres: MovieGenre?
-    @NSManaged public var groups: MovieGroup?
+    @NSManaged public var genres: NSSet?
+    @NSManaged public var groups: NSSet?
+
+}
+
+// MARK: Generated accessors for genres
+extension Movie {
+
+    @objc(addGenresObject:)
+    @NSManaged public func addToGenres(_ value: MovieGenre)
+
+    @objc(removeGenresObject:)
+    @NSManaged public func removeFromGenres(_ value: MovieGenre)
+
+    @objc(addGenres:)
+    @NSManaged public func addToGenres(_ values: NSSet)
+
+    @objc(removeGenres:)
+    @NSManaged public func removeFromGenres(_ values: NSSet)
+
+}
+
+// MARK: Generated accessors for groups
+extension Movie {
+
+    @objc(addGroupsObject:)
+    @NSManaged public func addToGroups(_ value: MovieGroup)
+
+    @objc(removeGroupsObject:)
+    @NSManaged public func removeFromGroups(_ value: MovieGroup)
+
+    @objc(addGroups:)
+    @NSManaged public func addToGroups(_ values: NSSet)
+
+    @objc(removeGroups:)
+    @NSManaged public func removeFromGroups(_ values: NSSet)
 
 }
 

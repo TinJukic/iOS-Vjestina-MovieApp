@@ -11,10 +11,12 @@ import PureLayout
 
 class MovieCategoriesView: UIScrollView {
     var navigationController: UINavigationController!
+    var repository: MoviesRepository!
     
-    init(navigationController: UINavigationController) {
+    init(navigationController: UINavigationController, repository: MoviesRepository) {
         super.init(frame: .zero)
         self.navigationController = navigationController
+        self.repository = repository
         
         backgroundColor = .white
         
@@ -28,7 +30,7 @@ class MovieCategoriesView: UIScrollView {
     var viewStackView: ViewStackView!
     
     func buildViews() {
-        viewStackView = ViewStackView(navigationController: navigationController)
+        viewStackView = ViewStackView(navigationController: navigationController, repository: repository)
         self.addSubview(viewStackView)
     }
     

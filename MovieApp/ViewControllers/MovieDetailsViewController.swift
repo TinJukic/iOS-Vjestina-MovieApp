@@ -8,12 +8,19 @@
 import Foundation
 import UIKit
 import PureLayout
+import CoreData
+
+protocol MovieDetailsViewControllerProtocol {
+    func reloadCollection()
+}
 
 class MovieDetailsViewController: UIViewController {
     var id: Int!
     var movieDetails: DetailsForMovie!
     var networkService: NetworkService!
-    var movie: MovieDetails
+    var context: NSManagedObjectContext!
+    var repository: MoviesRepository!
+    var delegate: MovieDetailsViewControllerProtocol?
     
     // PRVA POLOVICA
     var imageView: UIImageView!
@@ -42,17 +49,31 @@ class MovieDetailsViewController: UIViewController {
     var horizontalStackView2: UIStackView!
     
     convenience init() {
-        self.init(id: 0, movie: MovieDetails.init(adult: nil, backdropPath: nil, genreIds: nil, id: nil, originalLanguage: nil, originalTitle: nil, overview: nil, popularity: nil, posterPath: nil, releaseDate: nil, title: nil, video: nil, voteAverage: nil, voteCount: nil))
+        self.init(id: 0)
     }
     
-    init(id: Int, movie: MovieDetails) {
+    init(id: Int) {
         self.id = id
-        self.movie = movie
         super.init(nibName: nil, bundle: nil)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    @objc func buttonTapped(button: UIButton) {
+        self.repository.moviesDatabaseDataSource?.updateFavorite(withId: Int64(self.id))
+        let movie = self.repository.moviesDatabaseDataSource?.fetchMovie(withId: Int64(self.id))
+        
+        if movie?.favorite == false {
+            let starImage = UIImage(systemName: "star.fill")?.withTintColor(.white, renderingMode: .alwaysOriginal)
+            button.setImage(starImage, for: .normal)
+        } else {
+            let starImage = UIImage(systemName: "star")?.withTintColor(.white, renderingMode: .alwaysOriginal)
+            button.setImage(starImage, for: .normal)
+        }
+        
+        delegate?.reloadCollection()
     }
     
     override func viewDidLoad() {
@@ -66,6 +87,9 @@ class MovieDetailsViewController: UIViewController {
         navigationItem.title = "TMDB"
         navigationItem.backButtonTitle = "back"
         navigationItem.backButtonDisplayMode = .default
+        
+        self.context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+        self.repository = MoviesRepository(managedContext: context)
         
         fetchData()
     }
@@ -180,12 +204,17 @@ class MovieDetailsViewController: UIViewController {
         yearAndCountryLabel.textColor = .white
         view.addSubview(yearAndCountryLabel)
         
-        let starImage = UIImage(systemName: "star")?.withTintColor(.white, renderingMode: .alwaysOriginal)
+        var starImage = UIImage(systemName: "star")?.withTintColor(.white, renderingMode: .alwaysOriginal)
+        let movie = self.repository.moviesDatabaseDataSource?.fetchMovie(withId: Int64(self.id))
+        if movie?.favorite == false {
+            starImage = UIImage(systemName: "star.fill")?.withTintColor(.white, renderingMode: .alwaysOriginal)
+        }
         
         favoritesButton = UIButton()
         favoritesButton.setImage(starImage, for: .normal)
         favoritesButton.backgroundColor = .gray
         favoritesButton.layer.cornerRadius = 16
+        favoritesButton.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
         view.addSubview(favoritesButton)
         
         // DRUGA POLOVICA

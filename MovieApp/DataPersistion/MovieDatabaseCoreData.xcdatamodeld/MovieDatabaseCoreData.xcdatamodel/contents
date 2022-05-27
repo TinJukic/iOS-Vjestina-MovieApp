@@ -3,7 +3,7 @@
     <entity name="Movie" representedClassName="Movie" syncable="YES">
         <attribute name="adult" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="backdropPath" optional="YES" attributeType="String"/>
-        <attribute name="favorite" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="favorite" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
         <attribute name="genreIds" optional="YES" attributeType="Transformable" customClassName="[Int64]"/>
         <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="originalLanguage" optional="YES" attributeType="String"/>
@@ -16,8 +16,8 @@
         <attribute name="video" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="voteAverage" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="voteCount" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
-        <relationship name="genres" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="MovieGenre" inverseName="movies" inverseEntity="MovieGenre"/>
-        <relationship name="groups" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="MovieGroup" inverseName="movies" inverseEntity="MovieGroup"/>
+        <relationship name="genres" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MovieGenre" inverseName="movies" inverseEntity="MovieGenre"/>
+        <relationship name="groups" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MovieGroup" inverseName="movies" inverseEntity="MovieGroup"/>
     </entity>
     <entity name="MovieGenre" representedClassName="MovieGenre" syncable="YES">
         <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>

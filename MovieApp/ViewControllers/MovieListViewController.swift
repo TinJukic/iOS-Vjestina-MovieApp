@@ -74,8 +74,8 @@ class MovieListViewController: UIViewController {
     func buildViews() {
         noInternetConnectionView = NoInternetConnectionView()
         searchBarView = SearchBarView(delegate: self)
-        searchMoviesView = SearchMoviesView(navigationController: self.navigationController!, repository: self.moviesRepository)
-        movieCategories = MovieCategoriesView(navigationController: self.navigationController!)
+        searchMoviesView = SearchMoviesView(navigationController: self.navigationController!, repository: self.moviesRepository, searchBarView: searchBarView)
+        movieCategories = MovieCategoriesView(navigationController: self.navigationController!, repository: self.moviesRepository)
         
         if(connected == true) {
             // ako ima interneta, potrebno dohvatiti podatke i spremiti ih u bazu podataka

@@ -11,21 +11,19 @@ import PureLayout
 import MovieAppData
 
 class SearchMoviesViewCell: UIView {
-    var moviesSearchResult: SearchResults!
     var movieImage: UIImageView!
     var movieTitle: UILabel!
     var movieDescription: UILabel!
-    var index = 0
     var cell: UICollectionViewCell!
+    var movie: Movie!
     
-    init(index: Int, cell: UICollectionViewCell, moviesSearchResult: SearchResults) {
+    init(cell: UICollectionViewCell, movie: Movie) {
         super.init(frame: .zero)
         
         self.backgroundColor = .white
         
-        self.index = index
         self.cell = cell
-        self.moviesSearchResult = moviesSearchResult
+        self.movie = movie
         
         buildViews()
         addConstraints()
@@ -39,7 +37,7 @@ class SearchMoviesViewCell: UIView {
         movieImage = UIImageView()
         DispatchQueue.global().async {
             do {
-                let url = URL(string: "https://image.tmdb.org/t/p/original" + self.moviesSearchResult.results[self.index].posterPath!)!
+                let url = URL(string: "https://image.tmdb.org/t/p/original" + (self.movie.posterPath ?? ""))!
                 let data = try Data(contentsOf: url)
                 
                 DispatchQueue.main.async {
@@ -52,13 +50,13 @@ class SearchMoviesViewCell: UIView {
         self.addSubview(movieImage)
         
         movieTitle = UILabel()
-        movieTitle.text = moviesSearchResult.results[index].title
+        movieTitle.text = movie.title
         movieTitle.font = UIFont.boldSystemFont(ofSize: 16)
         movieTitle.numberOfLines = 0
         self.addSubview(movieTitle)
         
         movieDescription = UILabel()
-        movieDescription.text = moviesSearchResult.results[index].overview
+        movieDescription.text = movie.overview
         movieDescription.font = UIFont.systemFont(ofSize: 16)
         movieDescription.numberOfLines = 0
         self.addSubview(movieDescription)

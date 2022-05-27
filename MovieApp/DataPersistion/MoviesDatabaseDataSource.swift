@@ -20,6 +20,20 @@ class MoviesDatabaseDataSource {
     
     init(managedContext: NSManagedObjectContext) { self.managedContext = managedContext }
     
+    func fetchGroup(groupName: String) -> MovieGroup? {
+        let request: NSFetchRequest<MovieGroup> = MovieGroup.fetchRequest()
+        let predicate = NSPredicate(format: "name = %@", "\(groupName)")
+        request.predicate = predicate
+        request.fetchLimit = 1
+        
+        do {
+            return try managedContext.fetch(request).first
+        } catch let error as NSError {
+            print("Error \(error) : Info: \(error.userInfo)")
+            return nil
+        }
+    }
+    
     // dohvacanje svih filmova iz memorije uredjaja poredanih abecednim redom po nazivu filma
     // kategoriju filma dobivam iz movie group u bazi - KAKO?
     func fetchAllMovies() -> [Movie] {
@@ -50,8 +64,15 @@ class MoviesDatabaseDataSource {
         }
     }
     
-    func fetchMoviesFromCategory(withCategory genre: GenreDescription) -> [Movie] {
-        return []
+    func fetchMoviesFromGroup(withCategory group: MovieGroup) -> [Movie] {
+        let request: NSFetchRequest<Movie> = Movie.fetchRequest()
+
+        do {
+            return try managedContext.fetch(request)
+        } catch let error as NSError {
+            print("Error \(error) occured in fetchMoviesByNameSearch with info: \(error.userInfo)")
+            return []
+        }
     }
     
     func fetchMoviesByNameSearch(withName title: String) -> [Movie] {
@@ -73,11 +94,16 @@ class MoviesDatabaseDataSource {
     // azuriranje vrijednosti za favorite svojstvo filma na pritisak gumba
     func updateFavorite(withId id: Int64) {
         let movie = fetchMovie(withId: id)
+        print("Mijenjam...")
         
         if(movie?.favorite == true) {
-            movie?.favorite = false
+            print("Bio si true")
+//            movie?.favorite = false
+            movie?.setValue(false, forKey: "favorite")
         } else {
-            movie?.favorite = true
+            print("Bio si false")
+//            movie?.favorite = true
+            movie?.setValue(true, forKey: "favorite")
         }
         
         do {
@@ -91,7 +117,7 @@ class MoviesDatabaseDataSource {
     // bit ce sortirani abecednim redom
     func fetchFavorites() -> [Movie] {
         let request: NSFetchRequest<Movie> = Movie.fetchRequest()
-        let predicate: NSPredicate = NSPredicate(format: "favorite = %@", true)
+        let predicate: NSPredicate = NSPredicate(format: "favorite = %@", "YES")
         request.predicate = predicate
         
         let nameSort = NSSortDescriptor(key: "title", ascending: true)
@@ -125,32 +151,27 @@ class MoviesDatabaseDataSource {
         return nil
     }
     
-    // podatke dohvacam s interneta u MoviesRepository i dalje ih prosljedjujem ovim metodama
-    // metode ispod pozivam samo jednom, prilikom pokretanja aplikacije, dalje se sve radi preko baze podataka
     func saveWhatsPopularMovieData(whatsPopularSearchResults: SearchResults?) {
-        // vezu izmedju pojedinih filmova i grupa pravim na nacin da filmu dodijelim grupu koja mu treba
-        // sto sve trebam staviti u grupu ?
-        
         let group = MovieGroup(context: managedContext)
         group.name = "Whats popular"
         
-        print("HELLO! Moj count je: \(whatsPopularSearchResults?.results.count)")
+        print("Tu sam")
         
-        // dalje moram dohvatiti sve filmove koji odgovaraju ovom pozivu i postaviti vezu izmedju njih i grupe kojoj pripadaju
         // uvijek moram provjeriti postoji li taj film vec u bazi podataka
         do {
             try whatsPopularSearchResults?.results.forEach({ searchResult in
-                print("ID: \(searchResult.id ?? -1)")
                 let movieInDatabase = fetchMovie(withId: Int64(searchResult.id!))
                 
                 if(movieInDatabase == nil) {
                     group.addToMovies(saveMovie(movieDetails: searchResult))
                 } else {
-                    updateMovie(movieInDatabase: movieInDatabase!, fetchedMovie: searchResult)
+//                    updateMovie(movieInDatabase: movieInDatabase!, fetchedMovie: searchResult)
+                    group.addToMovies(updateMovie(movieInDatabase: movieInDatabase!, fetchedMovie: searchResult))
                 }
                 
                 // sada je potrebno svaki film spremiti u bazu podataka
                 try managedContext.save()
+                print("Uspio sam spremiti podatke")
             })
         } catch let error as NSError {
             print("Error \(error) occured in saveTopRatedMovieData with info: \(error.userInfo)")
@@ -161,6 +182,8 @@ class MoviesDatabaseDataSource {
         let group = MovieGroup(context: managedContext)
         group.name = "Trending"
         
+        print("Tu sam")
+        
         // uvijek moram provjeriti postoji li taj film vec u bazi podataka
         do {
             try trendingSearchResults?.results.forEach({ searchResult in
@@ -169,11 +192,13 @@ class MoviesDatabaseDataSource {
                 if(movieInDatabase == nil) {
                     group.addToMovies(saveMovie(movieDetails: searchResult))
                 } else {
-                    updateMovie(movieInDatabase: movieInDatabase!, fetchedMovie: searchResult)
+                    group.addToMovies(updateMovie(movieInDatabase: movieInDatabase!, fetchedMovie: searchResult))
+//                    updateMovie(movieInDatabase: movieInDatabase!, fetchedMovie: searchResult)
                 }
                 
                 // sada je potrebno svaki film spremiti u bazu podataka
                 try managedContext.save()
+                print("Uspio sam spremiti podatke")
             })
         } catch let error as NSError {
             print("Error \(error) occured in saveTopRatedMovieData with info: \(error.userInfo)")
@@ -184,6 +209,8 @@ class MoviesDatabaseDataSource {
         let group = MovieGroup(context: managedContext)
         group.name = "Recomended"
         
+        print("Tu sam")
+        
         // uvijek moram provjeriti postoji li taj film vec u bazi podataka
         do {
             try recomendedSearchResults?.results.forEach({ searchResult in
@@ -192,11 +219,13 @@ class MoviesDatabaseDataSource {
                 if(movieInDatabase == nil) {
                     group.addToMovies(saveMovie(movieDetails: searchResult))
                 } else {
-                    updateMovie(movieInDatabase: movieInDatabase!, fetchedMovie: searchResult)
+                    group.addToMovies(updateMovie(movieInDatabase: movieInDatabase!, fetchedMovie: searchResult))
+//                    updateMovie(movieInDatabase: movieInDatabase!, fetchedMovie: searchResult)
                 }
                 
                 // sada je potrebno svaki film spremiti u bazu podataka
                 try managedContext.save()
+                print("Uspio sam spremiti podatke")
             })
         } catch let error as NSError {
             print("Error \(error) occured in saveTopRatedMovieData with info: \(error.userInfo)")
@@ -207,6 +236,8 @@ class MoviesDatabaseDataSource {
         let group = MovieGroup(context: managedContext)
         group.name = "Top rated"
         
+        print("Tu sam")
+        
         // uvijek moram provjeriti postoji li taj film vec u bazi podataka
         do {
             try topRatedSearchResults?.results.forEach({ searchResult in
@@ -215,18 +246,20 @@ class MoviesDatabaseDataSource {
                 if(movieInDatabase == nil) {
                     group.addToMovies(saveMovie(movieDetails: searchResult))
                 } else {
-                    updateMovie(movieInDatabase: movieInDatabase!, fetchedMovie: searchResult)
+                    group.addToMovies(updateMovie(movieInDatabase: movieInDatabase!, fetchedMovie: searchResult))
+//                    updateMovie(movieInDatabase: movieInDatabase!, fetchedMovie: searchResult)
                 }
                 
                 // sada je potrebno svaki film spremiti u bazu podataka
                 try managedContext.save()
+                print("Uspio sam spremiti podatke")
             })
         } catch let error as NSError {
             print("Error \(error) occured in saveTopRatedMovieData with info: \(error.userInfo)")
         }
     }
     
-    func updateMovie(movieInDatabase: Movie?, fetchedMovie: MovieDetails) {
+    func updateMovie(movieInDatabase: Movie?, fetchedMovie: MovieDetails) -> Movie {
         if(movieInDatabase != nil) {
             // ne trebam mijenjati favorite oznaku!
             movieInDatabase!.title = fetchedMovie.title
@@ -235,7 +268,7 @@ class MoviesDatabaseDataSource {
             movieInDatabase!.voteCount = Int64(fetchedMovie.voteCount!)
             movieInDatabase!.voteAverage = fetchedMovie.voteAverage!
             movieInDatabase!.backdropPath = fetchedMovie.backdropPath
-            movieInDatabase!.genreIds = fetchedMovie.genreIds as! [Int64]
+            movieInDatabase!.genreIds = fetchedMovie.genreIds?.map{ Int64($0) }
             movieInDatabase!.originalLanguage = fetchedMovie.originalLanguage
             movieInDatabase!.overview = fetchedMovie.overview
             movieInDatabase!.popularity = fetchedMovie.popularity!
@@ -243,24 +276,18 @@ class MoviesDatabaseDataSource {
             movieInDatabase!.releaseDate = fetchedMovie.releaseDate
             movieInDatabase!.video = fetchedMovie.video!
         }
+        
+        return movieInDatabase!
     }
     
     func saveMovie(movieDetails: MovieDetails) -> Movie {
-        let movie = Movie()
+        let movie = Movie(context: self.managedContext)
         
-        print("Spremam film u bazu podataka")
-        print(movieDetails.originalTitle!)
-                
-        if movie != nil {
-            print("Ja ti nisam nil")
-            print("Ja sam ti: \(NSStringFromClass(movie.classForCoder))")
-        }
-        
-        movie.originalTitle = movieDetails.originalTitle! as! String
+        movie.originalTitle = movieDetails.originalTitle!
         movie.originalLanguage = movieDetails.originalLanguage
         movie.adult = movieDetails.adult!
         movie.backdropPath = movieDetails.backdropPath
-        movie.genreIds = movieDetails.genreIds as! [Int64]
+        movie.genreIds = movieDetails.genreIds?.map{ Int64($0) }
         movie.id = Int64(movieDetails.id!)
         movie.voteCount = Int64(movieDetails.voteCount!)
         movie.voteAverage = movieDetails.voteAverage!
@@ -270,9 +297,8 @@ class MoviesDatabaseDataSource {
         movie.releaseDate = movieDetails.releaseDate
         movie.title = movieDetails.title
         movie.video = movieDetails.video!
-        movie.favorite = false // inicijalno niti jedan film nije u favoritima
+        movie.setValue(true, forKey: "favorite") // inicijalno niti jedan film nije u favoritima
         
-        print("Spremio sam ga")
         return movie
     }
 }

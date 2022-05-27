@@ -13,12 +13,18 @@ import MovieAppData
 class TrendingView: UIView {
     var navigationController: UINavigationController!
     var networkService: NetworkService!
+    var repository: MoviesRepository!
+    var movies: [Movie]!
     
-    init(navigationController: UINavigationController) {
+    init(navigationController: UINavigationController, repository: MoviesRepository) {
         super.init(frame: .zero)
         
         self.navigationController = navigationController
+        self.repository = repository
         backgroundColor = .white
+        
+        let category = repository.moviesDatabaseDataSource?.fetchGroup(groupName: "Trending")
+        movies = repository.moviesDatabaseDataSource?.fetchMoviesFromGroup(withCategory: category!)
         
         fetchButtons()
     }
@@ -170,16 +176,15 @@ extension TrendingView: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.moviesSearchResult?.results.count ?? 0
+        return self.movies?.count ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MovieCollectionViewCell.cellIdentifier, for: indexPath) as! MovieCollectionViewCell
         
-        let movies = self.moviesSearchResult?.results ?? []
-        
-        let pictureURL = "https://image.tmdb.org/t/p/original" + movies[indexPath.row].posterPath!
+        let pictureURL = "https://image.tmdb.org/t/p/original" + (movies[indexPath.row].posterPath ?? "")
         cell.setImageURL(imageURL: pictureURL)
+        cell.movie = movies[indexPath.row]
         
         return cell
     }
@@ -190,8 +195,9 @@ extension TrendingView: UICollectionViewDelegate {
 //        logic when cell is selected
         print("Clicked on cell number \(indexPath.row)")
         
-        let movie = self.moviesSearchResult?.results[indexPath.row] ?? MovieDetails.init(adult: nil, backdropPath: nil, genreIds: nil, id: nil, originalLanguage: nil, originalTitle: nil, overview: nil, popularity: nil, posterPath: nil, releaseDate: nil, title: nil, video: nil, voteAverage: nil, voteCount: nil)
-        let movieDetailsViewsController = MovieDetailsViewController(id: self.moviesSearchResult?.results[indexPath.row].id! ?? 0, movie: movie)
+        let movie = self.movies[indexPath.row]
+        let movieDetailsViewsController = MovieDetailsViewController(id: Int(movie.id))
+        movieDetailsViewsController.delegate = self
         movieDetailsViewsController.tabBarController?.selectedIndex = indexPath.row
         
         self.navigationController.pushViewController(movieDetailsViewsController, animated: true)
@@ -201,5 +207,11 @@ extension TrendingView: UICollectionViewDelegate {
 extension TrendingView: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: 120, height: 180)
+    }
+}
+
+extension TrendingView: MovieDetailsViewControllerProtocol {
+    func reloadCollection() {
+        moviesCollectionView.reloadData()
     }
 }

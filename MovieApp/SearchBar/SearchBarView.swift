@@ -14,8 +14,13 @@ protocol SearchBarViewDelegate {
     func didDeselectSearchBar()
 }
 
+protocol SearchBarTypingProtocol {
+    func textTyping(text: String)
+}
+
 class SearchBarView: UIView, UITextFieldDelegate {
     var delegate: SearchBarViewDelegate?
+    var typingDelegate: SearchBarTypingProtocol?
     
     init(delegate: SearchBarViewDelegate?) {
         super.init(frame: .zero)
@@ -54,8 +59,8 @@ class SearchBarView: UIView, UITextFieldDelegate {
         delegate?.didSelectSearchBar()
     }
     
-    func textFieldDidEndEditing(_ textField: UITextField) {
-//        some code here
+    func textFieldDidChangeSelection(_ textField: UITextField) {
+        typingDelegate?.textTyping(text: textField.text!)
     }
     
     func textFieldShouldClear(_ textField: UITextField) -> Bool {
