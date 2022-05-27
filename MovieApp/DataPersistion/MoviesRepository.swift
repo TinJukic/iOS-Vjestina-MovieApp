@@ -25,12 +25,17 @@ class MoviesRepository {
         // dohvaca podatke i sprema ih (azurira)
         print("Evo ja pokusavam dohvatiti i spremiti podatke...")
         
+        genres()
         whatsPopularData()
         trendingData()
         recomendedData()
         topRatedData()
         
         print("Gotov sam")
+    }
+    
+    func genres() {
+        moviesNetworkDataSource?.getGenres()
     }
     
     func whatsPopularData() {

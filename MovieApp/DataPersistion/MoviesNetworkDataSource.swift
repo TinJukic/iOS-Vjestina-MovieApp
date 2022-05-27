@@ -31,10 +31,10 @@ class MoviesNetworkDataSource {
     }
     
     var genres: Genres?
-    func getGenres() -> Genres? {
+    func getGenres() {
         // dohvat podataka za genres
         let genresUrlRequestString = "https://api.themoviedb.org/3/genre/movie/list?language=en-US&api_key=59afefdb9064ea17898a694d311e247e"
-        guard let genresUrl = URL(string: genresUrlRequestString) else { return nil }
+        guard let genresUrl = URL(string: genresUrlRequestString) else { return }
         var genresUrlRequest = URLRequest(url: genresUrl)
         genresUrlRequest.httpMethod = "GET"
         genresUrlRequest.setValue("genre/movie/list/json", forHTTPHeaderField: "Content-Type")
@@ -42,12 +42,11 @@ class MoviesNetworkDataSource {
         switch result {
             case .success(let value):
                 self.genres = value
+                self.moviesDatabaseDatasource.saveGenres(genres: self.genres)
             case .failure(let failure):
                 print("failure in WhatsPopularView \(failure)")
             }
         }
-        
-        return self.genres
     }
     
     var whatsPopularMovieSearchResult: SearchResults?

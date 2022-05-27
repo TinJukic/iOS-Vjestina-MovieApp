@@ -142,8 +142,26 @@ class MoviesDatabaseDataSource {
     
     // dohvati sve zanrove koje imas u bazi podataka
     var genreDescriptions: [GenreDescription]?
-    func fetchAllGenres() -> [GenreDescription] {
-        return []
+    func fetchAllGenres() -> [MovieGenre] {
+        let request: NSFetchRequest<MovieGenre> = MovieGenre.fetchRequest()
+        
+        do {
+            return try managedContext.fetch(request)
+        } catch let error as NSError {
+            print("Error \(error) : Info: \(error.userInfo)")
+            return []
+        }
+    }
+    
+    func saveGenres(genres: Genres?) {
+        do {
+            try genres?.genres.forEach({ genre in
+                saveGenre(genre: genre)
+                try managedContext.save()
+            })
+        } catch let error as NSError {
+            print("Error \(error) occured in saveTopRatedMovieData with info: \(error.userInfo)")
+        }
     }
     
     // dohvati genre po njegovom ID-u
@@ -300,5 +318,14 @@ class MoviesDatabaseDataSource {
         movie.setValue(true, forKey: "favorite") // inicijalno niti jedan film nije u favoritima
         
         return movie
+    }
+    
+    func saveGenre(genre: GenreDescription) -> MovieGenre {
+        let movieGenre = MovieGenre(context: managedContext)
+        
+        movieGenre.id = Int64(genre.id)
+        movieGenre.name = genre.name
+        
+        return movieGenre
     }
 }

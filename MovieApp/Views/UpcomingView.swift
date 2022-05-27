@@ -12,7 +12,6 @@ import MovieAppData
 
 class UpcomingView: UIView {
     var navigationController: UINavigationController!
-    var networkService: NetworkService!
     var repository: MoviesRepository!
     var movies: [Movie]!
     
@@ -27,6 +26,8 @@ class UpcomingView: UIView {
         movies = repository.moviesDatabaseDataSource?.fetchMoviesFromGroup(withCategory: category!)
         
         fetchButtons()
+        buildViews()
+        addConstraints()
     }
     
     required init?(coder: NSCoder) {
@@ -47,30 +48,20 @@ class UpcomingView: UIView {
     var cellHeight = 0.0
     var selectedCategory = "Movies"
     var stackScrollView: UIScrollView!
-    var genres: Genres!
+    var genres: [MovieGenre]!
     var moviesSearchResult: SearchResults?
     
     func fetchButtons() {
-        networkService = NetworkService()
-        
-        // dohvat podataka za genres
-        let genresUrlRequestString = "https://api.themoviedb.org/3/genre/movie/list?language=en-US&api_key=59afefdb9064ea17898a694d311e247e"
-        guard let genresUrl = URL(string: genresUrlRequestString) else { return }
-        var genresUrlRequest = URLRequest(url: genresUrl)
-        genresUrlRequest.httpMethod = "GET"
-        genresUrlRequest.setValue("genre/movie/list/json", forHTTPHeaderField: "Content-Type")
-        networkService.executeUrlRequest(genresUrlRequest) { (result: Result<Genres, RequestError>) in
-        switch result {
-            case .success(let value):
-                self.genres = value
-            DispatchQueue.main.async {
-                self.buildViews()
-                self.addConstraints()
+        self.genres = self.repository.moviesDatabaseDataSource?.fetchAllGenres()
+    }
+    
+    func changeGenre(newGenre: String) {
+        self.genres.forEach({ genre in
+            if(genre.name == newGenre) {
+                selectedCategory = newGenre
+                return
             }
-            case .failure(let failure):
-                print("failure in RecommendedView \(failure)")
-            }
-        }
+        })
     }
     
     func unboldButtons(boldedButton: UIButton) {
@@ -88,24 +79,6 @@ class UpcomingView: UIView {
     }
     
     func buildViews() {
-        // dohvat podataka za filmove i njihov prikaz
-        let popularMoviesUrlRequestString = "https://api.themoviedb.org/3/movie/103/recommendations?language=en-US&page=1&api_key=59afefdb9064ea17898a694d311e247e"
-        guard let popularMoviesUrl = URL(string: popularMoviesUrlRequestString) else { return }
-        var popularMoviesUrlRequest = URLRequest(url: popularMoviesUrl)
-        popularMoviesUrlRequest.httpMethod = "GET"
-        popularMoviesUrlRequest.setValue("movie/103/recommendations/json", forHTTPHeaderField: "Content-Type")
-        networkService.executeUrlRequest(popularMoviesUrlRequest) { (result: Result<SearchResults, RequestError>) in
-            switch result {
-            case .success(let success):
-                self.moviesSearchResult = success
-                DispatchQueue.main.async {
-                    self.moviesCollectionView.reloadData()
-                }
-            case .failure(let failure):
-                print("failure in RecommendedView \(failure)")
-            }
-        }
-        
         stackScrollView = {
             let v = UIScrollView()
             v.translatesAutoresizingMaskIntoConstraints = false
@@ -124,7 +97,7 @@ class UpcomingView: UIView {
         upcomingStackView.distribution = .fillEqually
         upcomingStackView.spacing = 10
         
-        self.genres.genres.forEach({ genre in
+        self.genres.forEach({ genre in
             let genreButton = UIButton()
             genreButton.setTitle(genre.name, for: .normal)
             genreButton.setTitleColor(.black, for: .normal)
@@ -133,7 +106,9 @@ class UpcomingView: UIView {
             self.buttonList.append(genreButton)
             self.upcomingStackView.addArrangedSubview(genreButton)
         })
-        buttonList[0].titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+        if buttonList.isEmpty == false {
+            buttonList[0].titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+        }
         
         stackScrollView.addSubview(upcomingStackView)
         self.addSubview(stackScrollView)

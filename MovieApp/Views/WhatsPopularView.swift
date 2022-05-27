@@ -12,7 +12,6 @@ import MovieAppData
 
 class WhatsPopularView: UIView {
     var navigationController: UINavigationController!
-    var networkService: NetworkService!
     var repository: MoviesRepository!
     var movies: [Movie]!
     
@@ -28,6 +27,8 @@ class WhatsPopularView: UIView {
         backgroundColor = .white
         
         fetchButtons()
+        buildViews()
+        addConstraints()
     }
     
     required init?(coder: NSCoder) {
@@ -41,36 +42,17 @@ class WhatsPopularView: UIView {
     let cellIdentifier = "cellId"
     var cellHeight = 0.0
     var selectedCategory = "Streaming"
-    var genres: Genres!
+    var genres: [MovieGenre]!
     var stackScrollView: UIScrollView!
     var moviesSearchResult: SearchResults?
     
     func fetchButtons() {
-        networkService = NetworkService()
-
-        // dohvat podataka za genres
-        let genresUrlRequestString = "https://api.themoviedb.org/3/genre/movie/list?language=en-US&api_key=59afefdb9064ea17898a694d311e247e"
-        guard let genresUrl = URL(string: genresUrlRequestString) else { return }
-        var genresUrlRequest = URLRequest(url: genresUrl)
-        genresUrlRequest.httpMethod = "GET"
-        genresUrlRequest.setValue("genre/movie/list/json", forHTTPHeaderField: "Content-Type")
-        networkService.executeUrlRequest(genresUrlRequest) { (result: Result<Genres, RequestError>) in
-        switch result {
-            case .success(let value):
-                self.genres = value
-            DispatchQueue.main.async {
-                self.buildViews()
-                self.addConstraints()
-            }
-            case .failure(let failure):
-                print("failure in WhatsPopularView \(failure)")
-            }
-        }
+        self.genres = self.repository.moviesDatabaseDataSource?.fetchAllGenres()
     }
     
     func changeGenre(newGenre: String) {
-        self.genres.genres.forEach({
-            if($0.name == newGenre) {
+        self.genres.forEach({ genre in
+            if(genre.name == newGenre) {
                 selectedCategory = newGenre
                 return
             }
@@ -92,24 +74,6 @@ class WhatsPopularView: UIView {
     }
     
     func buildViews() {
-        // dohvat podataka za filmove i njihov prikaz
-        let popularMoviesUrlRequestString = "https://api.themoviedb.org/3/movie/popular?language=en-US&page=1&api_key=59afefdb9064ea17898a694d311e247e"
-        guard let popularMoviesUrl = URL(string: popularMoviesUrlRequestString) else { return }
-        var popularMoviesUrlRequest = URLRequest(url: popularMoviesUrl)
-        popularMoviesUrlRequest.httpMethod = "GET"
-        popularMoviesUrlRequest.setValue("movie/popular/json", forHTTPHeaderField: "Content-Type")
-        networkService.executeUrlRequest(popularMoviesUrlRequest) { (result: Result<SearchResults, RequestError>) in
-            switch result {
-            case .success(let success):
-                self.moviesSearchResult = success
-                DispatchQueue.main.async {
-                    self.moviesCollectionView.reloadData()
-                }
-            case .failure(let failure):
-                print("failure in WhatsPopularView \(failure)")
-            }
-        }
-        
         isUserInteractionEnabled = true
         
         stackScrollView = {
@@ -130,7 +94,7 @@ class WhatsPopularView: UIView {
         whatsPopularStackView.distribution = .fillEqually
         whatsPopularStackView.spacing = 10
         
-        self.genres.genres.forEach({ genre in
+        self.genres.forEach({ genre in
             let genreButton = UIButton()
             genreButton.setTitle(genre.name, for: .normal)
             genreButton.setTitleColor(.black, for: .normal)
@@ -139,7 +103,9 @@ class WhatsPopularView: UIView {
             self.buttonList.append(genreButton)
             self.whatsPopularStackView.addArrangedSubview(genreButton)
         })
-        buttonList[0].titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+        if buttonList.isEmpty == false {
+            buttonList[0].titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+        }
         
         stackScrollView.addSubview(whatsPopularStackView)
         self.addSubview(stackScrollView)
