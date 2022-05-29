@@ -37,6 +37,7 @@ class MovieListViewController: UIViewController {
     var connected = true
     var context: NSManagedObjectContext!
     var moviesRepository: MoviesRepository!
+    var favoritesView: FavoritesView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -90,6 +91,7 @@ class MovieListViewController: UIViewController {
             view.addSubview(searchMoviesView)
             
             view.addSubview(movieCategories)
+            movieCategories.favoritesView = self.favoritesView
         } else {
             // first check if device is connected to the internet
             view.addSubview(noInternetConnectionView)

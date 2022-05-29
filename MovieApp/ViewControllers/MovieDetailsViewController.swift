@@ -178,7 +178,7 @@ class MovieDetailsViewController: UIViewController {
         regularAttribute = [
               NSAttributedString.Key.font: UIFont(name: "HelveticaNeue-Light", size: 14.0)!
            ]
-        var dateSplit = movieDetails.releaseDate!.split(separator: "-")
+        let dateSplit = movieDetails.releaseDate!.split(separator: "-")
         let dateCountry = String(dateSplit[2]) + "/" + String(dateSplit[1]) + "/" + String(dateSplit[0]) + " (" + String(movieDetails.originalLanguage!) + ")\n"
         boldText = NSAttributedString(string: String(movieDetails.runtime!) + " min", attributes: boldAttribute)
         var genresString = ""

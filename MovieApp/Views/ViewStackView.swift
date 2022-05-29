@@ -34,6 +34,7 @@ class ViewStackView: UIView {
     var trendingView: TrendingView!
     var topRatedView: TopRatedView!
     var upcomingView: UpcomingView!
+    var favoritesView: FavoritesView!
     
     func buildViews() {
         stackView = UIStackView()
@@ -44,6 +45,7 @@ class ViewStackView: UIView {
         self.addSubview(stackView)
         
         whatsPopularView = WhatsPopularView(navigationController: navigationController, repository: repository)
+        whatsPopularView.favoritesView = self.favoritesView
         stackView.addArrangedSubview(whatsPopularView)
         
         trendingView = TrendingView(navigationController: navigationController, repository: repository)

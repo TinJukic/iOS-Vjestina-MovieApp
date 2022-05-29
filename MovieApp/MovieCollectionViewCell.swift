@@ -35,18 +35,6 @@ class MovieCollectionViewCell: UICollectionViewCell {
         addConstraints()
     }
     
-//    init(cell: UICollectionViewCell, movie: Movie) {
-//        super.init(frame: cell.frame)
-//
-//        self.backgroundColor = .white
-//
-//        self.cell = cell
-//        self.movie = movie
-//
-//        buildViews()
-//        addConstraints()
-//    }
-    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -82,12 +70,11 @@ class MovieCollectionViewCell: UICollectionViewCell {
         self.addSubview(moviePicture)
 
         likeButton = UIButton()
-        if movie != nil && movie.favorite == true {
+        if movie != nil && movie.favorite == false {
             likeButton.setImage(UIImage(systemName: "heart.fill")?.withTintColor(.white, renderingMode: .alwaysOriginal), for: .normal)
         } else {
             likeButton.setImage(UIImage(systemName: "heart")?.withTintColor(.white, renderingMode: .alwaysOriginal), for: .normal)
         }
-//        likeButton.setImage(UIImage(systemName: "heart")?.withTintColor(.white, renderingMode: .alwaysOriginal), for: .normal)
         likeButton.backgroundColor = .gray
         self.addSubview(likeButton)
 
@@ -106,32 +93,7 @@ class MovieCollectionViewCell: UICollectionViewCell {
     }
     
     func buildViews() {
-        // potrebno je dohvatiti sliku filma i staviti ju na view od kraja do kraja
-//        let pictureURL = "https://image.tmdb.org/t/p/original" + (movie.posterPath ?? "")
-//        print(pictureURL)
-////        self.setImageURL(imageURL: pictureURL)
-//
-//        movieImage = UIImageView()
-//        DispatchQueue.global().async {
-//            do {
-//                let url = URL(string: "https://image.tmdb.org/t/p/original" + (self.movie.posterPath ?? ""))!
-//                let data = try Data(contentsOf: url)
-//
-//                DispatchQueue.main.async {
-//                    self.movieImage.image = UIImage(data: data)
-//                }
-//            } catch {
-//                print(error)
-//            }
-//        }
-//        self.addSubview(movieImage)
-//        print("Dodao sam sliku")
-//
-//        likeButton = UIButton()
-//        likeButton.setImage(UIImage(systemName: "heart")?.withTintColor(.white, renderingMode: .alwaysOriginal), for: .normal)
-//        likeButton.backgroundColor = .gray
-//        likeButton.target(forAction: #selector(buttonPressed), withSender: self)
-//        self.addSubview(likeButton)
+        
     }
     
     func addConstraints() {

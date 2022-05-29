@@ -14,6 +14,7 @@ class WhatsPopularView: UIView {
     var navigationController: UINavigationController!
     var repository: MoviesRepository!
     var movies: [Movie]!
+    var favoritesView: FavoritesView!
     
     init(navigationController: UINavigationController, repository: MoviesRepository) {
         super.init(frame: .zero)
@@ -22,7 +23,11 @@ class WhatsPopularView: UIView {
         self.repository = repository
         
         let category = repository.moviesDatabaseDataSource?.fetchGroup(groupName: "Whats popular")
-        movies = repository.moviesDatabaseDataSource?.fetchMoviesFromGroup(withCategory: category!)
+        if category != nil {
+            movies = repository.moviesDatabaseDataSource?.fetchMoviesFromGroup(withCategory: category!)
+        } else {
+            movies = repository.moviesDatabaseDataSource?.fetchAllMovies()
+        }
         
         backgroundColor = .white
         
@@ -189,5 +194,8 @@ extension WhatsPopularView: UICollectionViewDelegateFlowLayout {
 extension WhatsPopularView: MovieDetailsViewControllerProtocol {
     func reloadCollection() {
         moviesCollectionView.reloadData()
+        if favoritesView != nil {
+            favoritesView.favoritesCollectionView.reloadData()
+        }
     }
 }

@@ -12,6 +12,7 @@ import PureLayout
 class MovieCategoriesView: UIScrollView {
     var navigationController: UINavigationController!
     var repository: MoviesRepository!
+    var favoritesView: FavoritesView!
     
     init(navigationController: UINavigationController, repository: MoviesRepository) {
         super.init(frame: .zero)
@@ -31,6 +32,7 @@ class MovieCategoriesView: UIScrollView {
     
     func buildViews() {
         viewStackView = ViewStackView(navigationController: navigationController, repository: repository)
+        viewStackView.favoritesView = self.favoritesView
         self.addSubview(viewStackView)
     }
     

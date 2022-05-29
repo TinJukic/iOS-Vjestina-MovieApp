@@ -23,13 +23,15 @@ class CustomTabBarController: UITabBarController {
     }
     
     func buildViews() {
-        movieListViewController = MovieListViewController()
         favoritesViewController = FavoritesViewController()
+        movieListViewController = MovieListViewController()
         
         self.viewControllers = [
             createTabBarItem(tabBarTitle: "Home", tabBarImage: UIImage(systemName: "house")!, viewController: movieListViewController),
             createTabBarItem(tabBarTitle: "Favorites", tabBarImage: UIImage(systemName: "heart")!, viewController: favoritesViewController)
         ]
+        
+        movieListViewController.favoritesView = favoritesViewController.favoritesView
     }
     
     func createTabBarItem(tabBarTitle: String, tabBarImage: UIImage, viewController: UIViewController) -> UINavigationController {

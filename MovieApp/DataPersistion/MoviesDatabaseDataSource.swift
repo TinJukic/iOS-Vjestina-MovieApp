@@ -66,9 +66,18 @@ class MoviesDatabaseDataSource {
     
     func fetchMoviesFromGroup(withCategory group: MovieGroup) -> [Movie] {
         let request: NSFetchRequest<Movie> = Movie.fetchRequest()
+        var movies: [Movie] = []
 
         do {
-            return try managedContext.fetch(request)
+            let allMovies = try managedContext.fetch(request)
+            
+            allMovies.forEach({ movie in
+                if movie.groups?.contains(group) == true {
+                    movies.append(movie)
+                }
+            })
+            
+            return movies
         } catch let error as NSError {
             print("Error \(error) occured in fetchMoviesByNameSearch with info: \(error.userInfo)")
             return []

@@ -14,6 +14,7 @@ class TopRatedView: UIView {
     var navigationController: UINavigationController!
     var repository: MoviesRepository!
     var movies: [Movie]!
+    var favoritesView: FavoritesView!
     
     init(navigationController: UINavigationController, repository: MoviesRepository) {
         super.init(frame: .zero)
@@ -23,7 +24,11 @@ class TopRatedView: UIView {
         backgroundColor = .white
         
         let category = repository.moviesDatabaseDataSource?.fetchGroup(groupName: "Top rated")
-        movies = repository.moviesDatabaseDataSource?.fetchMoviesFromGroup(withCategory: category!)
+        if category != nil {
+            movies = repository.moviesDatabaseDataSource?.fetchMoviesFromGroup(withCategory: category!)
+        } else {
+            movies = repository.moviesDatabaseDataSource?.fetchAllMovies()
+        }
         
         fetchButtons()
         buildViews()
@@ -188,5 +193,8 @@ extension TopRatedView: UICollectionViewDelegateFlowLayout {
 extension TopRatedView: MovieDetailsViewControllerProtocol {
     func reloadCollection() {
         moviesCollectionView.reloadData()
+        if favoritesView != nil {
+            favoritesView.favoritesCollectionView.reloadData()
+        }
     }
 }
