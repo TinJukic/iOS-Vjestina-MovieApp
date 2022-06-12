@@ -48,6 +48,10 @@ class MovieDetailsViewController: UIViewController {
     var horizontalStackView1: UIStackView!
     var horizontalStackView2: UIStackView!
     
+    // animacije
+    private var titleWidthConstraint: NSLayoutConstraint!
+    private var titleHeightConstraint: NSLayoutConstraint!
+    
     convenience init() {
         self.init(id: 0)
     }
@@ -67,10 +71,24 @@ class MovieDetailsViewController: UIViewController {
         
         if movie?.favorite == false {
             let starImage = UIImage(systemName: "star.fill")?.withTintColor(.white, renderingMode: .alwaysOriginal)
-            button.setImage(starImage, for: .normal)
+            UIView.animate(withDuration: 1, delay: 0, animations: {
+                button.transform = button.transform.translatedBy(x: 0, y: 0)
+                button.setImage(starImage, for: .normal)
+            }, completion: { _ in
+                UIView.animate(withDuration: 1, delay: 0, animations: {
+                    button.transform = CGAffineTransform.identity
+                }, completion: nil)
+            })
         } else {
             let starImage = UIImage(systemName: "star")?.withTintColor(.white, renderingMode: .alwaysOriginal)
-            button.setImage(starImage, for: .normal)
+            UIView.animate(withDuration: 1, delay: 0, animations: {
+                button.transform = button.transform.translatedBy(x: 0, y: 0)
+                button.setImage(starImage, for: .normal)
+            }, completion: { _ in
+                UIView.animate(withDuration: 1, delay: 0, animations: {
+                    button.transform = CGAffineTransform.identity
+                }, completion: nil)
+            })
         }
         
         delegate?.reloadCollection()
@@ -92,6 +110,22 @@ class MovieDetailsViewController: UIViewController {
         self.repository = MoviesRepository(managedContext: context)
         
         fetchData()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        UIView.animate(withDuration: 1, animations: {
+            self.movieNameLabel.transform = .identity
+        })
+        
+        UIView.animate(withDuration: 1, delay: 0.5, animations: {
+            self.shortDescription.transform = .identity
+        })
+        
+        UIView.animate(withDuration: 1, delay: 0.75, options: .curveEaseInOut, animations: {
+            self.genreLabel.transform = .identity
+        })
     }
     
     func fetchData() {
@@ -170,6 +204,7 @@ class MovieDetailsViewController: UIViewController {
         movieNameLabel.textColor = .white
         movieNameLabel.numberOfLines = 0
         view.addSubview(movieNameLabel)
+        movieNameLabel.transform = movieNameLabel.transform.translatedBy(x: view.frame.width * 2, y: -view.frame.height)
         
         shortDescription = UILabel()
         boldAttribute = [
@@ -179,8 +214,17 @@ class MovieDetailsViewController: UIViewController {
               NSAttributedString.Key.font: UIFont(name: "HelveticaNeue-Light", size: 14.0)!
            ]
         let dateSplit = movieDetails.releaseDate!.split(separator: "-")
-        let dateCountry = String(dateSplit[2]) + "/" + String(dateSplit[1]) + "/" + String(dateSplit[0]) + " (" + String(movieDetails.originalLanguage!) + ")\n"
-        boldText = NSAttributedString(string: String(movieDetails.runtime!) + " min", attributes: boldAttribute)
+        let dateCountry = String(dateSplit[2]) + "/" + String(dateSplit[1]) + "/" + String(dateSplit[0]) + " (" + String(movieDetails.originalLanguage!) + ")"
+        regularText = NSAttributedString(string: dateCountry, attributes: regularAttribute)
+        let shortDescriptionString = NSMutableAttributedString()
+        shortDescriptionString.append(regularText)
+        shortDescription.attributedText = shortDescriptionString
+        shortDescription.textColor = .white
+        shortDescription.numberOfLines = 0
+        view.addSubview(shortDescription)
+        shortDescription.transform = shortDescription.transform.translatedBy(x: view.frame.width * 2, y: -view.frame.height)
+        
+        genreLabel = UILabel()
         var genresString = ""
         movieDetails.genres!.forEach({ genre in
             genresString.append(contentsOf: genre.name)
@@ -190,14 +234,16 @@ class MovieDetailsViewController: UIViewController {
                 genresString += " "
             }
         })
-        regularText = NSAttributedString(string: dateCountry + genresString, attributes: regularAttribute)
-        let shortDescriptionString = NSMutableAttributedString()
-        shortDescriptionString.append(regularText)
-        shortDescriptionString.append(boldText)
-        shortDescription.attributedText = shortDescriptionString
-        shortDescription.textColor = .white
-        shortDescription.numberOfLines = 0
-        view.addSubview(shortDescription)
+        regularText = NSAttributedString(string: genresString, attributes: regularAttribute)
+        boldText = NSAttributedString(string: String(movieDetails.runtime!) + " min", attributes: boldAttribute)
+        let genreDescriptionString = NSMutableAttributedString()
+        genreDescriptionString.append(regularText)
+        genreDescriptionString.append(boldText)
+        genreLabel.attributedText = genreDescriptionString
+        genreLabel.textColor = .white
+        genreLabel.numberOfLines = 0
+        view.addSubview(genreLabel)
+        genreLabel.transform = genreLabel.transform.translatedBy(x: view.frame.width * 2, y: -view.frame.height)
         
         yearAndCountryLabel = UILabel()
         yearAndCountryLabel.text = dateCountry
@@ -342,8 +388,11 @@ class MovieDetailsViewController: UIViewController {
         shortDescription.autoPinEdge(toSuperviewSafeArea: .leading, withInset: 18)
         shortDescription.autoPinEdge(.top, to: .bottom, of: movieNameLabel, withOffset: 3)
         
+        genreLabel.autoPinEdge(toSuperviewEdge: .leading, withInset: 18)
+        genreLabel.autoPinEdge(.top, to: .bottom, of: shortDescription, withOffset: 3)
+        
         favoritesButton.autoSetDimensions(to: CGSize(width: 32, height: 32))
-        favoritesButton.autoPinEdge(.top, to: .bottom, of: shortDescription, withOffset: 15)
+        favoritesButton.autoPinEdge(.top, to: .bottom, of: genreLabel, withOffset: 15)
         favoritesButton.autoPinEdge(toSuperviewSafeArea: .leading, withInset: 18)
         
         // DRUGA POLOVICA
